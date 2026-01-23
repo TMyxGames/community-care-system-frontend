@@ -2,7 +2,7 @@
     <div class="user-container logged"
         v-if="authStore.isLoggedIn"
     >
-        <img class="user-logo" :src="$getFileUrl(userInfo.avatarUrl) || require('@/assets/兔兔.jpg')" alt="logo" @click="goToMyPage"/>
+        <img class="user-logo" :src="$getFileUrl(userInfo.avatarUrl) || defaultAvatar" alt="logo" @click="goToMyPage"/>
         <button class="user-option" @click="handleLogout">注销</button>
     </div>
     <div class="user-container not-logged"
@@ -16,11 +16,18 @@
 <script>
     import { useRouter } from 'vue-router'
     import { useAuthStore } from '@/stores/auth';
+    import defaultAvatar from '@/assets/兔兔.jpg'
+
 
     export default {
         name: 'GlobalHeaderUser',
         props: {
             name: String
+        },
+        data() {
+            return {
+                defaultAvatar: defaultAvatar,
+            }
         },
         setup() {
             const router = useRouter()

@@ -9,7 +9,7 @@
     </div>
     <div class="home-container">
         <!-- 内容 -->
-        <div class="home-view">
+        <glass-layer class="home-view">
             <!-- 轮播区 -->
             <section class="hero-section">
 
@@ -45,17 +45,19 @@
             <h2 id="subtitle">假设我这里有很多很多内容</h2>
             <h2 id="subtitle">假设我这里有很多很多内容</h2>
             <h2 id="subtitle">假设我这里有很多很多内容</h2>
-        </div>
+        </glass-layer>
     </div>
 </template>
 
 <script>
+    import GlassLayer from '../Common/GlassLayer.vue';
     import { useAuthStore } from '@/stores/auth';
-    import ContentList from '../Common/ContentList.vue'
+    import ContentList from './Common/ContentList.vue'
 
     export default {
         name: 'PageHome',
         components: { 
+            GlassLayer,
             ContentList,
         },
         data() {
@@ -158,14 +160,6 @@
         height: 100%;
         width: 100%;
         max-width: 100rem;
-        padding: clamp(1rem, 1.5vw, 1.5rem);
-
-        box-sizing: border-box;
-
-        background-color: rgba(255, 255, 255, 50%);
-        backdrop-filter: blur(10px);
-        /* box-shadow: 0 0 2rem rgba(0, 0, 0, 10%); */
-        border-radius: 2rem;
         
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(32rem, 1fr));

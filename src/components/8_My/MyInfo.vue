@@ -12,7 +12,7 @@
                 <!-- <el-button type="primary" size="large" link>
                     更换头像
                 </el-button> -->
-                <img class="avatar" :src="$getFileUrl(userInfo.avatarUrl) || require('@/assets/兔兔.jpg')" alt="用户头像" />
+                <img class="avatar" :src="$getFileUrl(userInfo.avatarUrl) || defaultAvatar" alt="用户头像" />
             </el-upload>
             <div class="cell id">
                 <label class="info-label">ID:</label>
@@ -55,16 +55,18 @@
 </template>
 
 <script>
-    import InputBox1 from '../InputBox1.vue';
+    // import InputBox1 from '../InputBox1.vue';
     import { useAuthStore } from '@/stores/auth';
+    import defaultAvatar from '@/assets/兔兔.jpg';
 
     export default {
         name: 'MyInfo',
         components: {
-            InputBox1,
+            // InputBox1,
         },
         data() {
             return {
+                defaultAvatar: defaultAvatar,
                 isEditing: false,
                 editForm: {
                     username: '',

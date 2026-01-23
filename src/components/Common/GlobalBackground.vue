@@ -7,6 +7,14 @@
 </template>
 
 <script>
+    import time1 from '@/assets/backgrounds/日出.png'
+    import time2 from '@/assets/backgrounds/早上.png'
+    import time3 from '@/assets/backgrounds/下午.png'
+    import time4 from '@/assets/backgrounds/黄昏.png'
+    import time5 from '@/assets/backgrounds/晚上.png'
+    import time6 from '@/assets/backgrounds/午夜.png'
+    import starmoon from '@/assets/backgrounds/星月.jpg'
+
     export default {
         name: 'GlobalBackground',
         props: {
@@ -22,12 +30,12 @@
         data() {
             return {
                 timeMaps: {
-                    time1: require('@/assets/backgrounds/日出.png'), // 6:00 - 8:00
-                    time2: require('@/assets/backgrounds/早上.png'), // 8:00 - 12:00
-                    time3: require('@/assets/backgrounds/下午.png'), // 12:00 - 16:00
-                    time4: require('@/assets/backgrounds/黄昏.png'), // 16:00 - 18:00
-                    time5: require('@/assets/backgrounds/晚上.png'), // 18:00 - 24:00
-                    time6: require('@/assets/backgrounds/午夜.png'), // 24:00 - 6:00
+                    time1: time1, // 6:00 - 8:00
+                    time2: time2, // 8:00 - 12:00
+                    time3: time3, // 12:00 - 16:00
+                    time4: time4, // 16:00 - 18:00
+                    time5: time5, // 18:00 - 24:00
+                    time6: time6, // 24:00 - 6:00
                 },
                 currentTimeImg: '',
             }
@@ -39,7 +47,7 @@
                     return this.currentTimeImg;
                 }
                 // 否则使用特定图片或者默认背景
-                return this.imgSrc || require('@/assets/backgrounds/星月.jpg');
+                return this.imgSrc || starmoon;
             }
         },
         mounted() {

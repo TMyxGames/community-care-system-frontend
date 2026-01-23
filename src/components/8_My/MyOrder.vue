@@ -5,16 +5,40 @@
             
         </div>
         <div class="order-list">
-            <div class="cell">
-                <label class="order-id">订单编号</label>
-                <label class="order-name">订单名称</label>
-            </div>
+            <OrderItem
+                v-for="order in orderStore.orderList"
+                :key="order.id"
+                :orderInfo="order"
+            />
         </div>
     </div>
 </template>
 
 <script> 
+    import { useOrderStore } from '@/stores/order';
+    import OrderItem from './Common/OrderItem.vue';
 
+    export default {
+        name: 'MyOrder',
+        components: {
+            OrderItem,
+        },
+        setup() {
+            const orderStore = useOrderStore()
+            return { orderStore };
+        },
+        data() {
+            return {
+                orderList: []
+            }
+        },
+        methods: {
+
+        },
+        mounted() {
+            this.orderStore.getOrderList();
+        }
+    }
 </script>
 
 <style scoped>

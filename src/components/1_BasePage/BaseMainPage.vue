@@ -45,6 +45,8 @@
     /* text-align: center; */
     color: #132843;
 
+    margin-top: 7rem;
+
     display: flex;
     flex-direction: column;
     align-items: center;

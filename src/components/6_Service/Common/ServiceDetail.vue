@@ -1,6 +1,6 @@
 <template>
     <div class="service-detail-container">
-        <div class="detail-view" v-if="currentService">
+        <glass-layer class="detail-view" v-if="currentService">
             <!-- 信息区 -->
             <div class="info-area">
                 <div class="img-area">
@@ -25,20 +25,21 @@
             <div class="rate-area">
                 <h1>用户评价</h1>
             </div>
-        </div>
+        </glass-layer>
         <!-- <div class="loading" v-else>加载中...</div> -->
     </div>
     <div>推荐列表</div>
 </template>
 
 <script>
+    import GlassLayer from '@/components/Common/GlassLayer.vue';
     import { useServiceStore } from '@/stores/service';
     import MarkdownIt from 'markdown-it';
 
     export default {
         name: 'ServiceDetail',
         components: {
-
+            GlassLayer,
         },
         setup() {
             const serviceStore = useServiceStore();
@@ -105,16 +106,6 @@
         height: 150rem;
 
         max-width: 100rem;
-        /* padding: clamp(0.25rem, 1.5vw, 1.5rem); */
-        padding: clamp(1rem, 2vw, 2rem);
-        margin-top: 7rem;
-        box-sizing: border-box;
-
-        background-color: rgba(255, 255, 255, 50%);
-        backdrop-filter: blur(10px);
-        /* box-shadow: 0 0 2rem rgba(0, 0, 0, 10%); */
-        border-radius: 2rem;
-
     }
 
     .info-area {

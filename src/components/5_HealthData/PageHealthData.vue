@@ -1,11 +1,11 @@
 <template>
     <div class="healthData-container">
         <div class="choose_bar"> 
-            <img class="option" :src="$getFileUrl(userInfo.avatarUrl) || require('@/assets/兔兔.jpg')" alt="用户头像"
+            <img class="option" :src="$getFileUrl(userInfo.avatarUrl) || defaultAvatar " alt="用户头像"
                 @click="handleUserChange(authStore.userInfo?.id)"
             />
 
-            <img class="option" :src="$getFileUrl(option.avatarUrl) || require('@/assets/兔兔.jpg')" alt="用户头像"
+            <img class="option" :src="$getFileUrl(option.avatarUrl) || defaultAvatar " alt="用户头像"
                 v-for="option in healthStore.boundList"
                 :key="option.id"
                 @click="handleUserChange(option.id)"
@@ -26,7 +26,8 @@
     import { useHealthStore } from '@/stores/health';
     import { useAuthStore } from '@/stores/auth';
     import { useRouter } from 'vue-router';
-    import HealthDataLayout from '../Common/HealthData/HealthDataLayout.vue';
+    import HealthDataLayout from './Common/HealthDataLayout.vue';
+    import defaultAvatar from '@/assets/兔兔.jpg';
 
     export default {
         name: 'PageHealthData',
@@ -41,7 +42,7 @@
         },
         data() {
             return {
-                
+                defaultAvatar: defaultAvatar,
             }
         },
         computed: {
@@ -57,7 +58,7 @@
             //     if (this.userInfo && this.userInfo.avatarUrl) {
             //         return this.$getFileUrl(this.userInfo.avatarUrl);
             //     }
-            //     return require('@/assets/兔兔.jpg');
+            //     return defaultAvatar;
             // }
         },
         created() {
@@ -89,7 +90,6 @@
         width: 100%;
         height: 100%;
         padding: clamp(0rem, 2rem);
-        margin-top: 5rem;
 
         /* background-color: #f8f6f6; */
         
@@ -108,7 +108,6 @@
         width: 100%;
         height: 5rem;
         max-width: 100rem;
-        margin-top: 2rem;
 
         font-size: 28px;
         font-weight: bold;

@@ -3,31 +3,31 @@ import BaseAuthPage from '@/components/1_BasePage/BaseAuthPage.vue'
 import BaseMainPage from '@/components/1_BasePage/BaseMainPage.vue'
 import BaseBackendPage from '@/components/1_BasePage/BaseBackendPage.vue'
 
-import AuthLoginCard from '@/components/2_AuthPage/AuthLoginCard.vue'
-import AuthRegiCard from '@/components/2_AuthPage/AuthRegiCard.vue'
+import AuthLoginCard from '@/components/2_Auth/AuthLoginCard.vue'
+import AuthRegiCard from '@/components/2_Auth/AuthRegiCard.vue'
 
-import PageHome from '@/components/3_MainPage/PageHome.vue'
-import PageHealthData from '@/components/3_MainPage/PageHealthData.vue'
-import PageSecurity from '@/components/3_MainPage/PageSecurity.vue'
-import PageService from '@/components/3_MainPage/PageService.vue'
-import PageMessage from '@/components/3_MainPage/PageMessage.vue'
-import PageMy from '@/components/3_MainPage/PageMy.vue'
-import Bind from '@/components/Common/HealthData/Bind.vue'
+import PageHome from '@/components/4_Home/PageHome.vue'
+import PageHealthData from '@/components/5_HealthData/PageHealthData.vue'
+import PageSecurity from '@/components/7_Security/PageSecurity.vue'
+import PageService from '@/components/6_Service/PageService.vue'
+import PageMessage from '@/components/9_Message/PageMessage.vue'
+import PageMy from '@/components/8_My/PageMy.vue'
+import Bind from '@/components/5_HealthData/Bind.vue'
 
-import ManageUser from '@/components/4_BackendPage/ManageUser.vue'
-import ManageCarousel from '@/components/4_BackendPage/ManageCarousel.vue'
-import ManageService from '@/components/4_BackendPage/ManageService.vue'
-import ManageContentList from '@/components/4_BackendPage/ManageContentList.vue'
+import ManageUser from '@/components/3_Backend/ManageUser.vue'
+import ManageCarousel from '@/components/3_Backend/ManageCarousel.vue'
+import ManageService from '@/components/3_Backend/ManageService.vue'
+import ManageContentList from '@/components/3_Backend/ManageContentList.vue'
 
-import MyInfo from '@/components/Common/My/MyInfo.vue'
-import MyAddress from '@/components/Common/My/MyAddress.vue'
-import MyOrder from '@/components/Common/My/MyOrder.vue'
+import MyInfo from '@/components/8_My/MyInfo.vue'
+import MyAddress from '@/components/8_My/MyAddress.vue'
+import MyOrder from '@/components/8_My/MyOrder.vue'
 
-import ServiceDetail from '@/components/Common/Service/ServiceDetail.vue'
+import ServiceDetail from '@/components/6_Service/Common/ServiceDetail.vue'
 
 
 const routes = [
-  { path: '/', component: BaseMainPage, redirect: "/PageHome", 
+  { path: '/:catchAll(.*)', component: BaseMainPage, redirect: "/PageHome", 
     children: [
       { path: '/PageHome', component: PageHome },
       { path: '/PageHealthData', component: PageHealthData },
@@ -44,7 +44,7 @@ const routes = [
       },
 
       { path: '/ServiceDetail/:id', name: 'ServiceDetail',
-        component: () => import('@/components/Common/Service/ServiceDetail.vue'),
+        component: () => import('@/components/6_Service/Common/ServiceDetail.vue'),
       },
     ]
   },

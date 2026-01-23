@@ -1,19 +1,21 @@
 <template>
-    <div class="my-container">
+    <glass-layer class="my-container">
         <div class="sidebar-area">
             <my-side-bar></my-side-bar>
         </div>
         <div class="my-view">
             <router-view></router-view>
         </div>
-    </div>
+    </glass-layer>
 </template>
 
 <script>
-    import MySideBar from '../Common/My/MySideBar.vue';
+    import GlassLayer from '../Common/GlassLayer.vue';
+    import MySideBar from './Common/MySideBar.vue';
     export default {
         name: 'PageMy',
         components: {
+            GlassLayer,
             MySideBar,
         },
         data() {
@@ -29,15 +31,6 @@
         width: 100%;
         height: 150rem;
         max-width: 100rem;
-        /* padding: clamp(0.25rem, 1.5vw, 1.5rem); */
-        padding: clamp(0.25rem, 1.5vw, 1.5rem);
-        margin-top: 7rem;
-        box-sizing: border-box;
-
-        background-color: rgba(255, 255, 255, 50%);
-        backdrop-filter: blur(10px);
-        /* box-shadow: 0 0 2rem rgba(0, 0, 0, 10%); */
-        border-radius: 2rem;
 
         display: grid;
         grid-template-columns: 1fr 4fr;

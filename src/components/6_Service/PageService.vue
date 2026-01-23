@@ -26,15 +26,13 @@
 </template>
 
 <script>
-    import ServiceLayout from '../Common/Service/ServiceLayout.vue';
-    import LayoutTest from '../Common/HealthData/LayoutTest.vue'; // 测试
+    import ServiceLayout from './Common/ServiceLayout.vue';
     import { useServiceStore } from '@/stores/service';
 
     export default {
         name: 'PageService',
         components: {
             ServiceLayout,
-            LayoutTest, // 测试
         },
         setup() {
             const serviceStore = useServiceStore();

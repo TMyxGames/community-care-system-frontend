@@ -10,7 +10,7 @@
 
 <style>
   /* 全局字体 */
-  body, #app, button, input, select,textarea {
+  body, #app, button, input, select, textarea {
     font-family: 'HarmonyOS Sans SC';
     font-weight: 500;
     color: #132843;

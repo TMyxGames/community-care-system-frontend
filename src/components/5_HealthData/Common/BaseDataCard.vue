@@ -5,7 +5,7 @@
         </div>
         <div class="content-row">
             
-            <img class="user-logo" :src="$getFileUrl(userInfo.avatarUrl) || require('@/assets/兔兔.jpg')" alt="头像">
+            <img class="user-logo" :src="$getFileUrl(userInfo.avatarUrl) || defaultAvatar" alt="头像">
             
             <div class="data-view">
                 <div class="cell">
@@ -37,6 +37,7 @@
 <script> 
     import { useHealthStore } from '@/stores/health';
     import { mapState } from 'pinia';
+    import defaultAvatar from '@/assets/兔兔.jpg';
 
     export default {
         name: 'BaseDataCard',
@@ -46,7 +47,7 @@
         },
         data() {
             return {
-
+                defaultAvatar: defaultAvatar,
             }
         },
         computed: {

@@ -1,6 +1,6 @@
 <template>
     <div class="layout-container">
-        <div class="layout-view">
+        <glass-layer class="layout-view">
             <div class="grid-item1">
                 <!-- 全部数据板块 -->
                 <all-data-card></all-data-card>
@@ -14,17 +14,19 @@
             <div class="grid-item4">4</div>
             <div class="grid-item4">4</div>
             <div class="grid-item4">4</div>
-        </div>
+        </glass-layer>
     </div>
 </template>
 
 <script>
+    import GlassLayer from '@/components/Common/GlassLayer.vue';
     import AllDataCard from './AllDataCard.vue';
     import BaseDataCard from './BaseDataCard.vue';
 
     export default {
         name: 'HealthDataView',
         components: {
+            GlassLayer,
             AllDataCard,
             BaseDataCard,
         },
@@ -54,13 +56,6 @@
         height: 100rem;
         width: 100%;
         max-width: 100rem;
-        box-sizing: border-box;
-        padding: clamp(1rem, 2vw, 2rem);
-
-        /* background-color: #f8f6f6; */
-        background-color: rgba(255, 255, 255, 50%);
-        backdrop-filter: blur(10px);
-        border-radius: 2rem;
 
         display: grid;
         grid-template-columns: repeat(4, 1fr);

@@ -33,12 +33,12 @@
 </template>
 
 <script>
-    import Button1 from "../Button1.vue";
+    // import Button1 from "../Button1.vue";
 
     export default {
         name: "ServiceCard",
         components: {
-            Button1,
+            // Button1,
         },
         props: {
             serviceData: {

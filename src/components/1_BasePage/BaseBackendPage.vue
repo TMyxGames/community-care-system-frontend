@@ -22,7 +22,7 @@
 </template>
 
 <script>
-    import BackendSideBar from '../Common/Backend/BackendSideBar.vue'
+    import BackendSideBar from '../3_Backend/Common/BackendSideBar.vue';
 
     export default {
         components: {
