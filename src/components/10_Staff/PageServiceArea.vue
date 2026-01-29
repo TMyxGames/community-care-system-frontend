@@ -73,7 +73,7 @@
         },
         data() {
             return {
-                mapDisplay: false,
+                // mapDisplay: false,
                 isDrawing: false,
                 dialogVisible: false,
                 areaForm: {
