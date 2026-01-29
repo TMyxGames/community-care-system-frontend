@@ -5,20 +5,32 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     // 从 localStorage 读取，确保刷新页面不丢失登录态
     userInfo: JSON.parse(localStorage.getItem('userInfo')) || null, // 登录的用户信息
+    activeRole: localStorage.getItem('activeRole') !== null
+                ? Number(localStorage.getItem('activeRole'))
+                : 0, // 用户使用的登录身份
     isLoggedIn: !!localStorage.getItem('userInfo'), // 是否登录
   }),
   actions: {
     // 登录成功后的持久化
-    login(user) {
+    login(user, selectedRole) {
       this.userInfo = user;
-      this.isLoggedIn = true;
+      // this.activeRole = Number(selectedRole);
+
+      const roleToStore = (selectedRole !== undefined && selectedRole !== null) ? Number(selectedRole) : 0;
+
+      this.activeRole = roleToStore;
+
       localStorage.setItem('userInfo', JSON.stringify(user));
+      localStorage.setItem('activeRole', this.activeRole);
+      this.isLoggedIn = true;
     },
     // 登出清理
     logout() {
       this.userInfo = null;
+      this.activeRole = 0;
       this.isLoggedIn = false;
       localStorage.removeItem('userInfo');
+      localStorage.removeItem('activeRole');
 
       // 清理健康数据(执行health里的resetData)
       const healthStore = useHealthStore();
@@ -28,7 +40,19 @@ export const useAuthStore = defineStore('auth', {
     }
   },
   getters: {
-    // 只有后端返回的 isAdmin 为 true 才具备管理员身份
-    isAdminUser: (state) => state.userInfo?.isAdmin === true
+    // 是否为用户
+    isNormalUser: (state) => state.userInfo?.role === 0,
+
+    // 是否为管理员
+    isAdminUser: (state) => Number(state.activeRole) === 1,
+
+    // 是否为服务人员
+    isStaffUser: (state) => Number(state.activeRole) === 2,
+
+    // 获取身份名称
+    roleName: state => {
+      const roles = { 0: '用户', 1: '管理员', 2: '服务人员'};
+      return roles[state.userInfo?.role] || '游客';
+    }
   }
 })

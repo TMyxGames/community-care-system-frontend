@@ -16,7 +16,7 @@
 
 <script> 
     import { useOrderStore } from '@/stores/order';
-    import OrderItem from './Common/OrderItem.vue';
+    import OrderItem from './Common/MyOrderItem.vue';
 
     export default {
         name: 'MyOrder',

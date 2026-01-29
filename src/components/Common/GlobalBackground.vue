@@ -1,5 +1,5 @@
 <template>
-    <div id="container">
+    <div class="background-container">
         <img :src="currentImg" alt="背景图片">
         <!-- <div class="overlay"></div> -->
     </div>
@@ -84,7 +84,7 @@
 </script>
 
 <style scoped>
-    #container {
+    .background-container {
         position: fixed;
         top: 0;
         left: 0;
@@ -93,7 +93,7 @@
         z-index: -1;
     }
 
-    #container img {
+    .background-container img {
         width: 100%;
         height: 100%;
         object-fit: cover;

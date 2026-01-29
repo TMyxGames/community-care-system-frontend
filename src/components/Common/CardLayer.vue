@@ -1,12 +1,12 @@
 <template>
-    <div class="glass-layer">
+    <div class="card-layer">
         <slot/>
     </div>
 </template>
 
 <script>
     export default {
-        name: 'GlassLayer',
+        name: 'CardLayer',
         props: {
             width: {
                 type: String,
@@ -21,30 +21,25 @@
 </script>
 
 <style scoped>
-    .glass-layer {
-        position: relative;
+    .card-layer {
         box-sizing: border-box;
         padding: clamp(1rem, 2vw, 2rem);
 
-        background-color: rgba(255, 255, 255, 50%);
-        box-shadow: 0 0 10px rgba(0, 0, 0, 25%);
-        backdrop-filter: blur(10px);
-        border-radius: 2rem;
+        background-color: rgba(255, 255, 255);
+        border-radius: 1rem;
     }
 
-    .thin {
-        padding: clamp(1rem, 1.5vw, 1.5rem);
+    .thin{
+        padding:clamp(1rem, 1.5vw, 1.5rem);
     }
 
     /* 平板屏幕 */
     @media (max-width: 768px) { 
-        .glass-layer {
+        .card-layer {
             padding:clamp(0.5rem, 1vw, 1rem);
-            border-radius: 1.25rem;
         }
-
-        .thin {
-            padding: clamp(0.5rem, 1, 1rem);
+        .thin{
+            padding:clamp(0.5rem, 1vw, 1rem);
         }
     }
 

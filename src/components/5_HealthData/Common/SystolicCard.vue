@@ -1,32 +1,13 @@
 <template>
-    <card-layer class="base-data-card thin">
+    <card-layer class="systolic-card thin">
         <div class="title-row">
-            <base-title class="title" color="#6eb6ff">基本信息</base-title>
+            <base-title class="title" color="#6eb6ff">收缩压</base-title>
         </div>
         <div class="content-row">
-            
-            <img class="user-logo" :src="$getFileUrl(userInfo.avatarUrl) || defaultAvatar" alt="头像">
-            
             <div class="data-view">
                 <div class="cell">
-                    <label class="cell-label">姓名</label>
-                    <label class="cell-value">{{ userInfo.username }}</label>
-                </div>
-                <div class="cell">
-                    <label class="cell-label">性别</label>
-                    <label class="cell-value">{{ userInfo.sex }}</label>
-                </div>
-                <div class="cell">
-                    <label class="cell-label">年龄</label>
-                    <label class="cell-value">{{ userInfo.age }}</label>
-                </div>
-                <div class="cell">
-                    <label class="cell-label">身高</label>
-                    <label class="cell-value">{{ userInfo.height }}</label>
-                </div>
-                <div class="cell">
-                    <label class="cell-label">体重</label>
-                    <label class="cell-value">{{ userInfo.weight }}</label>
+                    <label class="cell-label">当前值</label>
+                    <label class="cell-value">{{ userInfo.systolic }}</label>
                 </div>
             </div>
 
@@ -34,15 +15,14 @@
     </card-layer>
 </template>
 
-<script> 
+<script>
     import { useHealthStore } from '@/stores/health';
     import { mapState } from 'pinia';
     import CardLayer from '@/components/Common/CardLayer.vue';
     import BaseTitle from '@/components/Common/BaseTitle.vue';
-    import defaultAvatar from '@/assets/兔兔.jpg';
 
     export default {
-        name: 'BaseDataCard',
+        name: 'SystolicCard',
         components: {
             CardLayer,
             BaseTitle,
@@ -53,21 +33,21 @@
         },
         data() {
             return {
-                defaultAvatar: defaultAvatar,
+                
             }
         },
         computed: {
             ...mapState(useHealthStore, ['userInfo']),
         },
         methods: {
-        
+            
         },
     }
 </script>
 
 <style scoped>
     /* 容器 */
-    .base-data-card {
+    .systolic-card {
         width: 100%;
         height: 100%;
         
@@ -88,26 +68,6 @@
         display: flex;
         justify-content: row;
         align-items: center;
-    }
-
-    .content-row { 
-        width: 100%;
-        height: 100%;
-        box-sizing: border-box;
-
-        /* background-color: #6eb6ff; */
-
-        display: flex;
-        gap: 1.5rem;
-
-    }
-
-    .user-logo {
-        width: 10rem;
-        height: 10rem;
-        /* padding-top: 0.2rem; */
-
-        border-radius: 50%;
     }
 
     .data-view {

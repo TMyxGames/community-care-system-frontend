@@ -14,7 +14,7 @@
                     <div class="content markdown-body" v-html="renderedMarkdown"></div>
 
                     <div class="operation-row">
-                        <el-button type="primary">预约服务</el-button>
+                        <el-button type="primary" @click="toOrder">预约服务</el-button>
                         <el-button type="primary">收藏</el-button>
                     </div>
                 </div>
@@ -86,7 +86,10 @@
                 } catch (error) {
                     this.markdownRaw = '加载失败';
                 }
-            }
+            },
+            toOrder() {
+                this.$router.push(`/ServiceOrder/${this.currentService.id}`);
+            },
         },
     }
 </script>

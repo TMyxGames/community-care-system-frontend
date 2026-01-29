@@ -33,12 +33,12 @@
 </template>
 
 <script>
-    // import Button1 from "../Button1.vue";
+    import CardLayer from '@/components/Common/CardLayer.vue';
 
     export default {
         name: "ServiceCard",
         components: {
-            // Button1,
+            CardLayer,
         },
         props: {
             serviceData: {

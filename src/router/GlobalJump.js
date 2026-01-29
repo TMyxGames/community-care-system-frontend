@@ -24,6 +24,7 @@ import MyAddress from '@/components/8_My/MyAddress.vue'
 import MyOrder from '@/components/8_My/MyOrder.vue'
 
 import ServiceDetail from '@/components/6_Service/Common/ServiceDetail.vue'
+import ServiceOrder from '@/components/6_Service/ServiceOrder.vue'
 
 
 const routes = [
@@ -45,6 +46,9 @@ const routes = [
 
       { path: '/ServiceDetail/:id', name: 'ServiceDetail',
         component: () => import('@/components/6_Service/Common/ServiceDetail.vue'),
+      },
+      { path: '/ServiceOrder/:id', name: 'ServiceOrder',
+        component: () => import('@/components/6_Service/ServiceOrder.vue'),
       },
     ]
   },

@@ -9,7 +9,7 @@
             <img :src="orderInfo.serviceImg" class="service-img" alt="服务图片">
             <div class="info-detail">
                 <div class="title">{{ orderInfo.serviceTitle }}</div>
-                <div class="address">地址：{{ orderInfo.addressShot }}</div>
+                <div class="address">地址：{{ formatArea(orderInfo.addressShot) }}</div>
                 <span class="price">{{ orderInfo.servicePrice }}</span>
             </div>
         </div>
@@ -31,7 +31,7 @@
 
 <script> 
     export default {
-        name: 'OrderItem',
+        name: 'MyOrderItem',
         props: {
             orderInfo: {
                 type: Object,
@@ -52,7 +52,11 @@
             formatTime(timeStr) {
                 if(!timeStr) return '';
                 return timeStr.replace('T', ' ').substring(0, 16);
-            }
+            },
+            formatArea(area) {
+                if(!area) return '';
+                return area.replace(/\//g, '');
+            },
         },
     }
 </script>

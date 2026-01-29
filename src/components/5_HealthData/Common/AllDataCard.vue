@@ -1,7 +1,7 @@
 <template>
-    <div class="all-data-container">
+    <card-layer class="all-data-card thin">
         <div class="title-row">
-            <label class="title">全部数据</label>
+            <base-title class="title">全部数据</base-title>
             <div class="button-area">
                 <el-radio-group v-model="allData_timeControl">
                     <el-radio-button
@@ -53,15 +53,25 @@
 
         </div>
                 
-    </div>
+    </card-layer>
 </template>
 
 <script>
     import { useHealthStore } from '@/stores/health';
     import { mapState, mapActions } from 'pinia';
+    import CardLayer from '@/components/Common/CardLayer.vue';
+    import BaseTitle from '@/components/Common/BaseTitle.vue';
 
     export default {
         name: 'AllDataCard',
+        components: {
+            CardLayer,
+            BaseTitle,
+        },
+        setup() {
+            const healthStore = useHealthStore();
+            return { healthStore };
+        },
         data() {
             return {
                 allData_timeControl: 'latest',
@@ -78,8 +88,7 @@
             ...mapState(useHealthStore, ['currentSelection', 'latestData', 'sevenDaysData']),
         },
         created() {
-            const healthStore = useHealthStore();
-            healthStore.getAllData(this.currentUserId);
+            this.healthStore.getAllData(this.currentUserId);
         },
         methods: {
             // 格式化时间
@@ -97,57 +106,27 @@
 <style scoped>
 
     /* 容器 */
-    .all-data-container {
+    .all-data-card {
         width: 100%;
         height: 100%;
-        border-radius: 1rem;
-        box-sizing: border-box;
-
-        background-color: rgba(255, 255, 255);
         
         display: flex;
         flex-direction: column;
         align-items: center;
+        gap: var(--thin-gap);
+
         overflow: visible;
     }
 
     /* 标题行 */
     .title-row {
         width: 100%;
-        height: 5rem;
+        height: auto;
         box-sizing: border-box;
-        padding: 1.5rem;
-
-        /* background-color: rgb(255, 255, 255); */
 
         display: flex;
         justify-content: row;
         align-items: center;
-    }
-
-    /* 标题 */
-    .title {
-        /* font-size: 36px; */
-        font-size: clamp(1.5rem, 2vw, 2rem);
-        font-weight: 700;
-        margin-left: 1rem;
-
-        position: relative;
-    }
-
-    /* 标题装饰线 */
-    .title::after {
-        content: "";
-        height: clamp(1.8rem, 2.2vw, 2.2rem);
-        width: 0.5rem;
-
-        position: absolute;
-        left: -1rem;
-        top: 52%;
-        transform: translateY(-50%);
-
-        background-color: #ff2e63;
-
     }
 
     /* 按钮区 */
@@ -169,9 +148,8 @@
         width: 100%;
         height: 100%;
         box-sizing: border-box;
-        padding: 1.5rem;
 
-        background-color: #f8f6f6;
+        /* background-color: #f8f6f6; */
 
         display: flex;
         flex-direction: column;

@@ -9,23 +9,25 @@
     <GlobalHeader class="header"></GlobalHeader>
   
     <!-- 页面 -->
-    <div class="main-page">
+    <mid-overlay class="main-page">
   
       <router-view></router-view>
   
       <h2>🚧页面正在施工中🚧</h2>
-    </div>
+    </mid-overlay>
 </template>
   
 <script>
   import GlobalBackground from '@/components/Common/GlobalBackground.vue'
   import GlobalHeader from '@/components/Common/Header/GlobalHeader.vue'
+  import MidOverlay from '@/components/Common/MidOverlay.vue'
 
     export default {
       name: 'MainPage',
       components: {
         GlobalBackground,
         GlobalHeader,
+        MidOverlay,
       },
       data: function() {
         return {
@@ -42,14 +44,9 @@
   
   .main-page {
     font-family: "HarmonyOS Sans SC";
-    /* text-align: center; */
     color: #132843;
 
     margin-top: 7rem;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
       
 </style>

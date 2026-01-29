@@ -1,13 +1,13 @@
 <!-- 未来改动 -->
 <template>
     <!-- 横幅 -->
-    <div class="banner-container">
+    <mid-overlay class="banner-container">
         <div class="banner-view">
             <label class="banner-title">你好 {{ userInfo.username || '' }}!</label>
             <label class="banner-subtitle">{{ greeting }}</label>
         </div>
-    </div>
-    <div class="home-container">
+    </mid-overlay>
+    <mid-overlay class="home-container">
         <!-- 内容 -->
         <glass-layer class="home-view">
             <!-- 轮播区 -->
@@ -46,10 +46,11 @@
             <h2 id="subtitle">假设我这里有很多很多内容</h2>
             <h2 id="subtitle">假设我这里有很多很多内容</h2>
         </glass-layer>
-    </div>
+    </mid-overlay>
 </template>
 
 <script>
+    import MidOverlay from '../Common/MidOverlay.vue';
     import GlassLayer from '../Common/GlassLayer.vue';
     import { useAuthStore } from '@/stores/auth';
     import ContentList from './Common/ContentList.vue'
@@ -57,6 +58,7 @@
     export default {
         name: 'PageHome',
         components: { 
+            MidOverlay,
             GlassLayer,
             ContentList,
         },
@@ -102,34 +104,22 @@
 
 <style scoped>
     .banner-container {
-        height: 500px;
+        height: 30rem;
         width: 100vw;
-        /* padding: clamp(1rem, 3vw, 3rem); */
-
-        /* background-color: rgba(255, 255, 255, 0); */
-        /* backdrop-filter: blur(15px); */
-
-        display: flex;
-        align-self: center;
-        justify-content: center;
-        align-items: center;
     }
 
     .banner-view {
         height: 100%;
         width: 100%;
-        max-width: 106rem;
-        padding: clamp(1rem, 3vw, 3rem);
+        max-width: 104rem;
+        padding: clamp(1rem, 2vw, 2rem);
         box-sizing: border-box;
-
-        /* background-color: rgba(255, 255, 255, 0.25); */
-        /* backdrop-filter: blur(15px); */
 
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-end;
-        gap: clamp(1rem, 3vw, 2rem);
+        gap: clamp(1rem, 2vw, 2rem);
 
     }
 
@@ -146,14 +136,6 @@
     .home-container {
         height: 100%;
         width: 100vw;
-        padding: clamp(0rem, 2rem);
-        box-sizing: border-box;
-
-        /* background-color: #f8f6f6; */
-
-        display: flex;
-        flex-direction: column;
-        align-items: center;
     }
 
     .home-view {
@@ -169,7 +151,7 @@
         justify-content: center;
     }
 
-    @media (max-width: 60rem) {
+    @media (max-width: 768px) {
 
         .banner-container {
             height: 280px;

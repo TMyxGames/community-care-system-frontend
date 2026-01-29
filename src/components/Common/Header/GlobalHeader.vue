@@ -1,4 +1,3 @@
-<!-- 未来改动 -->
 <template>
     <div class="header-container" :class="{ 'is-transparent': isHomePage && !isScrolled }">
 
@@ -9,7 +8,7 @@
 
         <div class="left-area">
             <router-link 
-            v-for="option in options"
+            v-for="option in visibleOptions"
             :key="option.id"
             :to="option.path"
             custom 
@@ -33,6 +32,7 @@
 
 
 <script>
+    import { useAuthStore } from '@/stores/auth';
     import GlobalHeaderOption from '../Header/GlobalHeaderOption.vue'
     import GlobalHeaderUser from '../Header/GlobalHeaderUser.vue'
 
@@ -42,8 +42,9 @@
             GlobalHeaderOption,
             GlobalHeaderUser,
         },
-        props: {
-
+        setup() {
+            const authStore = useAuthStore();
+            return { authStore };
         },
         data() {
             return {
@@ -55,7 +56,8 @@
                     {id:3, name: "健康档案", path: '/PageHealthData'},
                     {id:4, name: "安全监控", path: '/PageSecurity'},
                     {id:5, name: "社区服务", path: '/PageService'},
-                    {id:5, name: "后台测试", path: '/ManageUser'},
+                    {id:6, name: "接单中心", path: '', role: [2]},
+                    {id:7, name: "后台测试", path: '/ManageUser', role: [1]},
                 ]
             }
         },
@@ -63,6 +65,17 @@
             '$route': {
                 handler: 'checkRoute',
                 immediate: true,
+            }
+        },
+        computed: {
+            visibleOptions() {
+                const activeRole = Number(this.authStore.activeRole);
+
+                return this.options.filter(option => {
+                    if (!option.role) return true;
+                    return option.role.includes(activeRole);
+                    
+                });
             }
         },
         mounted() {

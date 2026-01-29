@@ -1,23 +1,33 @@
 <template>
     <div class="healthData-container">
-        <div class="choose_bar"> 
-            <img class="option" :src="$getFileUrl(userInfo.avatarUrl) || defaultAvatar " alt="用户头像"
-                @click="handleUserChange(authStore.userInfo?.id)"
-            />
+        <glass-layer class="choose_bar thin">
+            <div class="option">
+                <img class="avatar" 
+                    :src="$getFileUrl(userInfo.avatarUrl) || defaultAvatar " 
+                    alt="用户头像"
+                    @click="handleUserChange(authStore.userInfo?.id)"
+                />
+                <label class="name">{{ authStore.userInfo.username }}</label>
+            </div>
 
-            <img class="option" :src="$getFileUrl(option.avatarUrl) || defaultAvatar " alt="用户头像"
+            <div class="option" 
                 v-for="option in healthStore.boundList"
                 :key="option.id"
-                @click="handleUserChange(option.id)"
-            />
-            
+            >
+                <img class="avatar" 
+                    :src="$getFileUrl(option.avatarUrl) || defaultAvatar " 
+                    alt="用户头像"
+                    
+                    @click="handleUserChange(option.id)"
+                />
+                <label class="name">{{ option.username }}</label>
+            </div>
             <button class="add_option" @click="goToBind">
 
             </button>
-        </div>
-        <div>
-            <HealthDataLayout></HealthDataLayout>
-        </div>
+        </glass-layer>
+
+        <HealthDataLayout></HealthDataLayout>
     </div>
 
 </template>
@@ -26,6 +36,8 @@
     import { useHealthStore } from '@/stores/health';
     import { useAuthStore } from '@/stores/auth';
     import { useRouter } from 'vue-router';
+    import MidOverlay from '../Common/MidOverlay.vue';
+    import GlassLayer from '../Common/GlassLayer.vue';
     import HealthDataLayout from './Common/HealthDataLayout.vue';
     import defaultAvatar from '@/assets/兔兔.jpg';
 
@@ -33,6 +45,8 @@
         name: 'PageHealthData',
         components: {
             HealthDataLayout,
+            GlassLayer,
+            MidOverlay,
         },
         setup() {
             const router = useRouter();
@@ -53,13 +67,6 @@
             userInfo() {
                 return this.authStore.userInfo || {};
             },
-            //判断头像
-            // avatarSrc() {
-            //     if (this.userInfo && this.userInfo.avatarUrl) {
-            //         return this.$getFileUrl(this.userInfo.avatarUrl);
-            //     }
-            //     return defaultAvatar;
-            // }
         },
         created() {
             // 将当前登录用户的id赋值给myId
@@ -89,37 +96,41 @@
     .healthData-container {
         width: 100%;
         height: 100%;
-        padding: clamp(0rem, 2rem);
-
-        /* background-color: #f8f6f6; */
-        
-        box-sizing: border-box;
 
         display: flex;
         flex-direction: column;
         align-items: center;
-        overflow: visible;
         gap: 2.5rem;
-
-        /* background-color: rgba(255, 255, 255, 25%); */
     }
 
     .choose_bar {
         width: 100%;
-        height: 5rem;
+        height: auto;
         max-width: 100rem;
 
         font-size: 28px;
         font-weight: bold;
         color: #132843;
 
-        background-color: rgba(255, 255, 255, 50%);
-        backdrop-filter: blur(10px);
-        /* box-shadow: 0 0 2rem rgba(0, 0, 0, 10%); */
-        border-radius: 1rem;
+        display: flex;
+        gap: 1rem;
     }
 
     .option {
+        width: auto;
+        height: auto;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .name {
+        font-size: 1rem;
+    }
+
+    .avatar {
         width: 5rem;
         height: 5rem;
         box-sizing: border-box;

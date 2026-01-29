@@ -26,7 +26,7 @@
         </div>
         <!-- 显示表单 -->
         <div class="display" v-else>
-            <AddressItem
+            <my-address-item
                 v-for="item in addressStore.addressList"
                 :key="item.id"
                 :addressInfo="item"
@@ -41,13 +41,13 @@
     import { useAuthStore } from '@/stores/auth';
     import { useAddressStore } from '@/stores/address';
     import SelectLocation from './Common/SelectLocation.vue';
-    import AddressItem from './Common/AddressItem.vue';
+    import MyAddressItem from './Common/MyAddressItem.vue';
 
     export default {
         name: 'PageHealthData',
         components: {
             SelectLocation,
-            AddressItem,
+            MyAddressItem,
         },
         setup() {
             const authStore = useAuthStore();

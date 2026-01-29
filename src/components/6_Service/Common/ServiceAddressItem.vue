@@ -1,5 +1,5 @@
 <template>
-    <div class="address-item-container">
+    <div class="service-address-item" @click="$emit('select', addressInfo)">
         <div class="info-header">
             <span class="contact">{{ addressInfo.contact }}</span>
             <span class="phone">{{ addressInfo.phone }}</span>
@@ -11,23 +11,16 @@
         </div>
         <div class="info-footer">
             <el-button 
-                v-if="addressInfo.isDefault !== 1" 
                 type="text" 
                 size="small" 
-                @click="$emit('set-default', addressInfo.id)"
-            >设为默认</el-button>
-            <el-button
-                type="text"
-                size="small"
-                @click="$emit('delete', addressInfo.id)"
-            >删除</el-button>
+            >选择该地址</el-button>
         </div>
     </div>
 </template>
 
 <script>
     export default {
-        name: 'AddressItem',
+        name: 'ServiceAddressItem',
         props: {
             addressInfo: {
                 type: Object,
@@ -46,7 +39,7 @@
 </script>
 
 <style scoped>
-    .address-item-container {
+    .service-address-item {
         width: 100%;
         height: 10rem;
 
@@ -55,6 +48,12 @@
         display: flex;
         flex-direction: column;
 
+        cursor: pointer
+
+    }
+
+    .service-address-item:hover {
+        transform: scale(1.05);
     }
 
     .contact {

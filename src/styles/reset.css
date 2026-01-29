@@ -1,18 +1,16 @@
-/* :root {
-  font-size: 16px;
-}
-
-@media (max-width: 1440px) {
-  :root {
-    font-size: 14px;
-  }
-} */
-
-/* 去除默认样式的内外边距 */
 body {
   margin: 0;
   padding: 0;
 
   font-family: "HarmonyOS Sans SC", "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+
+
+:root {
+  --normal-gap: clamp(1rem, 2vw, 2rem);
+  --thin-gap: clamp(1rem, 1.5vw, 1.5rem);
+
+  --mobile-gap: clamp(0.5rem, 1vw, 1rem);
 }

@@ -1,5 +1,3 @@
-<!-- 未来改动 -->
-<!-- 增加员工登录选项 -->
 <template>
     <div id="login-card">
         <h1>登 录</h1>
@@ -24,7 +22,11 @@
             />
         </div>
         <div class="form-row">
-            <el-checkbox v-model="LoginForm.isAdmin">管理员登录</el-checkbox>
+            <el-radio-group v-model="LoginForm.selectedRole">
+                <el-radio :label="0">用户</el-radio>
+                <el-radio :label="2">服务人员</el-radio>
+                <el-radio :label="1">管理员</el-radio>
+            </el-radio-group>
         </div>
         <div class="form-row">
             <el-button
@@ -66,7 +68,7 @@
                 LoginForm: {
                     email: '',
                     password: '',
-                    isAdmin: false,
+                    selectedRole: 0,
                 },
             }
         },
@@ -80,22 +82,22 @@
                     const res = await this.$http.post('/auth/login', {
                         email: this.LoginForm.email,
                         password: this.LoginForm.password,
-                        isAdmin: this.LoginForm.isAdmin,
+                        role: this.LoginForm.selectedRole,
                     });
                     
                     const user = res.data;
+                    const activeRole = this.LoginForm.selectedRole;
 
-                    if (this.LoginForm.isAdmin) {
-                        if (!user.isAdmin) {
-                            this.$message.error('该账号无管理员权限');
-                            return;
-                        }
-                        this.authStore.login(user);
+                    this.authStore.login(user, activeRole);
+
+                    if (activeRole === 1) {
                         this.$message.success('管理员登录成功');
                         this.$router.push('/ManageUser');
+                    } else if (activeRole === 2) {
+                        this.$message.success('服务人员登录成功');
+                        this.$router.push('/PageHome');
                     } else {
-                        this.authStore.login(user);
-                        this.$message.success('登录成功');
+                        this.$message.success('用户登录成功');
                         this.$router.push('/PageHome');
                     }
                 } catch (error) { 
