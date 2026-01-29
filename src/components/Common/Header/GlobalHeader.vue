@@ -56,7 +56,7 @@
                     {id:3, name: "健康档案", path: '/PageHealthData'},
                     {id:4, name: "安全监控", path: '/PageSecurity'},
                     {id:5, name: "社区服务", path: '/PageService'},
-                    {id:6, name: "接单中心", path: '', role: [2]},
+                    {id:6, name: "接单中心", path: '/PageStaff', role: [2]},
                     {id:7, name: "后台测试", path: '/ManageUser', role: [1]},
                 ]
             }

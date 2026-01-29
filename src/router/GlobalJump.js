@@ -13,6 +13,8 @@ import PageService from '@/components/6_Service/PageService.vue'
 import PageMessage from '@/components/9_Message/PageMessage.vue'
 import PageMy from '@/components/8_My/PageMy.vue'
 import Bind from '@/components/5_HealthData/Bind.vue'
+import PageStaff from '@/components/10_Staff/PageStaff.vue'
+import PageServiceArea from '@/components/10_Staff/PageServiceArea.vue'
 
 import ManageUser from '@/components/3_Backend/ManageUser.vue'
 import ManageCarousel from '@/components/3_Backend/ManageCarousel.vue'
@@ -36,6 +38,8 @@ const routes = [
       { path: '/PageSecurity', component: PageSecurity },
       { path: '/PageService', component: PageService },
       { path: '/PageMessage', component: PageMessage },
+      { path: '/PageStaff', component: PageStaff },
+      { path: '/PageServiceArea', component: PageServiceArea },
       { path: '/PageMy', component: PageMy, redirect: "/MyInfo",
         children: [
           { path: '/MyInfo', component: MyInfo },

@@ -1,5 +1,5 @@
 <template>
-    <glass-layer class="layout-container"> 
+    <glass-layer class="service-layout-container"> 
         <div class="grid-item" v-for="item in dataList" :key="item.id">
             <service-card :serviceData="item"></service-card>
         </div>
@@ -32,7 +32,7 @@
 </script>
 
 <style scoped>
-    .layout-container {
+    .service-layout-container {
         width: 100%;
         height: 100%;
         max-width: 100rem;
