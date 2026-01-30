@@ -1,7 +1,7 @@
 <template>
     <card-layer class="service-area-card">
-        <label>当前正在使用</label>
-        <el-button @click="toManageArea">管理服务范围</el-button>
+        <label>当前服务区域：</label>
+
     </card-layer>
 </template>
 
@@ -25,9 +25,7 @@
             }
         },
         methods: {
-            toManageArea() {
-                this.$router.push('/PageServiceArea')
-            }
+
         },
     }
 </script>

@@ -7,11 +7,6 @@
             </el-aside>
             <!-- 主体区域 -->
             <el-container>
-
-                <el-header class="header">
-                    <h1 class="title">当前页面标题</h1>
-                </el-header>
-
                 <el-main>
                     <router-view></router-view>
                 </el-main>
@@ -22,11 +17,15 @@
 </template>
 
 <script>
+    import GlobalBackground from '../Common/GlobalBackground.vue';
+    import MidOverlay from '../Common/MidOverlay.vue';
     import BackendSideBar from '../3_Backend/Common/BackendSideBar.vue';
 
     export default {
         components: {
-            BackendSideBar
+            GlobalBackground,
+            MidOverlay,
+            BackendSideBar,
         },
         data: function() {
             return {

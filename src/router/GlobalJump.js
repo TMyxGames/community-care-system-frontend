@@ -20,6 +20,8 @@ import ManageUser from '@/components/3_Backend/ManageUser.vue'
 import ManageCarousel from '@/components/3_Backend/ManageCarousel.vue'
 import ManageService from '@/components/3_Backend/ManageService.vue'
 import ManageContentList from '@/components/3_Backend/ManageContentList.vue'
+import ManageServiceArea from '@/components/3_Backend/ManageServiceArea.vue'
+import ManageStaff from '@/components/3_Backend/ManageStaff.vue'
 
 import MyInfo from '@/components/8_My/MyInfo.vue'
 import MyAddress from '@/components/8_My/MyAddress.vue'
@@ -68,6 +70,8 @@ const routes = [
       { path: '/ManageCarousel', component: ManageCarousel },
       { path: '/ManageContentList', component: ManageContentList },
       { path: '/ManageService', component: ManageService },
+      { path: '/ManageServiceArea', component: ManageServiceArea },
+      { path: '/ManageStaff', component: ManageStaff },
     ]
   },
 ]

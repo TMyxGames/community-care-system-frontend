@@ -28,8 +28,10 @@
                 options: [
                     {id:1, name: "用户管理", path: '/ManageUser'},
                     {id:2, name: "轮播图管理", path: '/ManageCarousel'},
-                    {id:3, name: "服务管理", path: '/ManageService'},
-                    {id:4, name: "内容列表管理", path: '/ManageContentList'},
+                    {id:3, name: "内容列表管理", path: '/ManageContentList'},
+                    {id:4, name: "服务项目管理", path: '/ManageService'},
+                    {id:5, name: "服务区域管理", path: '/ManageServiceArea'},
+                    {id:6, name: "服务人员管理", path: '/ManageStaff'},
                 ]
             }
         },

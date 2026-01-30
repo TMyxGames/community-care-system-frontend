@@ -5,44 +5,109 @@
 </template>
 
 <script setup>
-    import { onMounted, onUnmounted, defineExpose } from "vue";
+    import { onMounted, onUnmounted, defineExpose, ref } from "vue";
     import AMapLoader from "@amap/amap-jsapi-loader";
 
     let map = null;
+    let polygons = []; // 地图上的区域对象
     let mouseTool = null; // 鼠标工具
-    let currentPloygon = null;
+    let currentPolygon = null; // 当前绘制的图形
 
     const getMapInstance = () => map;
 
+    // 绘制图形
     const drawPolygon = () => { 
         if (!mouseTool) {
             mouseTool = new AMap.MouseTool(map);
         }
         mouseTool.polygon({
-            strokeColor: "#FF33FF",
-            strokeOpacity: 0.2,
-            strokeWeight: 6,
-            fillColor: "#1791fc",
-            fillOpacity: 0.35,
+            strokeColor: "#fc5c9c",
+            strokeOpacity: 0.25,
+            strokeWeight: 5,
+            fillColor: "#fccde2",
+            fillOpacity: 0.25,
         });
         mouseTool.on("draw", (e) => { 
-            currentPloygon = e.obj; // 获取路径坐标数组
+            currentPolygon = e.obj; // 获取路径坐标数组
+            mouseTool.close(false); // 关闭鼠标工具
+            console.log("绘制完成");
         });
     };
 
-    const finishDrawing = () => { 
+    // 获取绘制的图形
+    const getPath = () => { 
         if (mouseTool) {
             mouseTool.close(false);
         }
-        if (currentPloygon) { 
-            return currentPloygon.getPath();
+        if (currentPolygon) { 
+            return currentPolygon.getPath();
         }
         return null;
     };
 
-    const clearMap = () => { 
-        if (mouseTool) mouseTool.close(true); // 清除绘制
-        currentPloygon = null;
+    // 清除当前绘制
+    const clearDraw = () => { 
+        if (mouseTool) {
+            mouseTool.close(true); // 清除当前绘制状态
+        }
+        if (currentPolygon) {
+            map.remove(currentPolygon); // 清除绘制完成的图形
+            currentPolygon = null;
+        }
+    };
+
+    // 清空地图
+    const clearAll = () => { 
+        clearDraw(); // 清除绘制状态
+        if (map) {
+            map.clearMap(); // 清空所有图形
+        }
+    };
+
+    // 关闭鼠标工具（取消绘制）
+    const closeTool = () => { 
+        if (mouseTool) {
+            mouseTool.close(true); // 清除绘制状态
+        }
+    };
+
+    // 显示已有的区域
+    const existingAreaDisplay = (areaList) => { 
+        if (!map) return;
+        map.clearMap();
+        polygons = [];
+
+        areaList.forEach((item) => { 
+            const path = JSON.parse(item.scopePath);
+            const polygon = new window.AMap.Polygon({
+                path: path,
+                strokeColor: "#FF33FF",
+                strokeOpacity: 0.25,
+                strokeWeight: 5,
+                fillColor: "#1791fc",
+                fillOpacity: 0.25,
+                extData: item,
+            });
+            map.add(polygon);
+            polygons.push(polygon); // 添加到数组中
+        });
+        map.setFitView();
+    };
+
+    // 聚焦(已弃用)
+    // const focusOnArea = (center) => { 
+    //     if (map && center.lng && center.lat) {
+    //         map.setCenter([center.lng, center.lat]);
+    //         map.setZoom(14);
+    //     }
+    // };
+
+    // 聚焦
+    const focusOnArea = (areaId) => {
+        const target = polygons.find(p => p.getExtData().id === areaId);
+        if (target && map) {
+            map.setFitView(target, false, [60, 60, 60, 60], 18); 
+        }
     };
 
     onMounted(() => {
@@ -68,9 +133,14 @@
     });
 
     defineExpose({
+        getMapInstance,
         drawPolygon,
-        finishDrawing,
-        clearMap,
+        getPath,
+        clearAll,
+        clearDraw,
+        closeTool,
+        existingAreaDisplay,
+        focusOnArea,
     });
 
     onUnmounted(() => {

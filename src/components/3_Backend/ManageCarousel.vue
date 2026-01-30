@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="manage-carousel-container">
         <el-row>
             <el-col :span="24">
                 <span class="title">首页轮播管理</span>
@@ -183,7 +183,7 @@
 </script>
 
 <style scoped>
-    .container {
+    .manage-carousel-container {
         width: 100%;
         height: 100%;
         padding: 1rem;
