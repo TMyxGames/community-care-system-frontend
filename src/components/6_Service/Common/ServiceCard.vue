@@ -45,14 +45,6 @@
                 type: Object,
                 requiered: true,
             }
-            // title: {
-            //     type: String,
-            //     default: "标题"
-            // },
-            // content: {
-            //     type: String,
-            //     default: "内容"
-            // }
         },
         methods: {
             handleClick() {

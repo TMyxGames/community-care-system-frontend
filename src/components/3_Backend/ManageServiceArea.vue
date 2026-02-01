@@ -60,7 +60,7 @@
             <service-area-item
                 v-for="area in areaStore.areaList"
                 :key="area.id"
-                :area-info="area"
+                :areaInfo="area"
                 @click="focusOnArea(area)"
                 @delete="confirmDelete"
             />
@@ -109,7 +109,7 @@
             // 显示所有区域
             async loadAllAreas() { 
                 try {
-                    const data = await this.areaStore.getAllAreas();
+                    const data = await this.areaStore.getAllServiceAreas();
                     if (this.$refs.mapRef && data) {
                         this.$refs.mapRef.clearAll();
                         this.$refs.mapRef.existingAreaDisplay(data);
@@ -143,7 +143,7 @@
             },
             // 删除区域
             async deleteArea(id) { 
-                const success = await this.areaStore.removeArea(id);
+                const success = await this.areaStore.removeServiceArea(id);
                 if (success) {
                     this.loadAllAreas(); // 重新加载
                     this.$message.success("删除成功");
@@ -196,7 +196,7 @@
                     centerLat: this.areaForm.centerLat
                 };
                 try {
-                    const res = await this.$http.post('/area/add', payload);
+                    const res = await this.$http.post('/area/service/add', payload);
                     this.$message.success("保存成功");
                     this.dialogVisible = false;
                     this.isDrawing = false;

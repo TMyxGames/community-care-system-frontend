@@ -12,7 +12,7 @@
         <template
             v-else-if="isContent === true"
         >
-            <ServiceLayout :dataList="serviceStore.services"></ServiceLayout>
+            <ServiceLayout :dataList="serviceStore.serviceList"></ServiceLayout>
         </template>
 
         <!-- 没有服务时显示暂无服务 -->

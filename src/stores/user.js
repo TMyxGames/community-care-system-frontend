@@ -20,14 +20,12 @@ export const useUserStore = defineStore('user', {
         this.loading = false;
       }
     },
-    // 更新人员的所属区域
-    async assignArea(userId, areaId) {
+    // 更新人员的配置
+    async updateStaffConfig(payload) {
       try {
-        await axios.put(`/user/staff/assign-area`, { userId, areaId });
-        // 同步更新本地状态，避免重新请求后端
-        const user = this.allStaff.find(u => u.id === userId);
-        if (user) user.serviceAreaId = areaId;
-        return true;
+        const res = await axios.put(`/user/staff/config`, payload);
+
+        return res.status === 200;
       } catch (error) {
         return false;
       }
