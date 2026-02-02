@@ -20,6 +20,7 @@
                 :key="staff.id"
                 :staffInfo="staff"
                 @operation="handleOp"
+                @click="$refs.mapRef.focusOnStaff(staff)"
             />    
         </div>
         <!-- 操作对话框 -->

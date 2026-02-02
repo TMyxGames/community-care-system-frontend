@@ -29,6 +29,38 @@ export const useUserStore = defineStore('user', {
       } catch (error) {
         return false;
       }
-    }
+    },
+
+    initLocationSocket() { 
+      const ws = new WebSocket('ws://localhost:8081/ws/location');
+
+      ws.onmessage = (event) => { 
+        const {type, data} = JSON.parse(event.data);
+        
+        if (type === 'staff') {
+          this.allStaff = this.allStaff.map(s => ({ 
+            ...s,
+            ...(data[s.id] || {})
+          }));
+        } else if (type === 'user') {
+          this.userList = this.userList.map(u => ({ 
+            ...u,
+            ...(data[u.id] || {})
+          }));
+        }
+      };
+
+      ws.onclose = () => { 
+        console.warn('WebSocket已关闭，5秒后重连...');
+        setTimeout(() => { 
+          this.initLocationSocket();
+        }, 5000);
+      };
+    },
+
+
+
+
+
   }
 });

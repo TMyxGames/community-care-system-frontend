@@ -29,6 +29,7 @@ import MyOrder from '@/components/8_My/MyOrder.vue'
 
 import ServiceDetail from '@/components/6_Service/Common/ServiceDetail.vue'
 import ServiceOrder from '@/components/6_Service/ServiceOrder.vue'
+import MessagePlaceholder from '@/components/9_Message/Common/MessagePlaceholder.vue'
 
 
 const routes = [
@@ -39,7 +40,18 @@ const routes = [
       { path: '/Bind', component: Bind },
       { path: '/PageSecurity', component: PageSecurity },
       { path: '/PageService', component: PageService },
-      { path: '/PageMessage', component: PageMessage },
+      { path: '/PageMessage', component:PageMessage,
+        children: [
+          { path: '', name: 'MessagePlaceholder',
+            component: () => import('@/components/9_Message/Common/MessagePlaceholder.vue') 
+          },
+          { path: ':type', name: 'MessageDetail', prop: true,
+            component: () => import('@/components/9_Message/MessageDetail.vue')
+          },
+        ]
+      },
+
+
       { path: '/PageStaff', component: PageStaff },
       { path: '/PageServiceArea', component: PageServiceArea },
       { path: '/PageMy', component: PageMy, redirect: "/MyInfo",
