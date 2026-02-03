@@ -45,7 +45,7 @@
 
         display: grid;
         grid-template-columns: clamp(10rem, 20vw, 20rem) 1fr;
-        gap: clamp(1rem, 2vw, 2rem);
+        gap: var(--thin-gap);
     }
 
     .head {
