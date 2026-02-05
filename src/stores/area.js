@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import request from '@/utils/request';
 
 export const useAreaStore = defineStore('area', {
   state: () => ({
@@ -11,7 +11,7 @@ export const useAreaStore = defineStore('area', {
     async getAllServiceAreas() {
         this.loading = true;
         try {
-            const res = await axios.get('/area/service/all');
+            const res = await request.get('/area/service/all');
             this.areaList = res.data;
             return res.data;
         } catch (error) {
@@ -23,7 +23,7 @@ export const useAreaStore = defineStore('area', {
     // 删除服务区域
     async removeServiceArea(id) {
         try {
-            const res = await axios.delete(`/area/service/delete/${id}`);
+            const res = await request.delete(`/area/service/delete/${id}`);
             if(res.status === 200) {
                 this.areaList = this.areaList.filter(area => area.id !== id);
                 return true;
@@ -38,7 +38,7 @@ export const useAreaStore = defineStore('area', {
     async getAllSafeAreas() {
         this.loading = true;
         try {
-            const res = await axios.get('/area/safe/all');
+            const res = await request.get('/area/safe/all');
             this.areaList = res.data;
             return res.data;
         } catch (error) {
@@ -50,7 +50,7 @@ export const useAreaStore = defineStore('area', {
     // 删除安全区域
     async removeSafeArea(id) {
         try {
-            const res = await axios.delete(`/area/safe/delete/${id}`);
+            const res = await request.delete(`/area/safe/delete/${id}`);
             if(res.status === 200) {
                 this.areaList = this.areaList.filter(area => area.id !== id);
                 return true;

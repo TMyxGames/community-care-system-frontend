@@ -19,12 +19,18 @@
 
 <script> 
     import { useRouter } from 'vue-router'
+    import { useMessageStore } from '@/stores/message';
     import CardLayer from '@/components/Common/CardLayer.vue';
 
     export default {
         name: 'MySideBar',
         components: {
             CardLayer,
+        },
+        setup() {
+            const router = useRouter();
+            const messageStore = useMessageStore();
+            return { router, messageStore };
         },
         data() {
             return {
@@ -34,10 +40,6 @@
                     {id:3, name: "安全提醒", path: '/PageMessage/2'},
                 ]
             }
-        },
-        setup() {
-            const router = useRouter()
-            return { router }
         },
         methods: {
 

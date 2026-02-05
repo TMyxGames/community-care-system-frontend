@@ -4,7 +4,8 @@ import { useHealthStore } from './health';
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     // 从 localStorage 读取，确保刷新页面不丢失登录态
-    userInfo: JSON.parse(localStorage.getItem('userInfo')) || null, // 登录的用户信息
+    token: localStorage.getItem('token') || null,
+    userInfo: JSON.parse(localStorage.getItem('userInfo')) || null,
     activeRole: localStorage.getItem('activeRole') !== null
                 ? Number(localStorage.getItem('activeRole'))
                 : 0, // 用户使用的登录身份
@@ -12,14 +13,14 @@ export const useAuthStore = defineStore('auth', {
   }),
   actions: {
     // 登录成功后的持久化
-    login(user, selectedRole) {
+    login(user, selectedRole, token) {
       this.userInfo = user;
-      // this.activeRole = Number(selectedRole);
+      this.token = token;
 
       const roleToStore = (selectedRole !== undefined && selectedRole !== null) ? Number(selectedRole) : 0;
-
       this.activeRole = roleToStore;
 
+      localStorage.setItem('token', token);
       localStorage.setItem('userInfo', JSON.stringify(user));
       localStorage.setItem('activeRole', this.activeRole);
       this.isLoggedIn = true;
@@ -27,8 +28,11 @@ export const useAuthStore = defineStore('auth', {
     // 登出清理
     logout() {
       this.userInfo = null;
+      this.token = null;
       this.activeRole = 0;
       this.isLoggedIn = false;
+      
+      localStorage.removeItem('token');
       localStorage.removeItem('userInfo');
       localStorage.removeItem('activeRole');
 

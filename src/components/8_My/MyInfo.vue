@@ -92,8 +92,9 @@
             async saveEdit() { 
                 try {
                     const res = await this.$http.post('/auth/upload/info', this.editForm);
-                    if (res.status === 200) {
-                        this.authStore.login(res.data);
+                    const result = res.data;
+                    if (res.code === 200) {
+                        this.authStore.login(result.data, this.authStore.activeRole, this.authStore.token);
                         this.isEditing = false;
                         this.$message.success("资料更新成功");
                     }

@@ -108,6 +108,7 @@
             this.defaultAddress();
         },
         methods: {
+            // 默认选中地址
             defaultAddress() {
                 if (this.addressStore.addressList.length > 0) {
                     const defaultAddress = this.addressStore.addressList.find(item => item.isDefault === 1) 
@@ -115,11 +116,13 @@
                     this.handleSelectAddress(defaultAddress);
                 }
             },
+            // 选择地址
             handleSelectAddress(addr) {
                 this.selectedAddress = addr;
                 this.orderForm.addressId = addr.id;
                 this.addressDialogVisible = false;
             },
+            // 提交订单
             async submitOrder() {
                 if (!this.selectedAddress) {
                     this.$message.error('请选择服务地址');
@@ -145,8 +148,7 @@
                     };
 
                     const res = await this.$http.post('/order/create', orderData);
-
-                    if (res.status === 200) {
+                    if (res.code === 200) {
                         this.$message.success('预约成功');
                         this.$router.push('/MyOrder');
                     }

@@ -147,16 +147,16 @@
 
                 this.promptMessage = '';
                 try {
-                    const response = await this.$http.post('/auth/register', {
+                    const res = await this.$http.post('/auth/register', {
                         username: username,
                         password: password1,
                         email: email,
                         isAdmin: isAdmin,
                         captcha: captcha,
                     });
-                    if (response.status === 200) {
+                    if (res.code === 200) {
                         this.promptMessage = '注册成功!';
-                        // this.$router.push('/PageLogin');
+                        this.$router.push('/PageLogin');
                     }
                 } catch (error) {
                     console.log("请求出错：", error);
@@ -199,7 +199,7 @@
                 this.isCodeSending = true;
                 try {
                     const res = await this.$http.post(`/auth/sendCaptcha?email=${this.regiForm.email}`);
-                    if (res.status === 200) {
+                    if (res.code === 200) {
                         this.promptMessage = '';
                         this.$message.success('验证码已发送');
 

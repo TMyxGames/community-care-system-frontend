@@ -1,5 +1,5 @@
 <template>
-    <div class="healthData-container">
+    <div class="healthData-container" v-if="authStore.isLoggedIn">
         <glass-layer class="choose_bar thin">
             <!-- 自己的选项 -->
             <div class="option">
@@ -50,6 +50,9 @@
         </glass-layer>
 
         <HealthDataLayout></HealthDataLayout>
+    </div>
+    <div class="healthData-container" v-else>
+        <span>请先登录</span>
     </div>
 
 </template>

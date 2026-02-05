@@ -1,10 +1,9 @@
 <template>
-    <div class="message-detail"> 
-        <div v-for="msg in messageList"
-            :key="msg.id"
-            class="message-wrapper"
-        >
+    <div class="message-detail">
+        <div class="mid-display-area">
             <component
+                v-for="msg in messageList"
+                :key="msg.id"
                 :is="currentComponent"
                 :data="msg"
                 @refresh="getMessageList"
@@ -17,32 +16,70 @@
 <script setup>
     import { ref, watch, computed, onMounted } from 'vue';
     import { useRoute } from 'vue-router';
+    import { useMessageStore } from '@/stores/message';
     import axios from 'axios';
     import SystemMsgItem from './Common/SystemMsgItem.vue';
     import BindRequestItem from './Common/BindRequestItem.vue';
     import SecurityMsgItem from './Common/SecurityMsgItem.vue';
 
     const route = useRoute();
-    const messageList = ref([]);
+    const messageStore = useMessageStore();
 
-    const props = defineProps(['type']);
-
+    // 组件映射表
+    const componentMap = {
+        '0': SystemMsgItem,
+        '1': BindRequestItem,
+        '2': SecurityMsgItem,
+    };
+    // 根据路由参数计算当前组件
     const currentComponent = computed(() => {
-        if (props.type === '0') return SystemMsgItem;
-        if (props.type === '1') return BindRequestItem;
-        if (props.type === '2') return SecurityMsgItem;
-        return null;
+        const typeId = parseInt(route.params.type);
+        return componentMap[typeId] || SystemMsgItem;
     });
-    const getMessageList = async () => {
-        const res = await axios.get(`/message/all/${route.params.type}`);
-        messageList.value = await res.data.data;
+    // 当前消息列表
+    const messageList = computed(() => {
+        const typeId = parseInt(route.params.type);
+        return messageStore.messageList[typeId] || [];
+    });
+    // 获取消息列表
+    const getMessages = async () => { 
+        const typeId = parseInt(route.params.type);
+        if (isNaN(typeId)) return;
+
+        await messageStore.getMessageListByType(typeId);
     };
 
-    watch(() => route.params.type, () => {
-        getMessageList();
+    watch(() => route.params.type, (newType) => {
+        if (newType !== undefined) {
+            getMessages();
+        }
+    }, { immediate: true });
+
+    onMounted(() => { 
+        getMessages();
     });
 
-    onMounted(getMessageList);
+    // return { route, messageStore };
+
+
+
+
+
+    // const route = useRoute();
+    // const messageList = ref([]);
+
+    // const props = defineProps(['type']);
+
+    // const getMessageList = async () => {
+    //     const res = await axios.get(`/message/all/${route.params.type}`);
+    //     messageList.value = await res.data.data;
+    // };
+
+    // watch(() => route.params.type, () => {
+    //     getMessageList();
+    // });
+
+    // onMounted(getMessageList);
 
 </script>
 
@@ -50,5 +87,15 @@
     .message-detail {
         width: 100%;
         height: 100%;
+    }
+
+    .mid-display-area {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        overflow-y: auto;
     }
 </style>

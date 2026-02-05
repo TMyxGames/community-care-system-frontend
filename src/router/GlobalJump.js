@@ -51,7 +51,6 @@ const routes = [
         ]
       },
 
-
       { path: '/PageStaff', component: PageStaff },
       { path: '/PageServiceArea', component: PageServiceArea },
       { path: '/PageMy', component: PageMy, redirect: "/MyInfo",

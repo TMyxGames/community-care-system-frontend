@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { useAuthStore } from "./auth";
-import axios from "axios";
+import request from "@/utils/request";
 
 export const useAddressStore = defineStore("address", {
   state: () => ({
@@ -17,10 +17,11 @@ export const useAddressStore = defineStore("address", {
       this.loading = true;
 
       try {
-        const res = await axios.get('/address/get', {
+        const res = await request.get('/address/get', {
             params: { userId }
         });
-        this.addressList = res.data;
+        const result = res.data
+        this.addressList = result.data;
       } catch (error) {
         console.log("地址加载失败：", error);
       } finally {
@@ -30,7 +31,7 @@ export const useAddressStore = defineStore("address", {
     // 删除地址
     async deleteAddress(addressId) {
       try {
-        const res = await axios.delete(`/address/delete/${addressId}`);
+        const res = await request.delete(`/address/delete/${addressId}`);
         if (res.data.code === '删除成功') {
             this.addressList = this.addressList.filter(item => item.id !== addressId);
             this.$message.success('地址删除成功');
@@ -45,7 +46,7 @@ export const useAddressStore = defineStore("address", {
         const userId = authStore.userInfo?.id;
 
         try {
-            const res = await axios.put('/address/setDefault', null, {
+            const res = await request.put('/address/setDefault', null, {
                 params: { id: addressId, userId: userId }
             });
             if (res.data === '设置成功') {

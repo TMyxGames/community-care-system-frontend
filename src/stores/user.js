@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import request from '@/utils/request';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -12,7 +12,7 @@ export const useUserStore = defineStore('user', {
     async getStaffList() {
       this.loading = true;
       try {
-        const res = await axios.get('/user/staff/all');
+        const res = await request.get('/user/staff/all');
         this.allStaff = res.data;
       } catch (error) {
         console.error("获取服务人员列表失败", error);
@@ -23,7 +23,7 @@ export const useUserStore = defineStore('user', {
     // 更新人员的配置
     async updateStaffConfig(payload) {
       try {
-        const res = await axios.put(`/user/staff/config`, payload);
+        const res = await request.put(`/user/staff/config`, payload);
 
         return res.status === 200;
       } catch (error) {

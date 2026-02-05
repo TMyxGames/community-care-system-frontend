@@ -95,7 +95,7 @@
         methods: {
             async getCarousels() {
                 const res = await this.$http.get('/carousel/all');
-                this.carouselList = res.data;
+                this.carouselList = res;
             }
         },
     }

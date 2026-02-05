@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import axios from 'axios';
+import request from '@/utils/request';
 
 export const useServiceStore = defineStore('service', {
   state: () => ({
@@ -11,7 +11,7 @@ export const useServiceStore = defineStore('service', {
     async getAllServices() {
       this.loading = true;
       try {
-        const res = await axios.get('/service/all');
+        const res = await request.get('/service/all');
         this.serviceList = res.data;
       } catch (error) {
         console.error("数据加载失败", error);
@@ -22,7 +22,7 @@ export const useServiceStore = defineStore('service', {
     // 获取服务详情
     async getServiceById(id) {
       try {
-        const res = await axios.get(`/service/${id}`);
+        const res = await request.get(`/service/${id}`);
         return res.data;
       } catch (error) {
         console.error("数据加载失败", error);

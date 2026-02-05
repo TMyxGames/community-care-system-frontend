@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { useAuthStore } from "./auth";
-import axios from "axios";
+import request from "@/utils/request";
 
 export const useOrderStore = defineStore("order", {
   state: () => ({
@@ -15,10 +15,11 @@ export const useOrderStore = defineStore("order", {
 
       this.loading = true;
       try {
-        const res = await axios.get('/order/get', {
+        const res = await request.get('/order/get', {
             params: { userId }
         });
-        this.orderList = res.data;
+        const result = res.data;
+        this.orderList = result.data;
       } catch (error) {
         console.log("订单加载失败：", error);
       } finally {

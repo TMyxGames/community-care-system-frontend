@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { useAuthStore } from './auth';
-import axios from 'axios';
+import request from '@/utils/request';
 
 export const useHealthStore = defineStore('health', {
   state: () => ({
@@ -12,10 +12,10 @@ export const useHealthStore = defineStore('health', {
   actions: {
     // 获取绑定列表
     async getBoundList(userId) { 
-      const res = await axios.get('/auth/bindings', {
+      const res = await request.get('/auth/bindings', {
         params: { userId: userId }
       });
-      this.boundList = res.data;
+      this.boundList = res.data.data;
 
       // 设置当前选择的用户为用户自己
       this.setUserId(userId);
@@ -38,7 +38,7 @@ export const useHealthStore = defineStore('health', {
 
       this.loading = true;
       try {
-        const res = await axios.get('/health/getData', {
+        const res = await request.get('/health/getData', {
           params: { userId: this.currentSelection }
         });
           

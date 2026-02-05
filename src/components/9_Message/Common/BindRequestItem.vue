@@ -3,9 +3,9 @@
         <div class="info-area">
             <!-- 用户信息 -->
             <div class="info-row">
-                <span class="user-username">@{{ displayUser.username }}</span>
-                <span class="user-real-name">{{ displayUser.realName }}</span>
-                <span class="user-id">( id:{{ displayUser.id }} )</span>
+                <span class="user-username">@{{ msg.username }}</span>
+                <span class="user-real-name">{{ msg.realName }}</span>
+                <span class="user-id">( id:{{ msg.id }} )</span>
             </div>
             <!-- 提示文本 -->
             <div class="info-row">
@@ -19,13 +19,13 @@
                 class="operation-btn"
                 type="success"
                 size="small"
-                @click="handleAction(1)"
+                @click="$emit('accept', msg.id)"
             >同意</el-button>
             <el-button
                 class="operation-btn"
                 type="danger"
                 size="small"
-                @click="handleAction(2)"
+                @click="$emit('refuse', msg.id)"
             >拒绝</el-button>
         </div>
     </div>
@@ -34,11 +34,15 @@
 <script setup>
     import { computed } from 'vue';
     import { useAuthStore } from '@/stores/auth';
-    import axios from 'axios';
+    import request from '@/utils/request';
     import { ElMessage } from 'element-plus';
 
     const props = defineProps({
-        data: Object, // 后端传来的Message对象
+        // 后端传来的Message对象
+        msg: {
+            type: Object, 
+            required: true
+        },
     });
 
     const emit = defineEmits(['refresh']);
@@ -46,15 +50,15 @@
     const currentUserId = authStore.userInfo.id;
 
     // 判断当前用户是否是发送者
-    const isSender = computed(() => props.data.fromId === currentUserId);
+    const isSender = computed(() => props.msg.fromId === currentUserId);
 
     const displayUser = computed(() => {
-        return isSender.value ? props.data.toUser : props.data.fromUser;
+        return isSender.value ? props.msg.toUser : props.msg.fromUser;
     });
 
     const statusText = computed(() => {
-        if (props.data.status === 1) return '已同意';
-        if (props.data.status === 2) return '已拒绝';
+        if (props.msg.status === 1) return '已同意';
+        if (props.msg.status === 2) return '已拒绝';
         return '待处理';
     });
 
@@ -67,7 +71,7 @@
     const handleAction = async (newStatus) => {
         try {
             const res = await axios.put('/message/bind/handle', {
-                id: props.data.id,
+                id: props.msg.id,
                 status: newStatus,
             });
             if (res.data.code === 200) {
