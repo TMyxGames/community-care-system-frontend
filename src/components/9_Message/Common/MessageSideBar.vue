@@ -6,6 +6,7 @@
             :to="`/PageMessage/${session.id}?type=${session.type}`"
             custom
             v-slot="{ isActive, navigate }"
+            @click="handleSessionClick(session)"
         >
             <div 
                 :class="['sidebar-option', { 'is-active': isActive }]"
@@ -37,8 +38,14 @@
         return typeMap[session.type] || '未知会话';
     }
 
+    const handleSessionClick = (session) => {
+        messageStore.currentSessionId = session.id;
+        console.log("当前会话为：", messageStore.currentSessionId);
+    }
+
     const handleNavigate = (navigate) => {
         navigate();
+        // messageStore.currentSessionId = ;
     }
 
     onMounted(() => {

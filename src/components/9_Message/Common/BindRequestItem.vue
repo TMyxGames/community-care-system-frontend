@@ -4,9 +4,11 @@
         <div class="info-area">
             <!-- 用户信息 -->
             <div class="info-row">
-                <img class="user-avatar" :src="$getFileUrl(msg.otherUser.avatarUrl) || defaultAvatar" alt="logo"/>
+                <img class="user-avatar"
+                    :src="msg.otherUser?.avatarUrl ? $getFileUrl(msg.otherUser.avatarUrl) : defaultAvatar" alt="logo"
+                />
                 <span class="user-username" v-if="msg.otherUser">@{{ msg.otherUser.username }}</span>
-                <span class="user-real-name">{{ msg.otherUser.realName }}</span>
+                <span class="user-real-name">{{ msg.otherUser.realName || '加载中...' }}</span>
                 <span class="user-id">( id:{{ msg.otherUser.id }} )</span>
             </div>
             <!-- 提示文本 -->
@@ -62,7 +64,7 @@
 </template>
 
 <script setup>
-    import { computed } from 'vue';
+    import { computed, watch } from 'vue';
     import { useAuthStore } from '@/stores/auth';
     import request from '@/utils/request';
     import { ElMessage } from 'element-plus';
@@ -82,22 +84,6 @@
 
     // 判断当前用户是否是发送者
     const isSender = computed(() => props.msg.fromId === currentUserId);
-
-    // const displayUser = computed(() => {
-    //     return props.msg.otherUser;
-    // });
-
-    // const statusText = computed(() => {
-    //     if (props.msg.status === 1) return '已同意';
-    //     if (props.msg.status === 2) return '已拒绝';
-    //     return '待处理';
-    // });
-
-    // const statusType = computed(() => {
-    //     if (props.data.status === 1) return 'success';
-    //     if (props.data.status === 2) return 'info';
-    //     return 'warning';
-    // });
 
     const handleAction = async (newStatus) => {
         try {

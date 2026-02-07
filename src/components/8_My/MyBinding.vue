@@ -17,7 +17,7 @@
     import BaseTitle from '../Common/BaseTitle.vue';
     import MyBindingItem from './Common/MyBindingItem.vue';
     import { useAuthStore } from '@/stores/auth';
-    import { ref, onMounted } from 'vue';
+    import { ref, onMounted, onUnmounted } from 'vue';
     import request from '@/utils/request';
 
     const authStore = useAuthStore();
@@ -39,8 +39,21 @@
         }
     }
 
+
+    const handleMessageEvent = (event) => { 
+        const msg = event.detail;
+        if (msg.type === '1') {
+            loadBindings();
+        }
+    }   
+
     onMounted(() => {
         loadBindings();
+        window.addEventListener('new-message', handleMessageEvent);
+    })
+
+    onUnmounted(() => { 
+        window.removeEventListener('new-message', handleMessageEvent);
     })
 
 

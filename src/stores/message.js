@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useAuthStore } from "./auth";
+import { ref } from "vue";
 import request from "@/utils/request";
 
 export const useMessageStore = defineStore("message", { 
@@ -22,13 +23,21 @@ export const useMessageStore = defineStore("message", {
             this.isLoading = true;
             try { 
                 const data = await request.get(`/message/list/${sessionId}`);
-                this.activeMessages = data;
+                this.activeMessages = data.reverse();
             } catch (error) { 
                 console.error('获取消息失败：', error);
             } finally { 
                 this.isLoading = false;
             }
-        }
+        },
+
+        // 重置数据
+        resetData() {
+            this.sessionList = [];
+            this.activeMessages = [];
+            this.currentSessionId = null;
+            this.loading = false;
+        },
 
 
     },
