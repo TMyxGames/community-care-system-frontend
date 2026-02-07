@@ -20,8 +20,7 @@ export const useAddressStore = defineStore("address", {
         const res = await request.get('/address/get', {
             params: { userId }
         });
-        const result = res.data
-        this.addressList = result.data;
+        this.addressList = res;
       } catch (error) {
         console.log("地址加载失败：", error);
       } finally {

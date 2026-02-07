@@ -15,7 +15,7 @@ export const useHealthStore = defineStore('health', {
       const res = await request.get('/auth/bindings', {
         params: { userId: userId }
       });
-      this.boundList = res.data.data;
+      this.boundList = res;
 
       // 设置当前选择的用户为用户自己
       this.setUserId(userId);
@@ -42,7 +42,7 @@ export const useHealthStore = defineStore('health', {
           params: { userId: this.currentSelection }
         });
           
-        this.healthDataList = res.data;
+        this.healthDataList = res;
           
       } catch (error) {
           console.error("数据加载失败", error);

@@ -10,12 +10,25 @@ export const useMessageStore = defineStore("message", {
         isLoading: false,
     }),
     actions: { 
+        // 获取会话列表
         async getSessionList() { 
             const res = await request.get('/session/all');
-            if (res.data.code === 200) { 
-                this.sessionList = res.data.data;
-            }
+
+            this.sessionList = res;
         },
+
+        // 获取会话的消息
+        async getMessages(sessionId) {
+            this.isLoading = true;
+            try { 
+                const data = await request.get(`/message/list/${sessionId}`);
+                this.activeMessages = data;
+            } catch (error) { 
+                console.error('获取消息失败：', error);
+            } finally { 
+                this.isLoading = false;
+            }
+        }
 
 
     },

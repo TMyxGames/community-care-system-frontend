@@ -98,7 +98,7 @@
             async getRow() {
                 try {
                     const res = await this.$http.get('/carousel/all');
-                    this.tableData = res.data;
+                    this.tableData = res;
                 } catch (error) {
                     console.log(轮播数据获取失败);
 
@@ -138,7 +138,7 @@
 
                 try {
                     const res = await this.$http.post('/carousel/upload/img', formData);
-                    this.tableData[index].imgUrl = res.data;
+                    this.tableData[index].imgUrl = res;
                     this.$message.success("操作成功");
                 } catch (error) {
                     this.$message.error("操作失败");

@@ -1,50 +1,49 @@
 <template>
     <card-layer class="sidebar-container">
         <router-link
-            v-for="option in options"
-            :key="option.id"
-            :to="option.path"
+            v-for="session in messageStore.sessionList"
+            :key="session.id"
+            :to="`/PageMessage/${session.id}?type=${session.type}`"
             custom
             v-slot="{ isActive, navigate }"
         >
             <div 
                 :class="['sidebar-option', { 'is-active': isActive }]"
-                @click="navigate"
+                @click="handleNavigate(navigate)"
             > 
-                <span class="option-text">{{ option.name }}</span>
+                <span class="option-text">{{ getSessionName(session) }}</span>
             </div>
         </router-link>
     </card-layer>
 </template>
 
-<script> 
+<script setup> 
     import { useRouter } from 'vue-router'
     import { useMessageStore } from '@/stores/message';
     import CardLayer from '@/components/Common/CardLayer.vue';
+    import { onMounted } from 'vue';
 
-    export default {
-        name: 'MySideBar',
-        components: {
-            CardLayer,
-        },
-        setup() {
-            const router = useRouter();
-            const messageStore = useMessageStore();
-            return { router, messageStore };
-        },
-        data() {
-            return {
-                options: [
-                    {id:1, name: "系统消息", path: '/PageMessage/0'},
-                    {id:2, name: "绑定请求", path: '/PageMessage/1'},
-                    {id:3, name: "安全提醒", path: '/PageMessage/2'},
-                ]
-            }
-        },
-        methods: {
+    const messageStore = useMessageStore();
 
-        },
+    // 获取会话名称
+    const getSessionName = (session) => {
+        if (session.name) return session.name;
+
+        const typeMap = {
+            0: '系统通知',
+            1: '绑定请求',
+            2: '安全提醒',
+        };
+        return typeMap[session.type] || '未知会话';
     }
+
+    const handleNavigate = (navigate) => {
+        navigate();
+    }
+
+    onMounted(() => {
+        messageStore.getSessionList();
+    })
 </script>
 
 <style scoped>

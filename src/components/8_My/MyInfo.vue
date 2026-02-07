@@ -1,6 +1,6 @@
 <template>
     <div class="my-info-container">
-        <label class="title">账户信息</label>
+        <base-title>账户信息</base-title>
         <div class="form-row info-row">
             <el-upload
                 class="upload"
@@ -50,19 +50,19 @@
 
         </div>
         <!-- <div class="form-row"></div> -->
-        <label class="title">账户安全</label>
+        <base-title>账户安全</base-title>
     </div>
 </template>
 
 <script>
-    // import InputBox1 from '../InputBox1.vue';
+    import BaseTitle from '../Common/BaseTitle.vue';
     import { useAuthStore } from '@/stores/auth';
     import defaultAvatar from '@/assets/兔兔.jpg';
 
     export default {
         name: 'MyInfo',
         components: {
-            // InputBox1,
+            BaseTitle,
         },
         data() {
             return {
@@ -92,9 +92,8 @@
             async saveEdit() { 
                 try {
                     const res = await this.$http.post('/auth/upload/info', this.editForm);
-                    const result = res.data;
-                    if (res.code === 200) {
-                        this.authStore.login(result.data, this.authStore.activeRole, this.authStore.token);
+                    if (res) {
+                        this.authStore.login(res, this.authStore.activeRole, this.authStore.token);
                         this.isEditing = false;
                         this.$message.success("资料更新成功");
                     }
@@ -143,31 +142,6 @@
         /* align-items: center; */
 
         gap: 1rem;
-    }
-
-    /* 标题 */
-    .title {
-        /* font-size: 36px; */
-        font-size: clamp(1.5rem, 2vw, 2rem);
-        font-weight: 700;
-        margin-left: 1rem;
-
-        position: relative;
-    }
-
-    /* 标题装饰线 */
-    .title::after {
-        content: "";
-        height: clamp(1.8rem, 2.2vw, 2.2rem);
-        width: 0.5rem;
-
-        position: absolute;
-        left: -1rem;
-        top: 52%;
-        transform: translateY(-50%);
-
-        background-color: #ff2e63;
-
     }
 
     .form-row {

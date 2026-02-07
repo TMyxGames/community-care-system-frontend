@@ -1,5 +1,5 @@
 <template>
-    <glass-layer class="my-container">
+    <glass-layer class="my-container thin">
         <div class="sidebar-area">
             <my-side-bar></my-side-bar>
         </div>
@@ -11,11 +11,14 @@
 
 <script>
     import GlassLayer from '../Common/GlassLayer.vue';
+    import CardLayer from '../Common/CardLayer.vue';
     import MySideBar from './Common/MySideBar.vue';
+
     export default {
         name: 'PageMy',
         components: {
             GlassLayer,
+            CardLayer,
             MySideBar,
         },
         data() {

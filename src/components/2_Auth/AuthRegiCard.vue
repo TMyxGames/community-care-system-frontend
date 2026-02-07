@@ -199,18 +199,17 @@
                 this.isCodeSending = true;
                 try {
                     const res = await this.$http.post(`/auth/sendCaptcha?email=${this.regiForm.email}`);
-                    if (res.code === 200) {
-                        this.promptMessage = '';
-                        this.$message.success('验证码已发送');
 
-                        this.countdown = 60;
-                        const timer = setInterval(() => { 
-                            this.countdown--;
-                            if (this.countdown <= 0) {
-                                clearInterval(timer);
-                            }
-                        }, 1000);
-                    } 
+                    this.promptMessage = '';
+                    this.$message.success('验证码已发送');
+
+                    this.countdown = 60;
+                    const timer = setInterval(() => { 
+                        this.countdown--;
+                        if (this.countdown <= 0) {
+                            clearInterval(timer);
+                        }
+                    }, 1000);
                 } catch (error) {
                     this.promptMessage = '发送验证码失败';
                 } finally {

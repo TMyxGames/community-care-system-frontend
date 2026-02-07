@@ -21,7 +21,7 @@
                     
                     @click="handleUserChange(option.id)"
                 />
-                <label class="name">{{ option.elderId }}</label>
+                <label class="name">{{ option.username }}</label>
             </div>
             <!-- 添加绑定按钮 -->
             <button class="add_option" @click="goToBind"/>
@@ -124,37 +124,28 @@
             },
             async searchUser() {
                 try {
-                    const response = await this.$http.get("/user/search", {
+                    const res = await this.$http.get("/user/search", {
                         params: {
                             keyword: this.keyword,
                             userId: this.authStore.userInfo.id,
                         }
                     });
 
-                    const res = response.data;
-
-                    if (res.code === 200) {
-                        this.result = res.data;
-                    } else {
-                        this.$message.error('请求失败');
-                    }
+                    this.result = res;
                 } catch (error) {
                     this.$message.error('请求失败');
                 }
             },
             async sendRequest(targetUser) { 
                 try {
-                    const res = await this.$http.post('/message/send/bind', null, {
+                    const res = await this.$http.post('/message/bind/send', null, {
                         params:{
                             userId: this.authStore.userInfo.id,
                             toId: targetUser.id,
                         }
                     });
-                    if (res.data.code === 200) {
-                        console.log("请求已发送", res);
-                    } else {
-                        console.error("请求失败", res.data.msg);
-                    }
+                    console.log("请求已发送", res);
+                    this.$message.success("请求已发送");
                 } catch (error) {
                     console.log("请求出现问题", error);
                 }

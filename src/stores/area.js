@@ -13,7 +13,6 @@ export const useAreaStore = defineStore('area', {
         try {
             const res = await request.get('/area/service/all');
             this.areaList = res.data;
-            return res.data;
         } catch (error) {
             console.error('获取区域列表失败：', error);
         } finally {
@@ -24,10 +23,8 @@ export const useAreaStore = defineStore('area', {
     async removeServiceArea(id) {
         try {
             const res = await request.delete(`/area/service/delete/${id}`);
-            if(res.status === 200) {
-                this.areaList = this.areaList.filter(area => area.id !== id);
-                return true;
-            }
+            this.areaList = this.areaList.filter(area => area.id !== id);
+            return true;
         } catch (error) {
             console.error('删除区域失败：', error);
             return false;
@@ -39,8 +36,8 @@ export const useAreaStore = defineStore('area', {
         this.loading = true;
         try {
             const res = await request.get('/area/safe/all');
-            this.areaList = res.data;
-            return res.data;
+            this.areaList = res;
+            return res;
         } catch (error) {
             console.error('获取区域失败：', error);
         } finally {
@@ -51,10 +48,8 @@ export const useAreaStore = defineStore('area', {
     async removeSafeArea(id) {
         try {
             const res = await request.delete(`/area/safe/delete/${id}`);
-            if(res.status === 200) {
-                this.areaList = this.areaList.filter(area => area.id !== id);
-                return true;
-            }
+            this.areaList = this.areaList.filter(area => area.id !== id);
+            return true;
         } catch (error) {
             console.error('删除区域失败：', error);
             return false;

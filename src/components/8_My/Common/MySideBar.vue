@@ -20,8 +20,9 @@
             return {
                 options: [
                     {id:1, name: "账户信息", path: '/MyInfo'},
-                    {id:2, name: "我的订单", path: '/MyOrder'},
+                    {id:2, name: "订单管理", path: '/MyOrder'},
                     {id:3, name: "地址管理", path: '/MyAddress'},
+                    {id:4, name: "绑定管理", path: '/MyBinding'},
                 ]
             }
         },

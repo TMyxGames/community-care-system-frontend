@@ -152,9 +152,9 @@
             async getRow() {
                 try {
                     const res = await this.$http.get('/service/all');
-                    this.tableData = res.data;
+                    this.tableData = res;
                 } catch (error) {
-                    console.log(服务数据获取失败);
+                    console.log('服务数据获取失败：' + error);
 
                 }
             },
@@ -199,7 +199,7 @@
 
                 try {
                     const res = await this.$http.post('/service/upload/img', formData);
-                    this.tableData[index].imgUrl = res.data;
+                    this.tableData[index].imgUrl = res;
                     this.$message.success("操作成功");
                 } catch (error) {
                     this.$message.error("操作失败");
@@ -225,7 +225,7 @@
 
                 try {
                     const res = await this.$http.post('/service/upload/markdown', formData);
-                    this.tableData[index].contentUrl = res.data;
+                    this.tableData[index].contentUrl = res;
                     this.$message.success("操作成功");
                 } catch (error) {
                     this.$message.error("操作失败");

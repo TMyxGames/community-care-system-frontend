@@ -1,14 +1,15 @@
 <template>
     <div class="message-detail">
         <div class="mid-display-area">
+            <!-- <el-empty v-if="messageStore.activeMessages.length === 0" description="暂无消息" /> -->
             <component
-                v-for="msg in messageList"
+                
+                v-for="msg in messageStore.activeMessages"
                 :key="msg.id"
                 :is="currentComponent"
-                :data="msg"
-                @refresh="getMessageList"
+                :msg="msg"
+                @refresh="loadData"
             />
-
         </div>
     </div>
 </template>
@@ -17,7 +18,6 @@
     import { ref, watch, computed, onMounted } from 'vue';
     import { useRoute } from 'vue-router';
     import { useMessageStore } from '@/stores/message';
-    import axios from 'axios';
     import SystemMsgItem from './Common/SystemMsgItem.vue';
     import BindRequestItem from './Common/BindRequestItem.vue';
     import SecurityMsgItem from './Common/SecurityMsgItem.vue';
@@ -31,55 +31,29 @@
         '1': BindRequestItem,
         '2': SecurityMsgItem,
     };
+
     // 根据路由参数计算当前组件
     const currentComponent = computed(() => {
-        const typeId = parseInt(route.params.type);
-        return componentMap[typeId] || SystemMsgItem;
+        const type = route.query.type; // 从URL参数获取type
+        return componentMap[type] || SystemMsgItem;
     });
-    // 当前消息列表
-    const messageList = computed(() => {
-        const typeId = parseInt(route.params.type);
-        return messageStore.messageList[typeId] || [];
-    });
-    // 获取消息列表
-    const getMessages = async () => { 
-        const typeId = parseInt(route.params.type);
-        if (isNaN(typeId)) return;
 
-        await messageStore.getMessageListByType(typeId);
+    // 获取消息列表
+    const loadData = () => { 
+        const sessionId = route.params.id; // 从URL路径获取sessionId
+        if (sessionId) {
+            messageStore.getMessages(sessionId);
+        }
     };
 
-    watch(() => route.params.type, (newType) => {
-        if (newType !== undefined) {
-            getMessages();
+    watch(() => route.params.id, (newId) => {
+        console.log('sessionId changed:', newId);
+        if (newId) {
+            loadData();
         }
     }, { immediate: true });
 
-    onMounted(() => { 
-        getMessages();
-    });
-
-    // return { route, messageStore };
-
-
-
-
-
-    // const route = useRoute();
-    // const messageList = ref([]);
-
-    // const props = defineProps(['type']);
-
-    // const getMessageList = async () => {
-    //     const res = await axios.get(`/message/all/${route.params.type}`);
-    //     messageList.value = await res.data.data;
-    // };
-
-    // watch(() => route.params.type, () => {
-    //     getMessageList();
-    // });
-
-    // onMounted(getMessageList);
+    onMounted(loadData);
 
 </script>
 
@@ -93,9 +67,11 @@
         width: 100%;
         height: 100%;
         display: flex;
-        flex-direction: column;
+        flex-direction: column-reverse;
         align-items: center;
-        justify-content: flex-start;
+        justify-content: flex-end;
         overflow-y: auto;
+
+        gap: var(--thin-gap)
     }
 </style>

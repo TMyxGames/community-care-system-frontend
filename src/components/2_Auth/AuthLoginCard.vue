@@ -85,26 +85,22 @@
                         role: this.LoginForm.selectedRole,
                     });
                     
-                    const result = res.data;
-                    if (result.code == 200) {
-                        const { userInfo, token } = result.data;
-                        const activeRole = this.LoginForm.selectedRole;
+                    const { userInfo, token } = res;
+                    const activeRole = this.LoginForm.selectedRole;
 
-                        this.authStore.login(userInfo, activeRole, token);
+                    this.authStore.login(userInfo, activeRole, token);
 
-                        if (activeRole === 1) {
-                            this.$message.success('管理员登录成功');
-                            this.$router.push('/ManageUser');
-                        } else if (activeRole === 2) {
-                            this.$message.success('服务人员登录成功');
-                            this.$router.push('/PageHome');
-                        } else {
-                            this.$message.success('用户登录成功');
-                            this.$router.push('/PageHome');
-                        }
+                    if (activeRole === 1) {
+                        this.$message.success('管理员登录成功');
+                        this.$router.push('/ManageUser');
+                    } else if (activeRole === 2) {
+                        this.$message.success('服务人员登录成功');
+                        this.$router.push('/PageHome');
                     } else {
-                        this.$message.error(result.msg || '登录失败');
+                        this.$message.success('用户登录成功');
+                        this.$router.push('/PageHome');
                     }
+
 
                 } catch (error) { 
                     this.$message.error('登录失败');

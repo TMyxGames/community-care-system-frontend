@@ -12,7 +12,7 @@ export const useServiceStore = defineStore('service', {
       this.loading = true;
       try {
         const res = await request.get('/service/all');
-        this.serviceList = res.data;
+        this.serviceList = res;
       } catch (error) {
         console.error("数据加载失败", error);
       } finally {
@@ -23,7 +23,7 @@ export const useServiceStore = defineStore('service', {
     async getServiceById(id) {
       try {
         const res = await request.get(`/service/${id}`);
-        return res.data;
+        return res;
       } catch (error) {
         console.error("数据加载失败", error);
         return null;

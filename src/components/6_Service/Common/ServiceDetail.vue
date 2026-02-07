@@ -82,7 +82,7 @@
             async loadMarkdown(url) {
                 try {
                     const res = await this.$http.get(this.currentService.contentUrl);
-                    this.markdownRaw = res.data;
+                    this.markdownRaw = res;
                 } catch (error) {
                     this.markdownRaw = '加载失败';
                 }

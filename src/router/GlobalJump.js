@@ -12,7 +12,6 @@ import PageSecurity from '@/components/7_Security/PageSecurity.vue'
 import PageService from '@/components/6_Service/PageService.vue'
 import PageMessage from '@/components/9_Message/PageMessage.vue'
 import PageMy from '@/components/8_My/PageMy.vue'
-import Bind from '@/components/5_HealthData/Bind.vue'
 import PageStaff from '@/components/10_Staff/PageStaff.vue'
 import PageServiceArea from '@/components/10_Staff/PageServiceArea.vue'
 
@@ -26,6 +25,7 @@ import ManageStaff from '@/components/3_Backend/ManageStaff.vue'
 import MyInfo from '@/components/8_My/MyInfo.vue'
 import MyAddress from '@/components/8_My/MyAddress.vue'
 import MyOrder from '@/components/8_My/MyOrder.vue'
+import MyBinding from '@/components/8_My/MyBinding.vue'
 
 import ServiceDetail from '@/components/6_Service/Common/ServiceDetail.vue'
 import ServiceOrder from '@/components/6_Service/ServiceOrder.vue'
@@ -37,7 +37,6 @@ const routes = [
     children: [
       { path: '/PageHome', component: PageHome },
       { path: '/PageHealthData', component: PageHealthData },
-      { path: '/Bind', component: Bind },
       { path: '/PageSecurity', component: PageSecurity },
       { path: '/PageService', component: PageService },
       { path: '/PageMessage', component:PageMessage,
@@ -45,7 +44,7 @@ const routes = [
           { path: '', name: 'MessagePlaceholder',
             component: () => import('@/components/9_Message/Common/MessagePlaceholder.vue') 
           },
-          { path: ':type', name: 'MessageDetail', prop: true,
+          { path: '/PageMessage/:id', name: 'MessageDetail', prop: true,
             component: () => import('@/components/9_Message/MessageDetail.vue')
           },
         ]
@@ -58,6 +57,7 @@ const routes = [
           { path: '/MyInfo', component: MyInfo },
           { path: '/MyAddress', component: MyAddress },
           { path: '/MyOrder', component: MyOrder },
+          { path: '/MyBinding', component: MyBinding },
         ]
       },
 
