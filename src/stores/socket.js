@@ -1,22 +1,24 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useAuthStore } from "./auth";
+import { useLocationStore } from "./location";
 import { ElNotification } from "element-plus";
 
 export const useSocketStore = defineStore("socket", () => { 
-    const socket = ref(null);
+    const messageSocket = ref(null); // 消息socket
+    const locationSocket = ref(null); // 位置socket
+
     const authStore = useAuthStore();
+    const locationStore = useLocationStore();
     let heartbeatTimer = null;
     const reconnectCount = ref(0);
     const maxReconnectAttempts = 5;
-
-    // 初始化连接
-    const initSocket = () => { 
+    // 初始化消息socket
+    const initMessageSocket = () => { 
         // 如果是已连接或未登录，则不初始化连接
-        if (socket.value?.readyState === WebSocket.OPEN || !authStore.userInfo.id) return;
+        if (messageSocket.value?.readyState === WebSocket.OPEN || !authStore.userInfo?.id) return;
 
-        const wsUrl = `ws://localhost:8081/ws/message?userId=${authStore.userInfo.id}`;
-        const ws = new WebSocket(wsUrl);
+        const ws = new WebSocket (`ws://localhost:8081/ws/message?userId=${authStore.userInfo.id}`);
 
         ws.onopen = () => { 
             console.log("已连接到消息服务器");
@@ -38,7 +40,7 @@ export const useSocketStore = defineStore("socket", () => {
             if (heartbeatTimer) {
                 clearInterval(heartbeatTimer);
             }
-            socket.value = null;
+            messageSocket.value = null;
             console.log("消息服务器连接已断开，正在尝试重连...");
 
             if (reconnectCount.value < maxReconnectAttempts) {
@@ -51,8 +53,65 @@ export const useSocketStore = defineStore("socket", () => {
             ws.close();
         };
 
-        socket.value = ws;
+        messageSocket.value = ws;
     };  
+
+    // 初始化位置socket
+    const initLocationSocket = () => { 
+        // 如果是已连接或未登录，则不初始化连接
+        if (locationSocket.value?.readyState === WebSocket.OPEN || !authStore.userInfo?.id) return;
+
+        const ws = new WebSocket (`ws://localhost:8081/ws/location?userId=${authStore.userInfo.id}`);
+
+        ws.onopen = () => { 
+            console.log("已连接到位置服务器");
+        };
+
+        ws.onmessage = (event) => { 
+            const payload = JSON.parse(event.data);
+            console.log("收到位置数据：", payload);
+
+            try {
+                
+                if (payload.type === 'staff_update') {
+                    locationStore.updateFromSocket('staff', payload.data);
+                } else if (payload.type === 'user_update') {
+                    locationStore.updateFromSocket('user', payload.data);
+                }
+            } catch (e) {
+                console.error("解析位置数据失败", e);
+            }
+        };
+
+        ws.onclose = () => { 
+            locationSocket.value = null;
+            console.log("位置服务器连接已断开");
+            // if (reconnectCount.value < maxReconnectAttempts) {
+            //     attemptReconnect();
+            // }
+        };
+
+        locationSocket.value = ws;
+    }
+
+    // 初始化所有socket
+    const initAllSocket = () => { 
+        initMessageSocket();
+        initLocationSocket();
+    };
+
+    // 关闭所有socket
+    const closeAllSocket = () => { 
+        messageSocket.value?.close();
+        locationSocket.value?.close();
+        messageSocket.value = null;
+        locationSocket.value = null;
+    };
+
+
+
+
+
 
     // 尝试重连
     const attemptReconnect = () => { 
@@ -61,17 +120,9 @@ export const useSocketStore = defineStore("socket", () => {
 
         console.log(`第 ${reconnectCount.value} 次重连将在 ${delay/1000} 秒后开始...`);
         setTimeout(() => { 
-            initSocket();
+            initMessageSocket();
+            initLocationSocket();
         }, delay);
-    };
-
-    // 关闭连接
-    const closeSocket = () => { 
-        if (socket.value) {
-            socket.value.close();
-            socket.value = null;
-            console.log("消息服务器连接已关闭");
-        }
     };
 
     // 处理接收到的消息
@@ -79,7 +130,7 @@ export const useSocketStore = defineStore("socket", () => {
         console.log("收到消息：", msg);
         ElNotification({
             title: "绑定请求更新",
-            message: msg.content || "您有一条新的绑定状态变动",
+            message: msg.content || "您有一条新的绑定请求消息",
             type: msg.status === 2 ? "warning" : "info",
             position: 'bottom-right',
             duration: 3000,
@@ -88,9 +139,10 @@ export const useSocketStore = defineStore("socket", () => {
     };
 
     return { 
-        socket,
-        initSocket,
-        closeSocket,
+        messageSocket,
+        locationSocket,
+        initAllSocket,
+        closeAllSocket,
     };
 
 });

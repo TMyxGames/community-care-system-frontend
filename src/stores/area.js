@@ -12,7 +12,9 @@ export const useAreaStore = defineStore('area', {
         this.loading = true;
         try {
             const res = await request.get('/area/service/all');
-            this.areaList = res.data;
+            console.log('所有服务区域为：', res);
+            this.areaList = res;
+            return res;
         } catch (error) {
             console.error('获取区域列表失败：', error);
         } finally {
@@ -36,6 +38,7 @@ export const useAreaStore = defineStore('area', {
         this.loading = true;
         try {
             const res = await request.get('/area/safe/all');
+            console.log('所有安全区域为：', res);
             this.areaList = res;
             return res;
         } catch (error) {

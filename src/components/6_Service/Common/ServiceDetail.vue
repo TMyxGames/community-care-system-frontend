@@ -34,6 +34,7 @@
 <script>
     import GlassLayer from '@/components/Common/GlassLayer.vue';
     import { useServiceStore } from '@/stores/service';
+    import { useCommentStore } from '@/stores/comment';
     import MarkdownIt from 'markdown-it';
 
     export default {
@@ -43,7 +44,8 @@
         },
         setup() {
             const serviceStore = useServiceStore();
-            return { serviceStore }
+            const commentStore = useCommentStore();
+            return { serviceStore, commentStore }
         },
         data() {
             return {
@@ -77,6 +79,8 @@
                 this.$message.error('该服务不存在或已被删除');
                 this.$router.push('/PageService');
             }
+
+            this.commentStore.getCommentList(id);
         },
         methods: {
             async loadMarkdown(url) {

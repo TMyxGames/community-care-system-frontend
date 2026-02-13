@@ -15,9 +15,7 @@ export const useOrderStore = defineStore("order", {
 
       this.loading = true;
       try {
-        const res = await request.get('/order/get', {
-            params: { userId }
-        });
+        const res = await request.get('/order/get');
         this.orderList = res;
       } catch (error) {
         console.log("订单加载失败：", error);

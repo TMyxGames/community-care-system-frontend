@@ -12,9 +12,7 @@ export const useHealthStore = defineStore('health', {
   actions: {
     // 获取绑定列表
     async getBoundList(userId) { 
-      const res = await request.get('/auth/bindings', {
-        params: { userId: userId }
-      });
+      const res = await request.get('/auth/bindings');
       this.boundList = res;
 
       // 设置当前选择的用户为用户自己

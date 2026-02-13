@@ -89,13 +89,9 @@
                         area: this.address.area.join('/'),
                         detail: this.address.detail,
                     });
-                    if (res.status === 200) {
-                        this.$message.success('地址保存成功');
-                        await this.addressStore.getAddressList();
-                        this.showEditForm();
-                    } else {
-                        this.$message.error(res.data);
-                    }
+                    this.$message.success('地址保存成功');
+                    await this.addressStore.getAddressList();
+                    this.showEditForm();
                 } catch (error) {
                     this.$message.error('地址保存失败');
                     console.log(error);

@@ -32,6 +32,12 @@
                         <el-input v-model="keyword" placeholder="请搜索想要绑定的用户" width="10px"></el-input>
                         <el-button type="primary" @click="searchUser">搜索</el-button>
                     </el-form-item>
+                    <el-form-item label="你是">
+                        <el-radio-group v-model="relation">
+                            <el-radio :label="0">关注者</el-radio>
+                            <el-radio :label="1">被关注者</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
                 </el-form>
                 <div class="search-result">
                     <search-user-item
@@ -87,6 +93,7 @@
                 dialogVisible: false,
                 keyword: '',
                 result: [],
+                relation: 0,
                 bindForm: {
                     userId: '',
                     bindId: '',
@@ -140,8 +147,8 @@
                 try {
                     const res = await this.$http.post('/message/bind/send', null, {
                         params:{
-                            userId: this.authStore.userInfo.id,
                             toId: targetUser.id,
+                            relation: this.relation,
                         }
                     });
                     console.log("请求已发送", res);

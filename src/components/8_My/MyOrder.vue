@@ -1,9 +1,6 @@
 <template>
     <div class="my-order-container">
         <label class="title">订单信息</label>
-        <div class="form-row">
-            
-        </div>
         <div class="order-list">
             <OrderItem
                 v-for="order in orderStore.orderList"
@@ -29,15 +26,15 @@
         },
         data() {
             return {
-                orderList: []
+                orderList: [],
             }
+        },
+        mounted() {
+            this.orderStore.getOrderList();
         },
         methods: {
 
         },
-        mounted() {
-            this.orderStore.getOrderList();
-        }
     }
 </script>
 
@@ -92,5 +89,19 @@
         align-items: center;
 
         gap: 0.5rem;
+    }
+
+    .order-list {
+        width: 100%;
+        height: auto;
+        padding: var(--thin-gap);
+        box-sizing: border-box;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+
+        gap: var(--thin-gap);
     }
 </style>

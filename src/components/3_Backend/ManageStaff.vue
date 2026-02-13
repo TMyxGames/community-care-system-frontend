@@ -20,7 +20,7 @@
                 :key="staff.id"
                 :staffInfo="staff"
                 @operation="handleOp"
-                @click="$refs.mapRef.focusOnStaff(staff)"
+                @click="handleStaffClick(staff)"
             />    
         </div>
         <!-- 操作对话框 -->
@@ -72,15 +72,21 @@
             </template>
         </el-dialog>
     </div>
+    <location-control
+        :userId="36"
+        type="staff"
+    />
 </template>
 
 <script> 
     import { useUserStore } from '@/stores/user';
     import { useAreaStore } from '@/stores/area';
     import { useServiceStore } from '@/stores/service';
+    import { useLocationStore } from '@/stores/location';
     import MapContainer from '@/components/Common/MapContainer.vue';
     import BaseTitle from '../Common/BaseTitle.vue';
     import StaffItem from './Common/StaffItem.vue';
+    import LocationControl from '../Common/LocationControl.vue';
 
     export default {
         name: "ManageStaff",
@@ -88,12 +94,14 @@
             MapContainer,
             BaseTitle,
             StaffItem,
+            LocationControl,
         },
         setup() {
             const userStore = useUserStore();
             const areaStore = useAreaStore();
             const serviceStore = useServiceStore();
-            return { userStore, areaStore, serviceStore };
+            const locationStore = useLocationStore();
+            return { userStore, areaStore, serviceStore, locationStore };
         },
         data() {
             return {
@@ -124,6 +132,28 @@
                     }
                 } catch (error) {
                     this.$message.error("加载失败");
+                }
+            },
+            // 聚焦服务人员
+            async handleStaffClick(staff) { 
+                this.locationStore.focusStaff(staff.id, staff);
+
+                const cache = this.locationStore.allLocations.staff[staff.id];
+
+                const lng = staff.lng || cache?.lng;
+                const lat = staff.lat || cache?.lat;
+                if (!lng || !lng) {
+                    console.warn("没有该人员的坐标");
+                    return;
+                }
+
+                const fullData = { 
+                    ...staff, 
+                    lng,
+                    lat,
+                }
+                if (this.$refs.mapRef) {
+                    this.$refs.mapRef.focusOnStaff(fullData);
                 }
             },
             // 处理操作事件

@@ -33,6 +33,7 @@
             });
 
             bindingList.value = res;
+
         } catch (error) {
             console.log('加载绑定列表失败：', error);
 
@@ -42,9 +43,12 @@
 
     const handleMessageEvent = (event) => { 
         const msg = event.detail;
-        if (msg.type === '1') {
-            loadBindings();
+        if (msg.type == 1) {
+            if (msg.status == 1 || msg.status == 3) {
+                loadBindings();
+            }
         }
+        
     }   
 
     onMounted(() => {

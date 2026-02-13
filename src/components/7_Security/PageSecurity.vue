@@ -3,58 +3,60 @@
         <base-title>安全监控</base-title>
     </div>
     <glass-layer class="security-container">
-        <div class="map-area"></div>
+        <div class="map-area">
             <!-- 地图 -->
             <map-container
                 class="map" ref="mapRef"
             />
-            <!-- 地图控制区域 -->
-            <div class="map-control-area">
-                <el-button
-                    type="primary"
-                    @click="startDrawing"
-                    :disabled="isDrawing"
-                >
-                    开始绘制区域
-                </el-button>
-                <el-button
-                    type="primary"
-                    @click="handleSave"
-                    :disabled="!isDrawing"
-                >
-                    保存区域
-                </el-button>
-                <el-button
-                    type="danger" 
-                    @click="clearDrawing"
-                    :disabled="!isDrawing"
-                >
-                    重置
-                </el-button>
-                <el-button
-                    type="danger"
-                    plain
-                    @click="cancelDrawing"
-                    :disabled="!isDrawing"
-                >
-                    取消绘制
-                </el-button>
-            </div>
-            <!-- 绘制完成后显示保存对话框 -->
-            <el-dialog title="保存安全区域" v-model="dialogVisible">
-                <el-form :model="areaForm">
-                    <el-form-item label="区域名称" label-width="80px">
-                        <el-input v-model="areaForm.name" placeholder="请输入区域名称"></el-input>
-                    </el-form-item>
-                </el-form>
-                <template #footer>
-                    <span class="dialog-footer">
-                        <el-button @click="dialogVisible = false">取消</el-button>
-                        <el-button type="primary" @click="saveArea">确定保存</el-button>
-                    </span>
-                </template>
-            </el-dialog>
-
+        </div>
+        <!-- 地图控制区域 -->
+        <div class="map-control-area">
+            <el-button
+                type="primary"
+                @click="startDrawing"
+                :disabled="isDrawing"
+            >
+                开始绘制区域
+            </el-button>
+            <el-button
+                type="primary"
+                @click="handleSave"
+                :disabled="!isDrawing"
+            >
+                保存区域
+            </el-button>
+            <el-button
+                type="danger" 
+                @click="clearDrawing"
+                :disabled="!isDrawing"
+            >
+                重置
+            </el-button>
+            <el-button
+                type="danger"
+                plain
+                @click="cancelDrawing"
+                :disabled="!isDrawing"
+            >
+                取消绘制
+            </el-button>
+        </div>
+        <!-- 绘制完成后显示保存对话框 -->
+        <el-dialog title="保存安全区域" v-model="dialogVisible">
+            <el-form :model="areaForm">
+                <el-form-item label="区域名称" label-width="80px">
+                    <el-input v-model="areaForm.name" placeholder="请输入区域名称"></el-input>
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="dialogVisible = false">取消</el-button>
+                    <el-button type="primary" @click="saveArea">确定保存</el-button>
+                </span>
+            </template>
+        </el-dialog>
+        <!-- 模拟定位控制区域 -->
+        <location-control :userId="34" type="user"/>
 
     </glass-layer>
 </template>
@@ -63,9 +65,12 @@
     import { useAuthStore } from '@/stores/auth';
     import { useAreaStore } from '@/stores/area';
     import { useHealthStore } from '@/stores/health';
+    import { useLocationStore } from '@/stores/location';
     import GlassLayer from '../Common/GlassLayer.vue';
     import BaseTitle from '../Common/BaseTitle.vue';
     import MapContainer from '../Common/MapContainer.vue';
+    import LocationControl from '../Common/LocationControl.vue';
+    import { onMounted } from 'vue';
 
     export default {
         name: 'PageSecurity',
@@ -73,12 +78,15 @@
             GlassLayer,
             BaseTitle,
             MapContainer,
+            LocationControl,
         },
         setup() {
             const authStore = useAuthStore();
             const areaStore = useAreaStore();
             const healthStore = useHealthStore();
-            return { authStore, areaStore, healthStore };
+            const locationStore = useLocationStore();
+
+            return { authStore, areaStore, healthStore, locationStore };
 
         },
         data() {
@@ -91,16 +99,38 @@
                 },
             }
         },
-        mounted() {
+        async mounted() {
             this.loadAllAreas();
+            await this.getUserBinding();
         },
         methods: {
+            // 获取绑定列表
+            async getUserBinding() {
+                this.locationStore.currentMode = 'security';
+
+                try {
+                    const res = await this.$http.get('/auth/bindings');
+                    const users = res.filter(user => user.relation === 0);
+                    console.log("筛选后的用户为：", users)
+                    this.locationStore.showAllUsers(users);
+                    this.$nextTick(() => {
+                        if (this.$refs.mapRef) {
+                            this.$refs.mapRef.getMapInstance()?.setFitView();
+                        }
+                    })
+                } catch (error) {
+                    console.log(error);
+                }
+                
+
+            },
+
             // 显示所有区域
             async loadAllAreas() { 
                 try {
                     const data = await this.areaStore.getAllSafeAreas();
                     if (this.$refs.mapRef && data) {
-                        this.$refs.mapRef.clearAll();
+                        // this.$refs.mapRef.clearAll();
                         this.$refs.mapRef.existingAreaDisplay(data);
                     }
                 } catch (error) {
@@ -202,6 +232,7 @@
 
         display: flex;
         flex-direction: column;
+        gap: var(--thin-gap);
     }
 
     .head {

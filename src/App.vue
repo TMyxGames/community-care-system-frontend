@@ -14,9 +14,9 @@
     () => authStore.userInfo?.id, 
     (newId) => {
       if (newId) {
-        socketStore.initSocket();
+        socketStore.initAllSocket();
       } else {
-        socketStore.closeSocket();
+        socketStore.closeAllSocket();
       }
     }, 
     { immediate: true }

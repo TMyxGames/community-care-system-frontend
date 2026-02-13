@@ -17,9 +17,7 @@ export const useAddressStore = defineStore("address", {
       this.loading = true;
 
       try {
-        const res = await request.get('/address/get', {
-            params: { userId }
-        });
+        const res = await request.get('/address/get');
         this.addressList = res;
       } catch (error) {
         console.log("地址加载失败：", error);
@@ -31,10 +29,8 @@ export const useAddressStore = defineStore("address", {
     async deleteAddress(addressId) {
       try {
         const res = await request.delete(`/address/delete/${addressId}`);
-        if (res.data.code === '删除成功') {
-            this.addressList = this.addressList.filter(item => item.id !== addressId);
-            this.$message.success('地址删除成功');
-        }
+        this.addressList = this.addressList.filter(item => item.id !== addressId);
+        this.$message.success('地址删除成功');
       } catch (error) {
         console.log("删除地址失败：", error);
       }

@@ -5,9 +5,13 @@
 </template>
 
 <script setup>
-    import { onMounted, onUnmounted, defineExpose, ref, watch } from "vue";
+    import { onMounted, onUnmounted, defineExpose, ref, watch, nextTick } from "vue";
     import { useUserStore } from "@/stores/user";
+    import { useAreaStore } from "@/stores/area";
+    import { useLocationStore } from "@/stores/location";
     import AMapLoader from "@amap/amap-jsapi-loader";
+    import { getFullUrl } from "@/utils/config";
+    import defaultAvatar from "@/assets/兔兔.jpg";
 
     let map = null;
     let polygons = []; // 地图上的区域对象
@@ -16,32 +20,22 @@
     let AMapInstance = null;
     const markerMap = new Map();
     const userStore = useUserStore();
+    const areaStore = useAreaStore();
+    const locationStore = useLocationStore();
 
 
     // 分类存储Marker的对象
     const markerMapContainer = {
         staff: new Map(),
-        user: new Map(),
+        security: new Map(),
     };
     const getMapInstance = () => map;
 
-    /**
-     * 通用图标更新函数
-     * @param {string} category - 类别: 'staff' 或 'user'
-     * @param {Array} dataList - 包含 id, lng, lat 的对象数组
-     * @param {Object} options - 自定义配置（图标路径等）
-     */
-    const updateMarkers = (type, dataList, options = {}) => { 
+    const updateMarkers = (dataList) => { 
         if(!map || !window.AMap) return;
 
-        const specMarkerMap = markerMapContainer[type]; // 获取对应类型的MarkerMap
-        if (!specMarkerMap) return;
-
-        const config = {
-            icon: options.icon || 'https://webapi.amap.com/theme/v1.4/markers/n/mark_r.png',
-            size: options.size || 32,
-            ...options,
-        };
+        const mode = locationStore.currentMode;
+        const targetMap = markerMapContainer[mode];
 
         const currentIds = new Set();
 
@@ -51,62 +45,56 @@
 
             const position = [item.lng, item.lat]; // Marker的经纬度
 
-            if (specMarkerMap.has(item.id)) { 
+            if (targetMap.has(item.id)) { 
                 // 如果存在，则更新位置
-                specMarkerMap.get(item.id).setPosition(position);
+                targetMap.get(item.id).setPosition(position);
             } else { 
-                // 如果不存在，则创建
-                // 调用高德地图的创建Marker方法
+                // 如果不存在，则调用高德地图的创建Marker方法来创建一个
                 const marker = new window.AMap.Marker({
                     position: position,
                     map: map,
-                    content: `<div class="custom-marker marker-${type}">
-                                <div class="marker-label">${item.realName || item.username}</div>
+                    content: `<div class="custom-marker">
+                                <img class="marker-img" src="${getFullUrl(item.avatarUrl) || defaultAvatar}"/>
                             </div>`,
-                    offset: new window.AMap.Pixel(-(config.size / 2), -config.size),
+                    // offset: new window.AMap.Pixel(-(config.size / 2), -config.size),
                 });
-                specMarkerMap.set(item.id, marker);
+                targetMap.set(item.id, marker);
             }
         });
         // 清除不在列表中的人员标记
-        specMarkerMap.forEach((marker, id) => { 
+        targetMap.forEach((marker, id) => { 
             if (!currentIds.has(id)) { 
                 marker.setMap(null);
-                specMarkerMap.delete(id);
+                targetMap.delete(id);
             }
         });
     };
-
+    // 监听位置列表的更新
     watch(
-        () => userStore.allStaff,
+        () => locationStore.activeMarkers,
         (newList) => { 
-            if (newList && newList.length > 0) {
-                updateMarkers('staff', newList, {
-                    icon: 'https://webapi.amap.com/theme/v1.4/markers/n/mark_b.png',
-                    size: 32,
-                });
+            if (map && window.AMap) {
+                console.log("监听到数据变化，执行绘制", newList.length);
+                updateMarkers(newList);
             }
         },
-        { deep: true }
+        { deep: true, immediate: true },
+    );
+    // 监听聚焦
+    watch(
+        () => locationStore.focusId, 
+        (id) => {
+            if (!id) return;
+            
+            // 从已经画好的 MarkerMap 中找到对应的实例
+            const marker = markerMap.get(id);
+            if (marker && map) {
+                // 让地图平滑飞过去，并缩放到合适的级别
+                map.setZoomAndCenter(18, marker.getPosition());
+            }
+        }
     );
 
-    watch(
-        () => userStore.userList,
-        (newList) => { 
-            if (newList && newList.length > 0) {
-                updateMarkers('user', newList, {
-                    icon: 'https://webapi.amap.com/theme/v1.4/markers/n/mark_b.png',
-                    size: 36,
-                });
-                if (user.safeArea) {
-                    user.safeArea.forEach(area => {
-                        checkInArea([user.lng, user.lat], area);
-                    })
-                }
-            }
-        },
-        { deep: true }
-    );
 
     // 检测人员是否在区域内
     const checkInArea = (point, areaItem) => { 
@@ -185,6 +173,7 @@
     // 显示已有的区域
     const existingAreaDisplay = (areaList) => { 
         if (!map) return;
+
         polygons.forEach(p => map.remove(p));
         polygons = [];
 
@@ -205,7 +194,17 @@
         map.setFitView();
     };
 
-    // 聚焦
+    watch(
+        () => areaStore.areaList,
+        (newList) => { 
+            if (newList && newList.length > 0) { 
+                existingAreaDisplay(newList);
+            }
+        },
+        { deep: true, immediate: true },
+    );
+
+    // 聚焦服务区域
     const focusOnArea = (areaId) => {
         const target = polygons.find(p => p.getExtData().id === areaId);
         if (target && map) {
@@ -213,13 +212,16 @@
         }
     };
 
+    // 聚焦服务人员
     const focusOnStaff = (staff) => {
-        if (map && staff.lng && staff.lat) {
-            map.setZoomAndCenter(18, [staff.lng, staff.lat]);
-        }
+        if (!staff.id || !map) return;
+
+        updateMarkers([staff], locationStore.currentMode === 'staff'); 
+
+        map.setZoomAndCenter(17, [staff.lng, staff.lat]);
     };
 
-    onMounted(() => {
+    onMounted(async () => {
         window._AMapSecurityConfig = {
             securityJsCode: "98431c9e945c81b827dbc2adfe096468",
         };
@@ -236,8 +238,17 @@
                     zoom: 11, // 初始化地图级别
                 });
 
-                if (userStore.allStaff.length > 0) {
-                    updateMarkers('staff', userStore.allStaff, { icon:'...', size: 32 });
+                map.on('complete', () => { 
+                    if (areaStore.areaList && areaStore.areaList.length > 0) {
+                        existingAreaDisplay(areaStore.areaList);
+                    }
+                    if (locationStore.activeMarkers.length > 0) {
+                        updateMarkers(locationStore.activeMarkers);
+                    }
+                })
+
+                if (userStore.allStaff && userStore.allStaff.length > 0) {
+                    updateMarkers(userStore.allStaff);
                 }
             })
             .catch((e) => {
@@ -295,5 +306,13 @@
         white-space: nowrap;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+    :deep(.marker-img) {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #409EFF;
+    background-color: #fff;
+    object-fit: cover;
+}
 
 </style>
