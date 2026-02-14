@@ -23,7 +23,8 @@
         </div>
         <div class="form-row">
             <el-radio-group v-model="LoginForm.selectedRole">
-                <el-radio :label="0">用户</el-radio>
+                <el-radio :label="0">家属</el-radio>
+                <el-radio :label="3">老人</el-radio>
                 <el-radio :label="2">服务人员</el-radio>
                 <el-radio :label="1">管理员</el-radio>
             </el-radio-group>

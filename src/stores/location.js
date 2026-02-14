@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { useAuthStore } from '@/stores/auth';
 import request from '@/utils/request';
 
 export const useLocationStore = defineStore('location', {
@@ -36,6 +37,31 @@ export const useLocationStore = defineStore('location', {
                     return marker;
                 });
             }
+        },
+
+        // 获取监控目标的位置信息
+        async loadMonitoringData() {
+            const authStore = useAuthStore();
+            // 将地图显示模式改为security
+            this.currentMode = 'security';
+
+            if (authStore.userInfo.role === 3) {
+                const user = [{
+                    id: authStore.userInfo.id,
+                    username: authStore.userInfo.username,
+                    realName: authStore.userInfo.realName,
+                    avatarUrl: authStore.userInfo.avatarUrl,
+                }];
+                this.showAllUsers(user);
+            } else {
+                try {
+                    const res = await request.get('/auth/bindings');    
+                    this.showAllUsers(res);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        
         },
 
         // 显示和聚焦服务人员

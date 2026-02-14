@@ -44,8 +44,11 @@ export const useAuthStore = defineStore('auth', {
     }
   },
   getters: {
-    // 是否为用户
+    // 是否为家属
     isNormalUser: (state) => state.userInfo?.role === 0,
+
+    // 是否为老人
+    isNormalUser: (state) => state.userInfo?.role === 3,
 
     // 是否为管理员
     isAdminUser: (state) => Number(state.activeRole) === 1,
@@ -55,7 +58,7 @@ export const useAuthStore = defineStore('auth', {
 
     // 获取身份名称
     roleName: state => {
-      const roles = { 0: '用户', 1: '管理员', 2: '服务人员'};
+      const roles = { 0: '家属', 1: '管理员', 2: '服务人员', 3: '老人'};
       return roles[state.userInfo?.role] || '游客';
     }
   }

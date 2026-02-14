@@ -1,8 +1,8 @@
 <template>
     <div class="healthData-container" v-if="authStore.isLoggedIn">
-        <glass-layer class="choose_bar thin">
+        <glass-layer class="choose_bar thin" v-if="authStore.activeRole !== 3">
             <!-- 自己的选项 -->
-            <div class="option">
+            <div class="option" v-if="authStore.activeRole === 3">
                 <img class="avatar" 
                     :src="$getFileUrl(userInfo.avatarUrl) || defaultAvatar " 
                     alt="用户头像"
@@ -27,16 +27,15 @@
             <button class="add_option" @click="goToBind"/>
             <!-- 点击添加绑定时弹出对话框 -->
             <el-dialog title="添加绑定" v-model="dialogVisible" append-to-body>
+                <div>
+                    <span>您将作为</span>
+                    <b>{{ roleName }}</b>
+                    <span>向对方发起绑定请求</span>
+                </div>
                 <el-form :model="bindForm">
                     <el-form-item label="用户" label-width="80px">
                         <el-input v-model="keyword" placeholder="请搜索想要绑定的用户" width="10px"></el-input>
                         <el-button type="primary" @click="searchUser">搜索</el-button>
-                    </el-form-item>
-                    <el-form-item label="你是">
-                        <el-radio-group v-model="relation">
-                            <el-radio :label="0">关注者</el-radio>
-                            <el-radio :label="1">被关注者</el-radio>
-                        </el-radio-group>
                     </el-form-item>
                 </el-form>
                 <div class="search-result">
@@ -101,24 +100,21 @@
             }
         },
         computed: {
-            currentElderName() {
-                const current = this.healthStore.boundList.find(e => e.id === this.healthStore.currentSelection);
-                return current ? (current.remark || current.username) : '未选择';
-            },
-            userInfo() {
-                return this.authStore.userInfo || {};
+            // 根据用户role返回身份
+            roleName() {
+                const roleName = {
+                    0: '家属',
+                    1: '家属',
+                    2: '家属',
+                    3: '老人',
+                };
+                return roleName[this.authStore.userInfo.role] || '未知身份';
             },
         },
         created() {
-            // 将当前登录用户的id赋值给myId
-            // 如果myId存在，则获取该用户的绑定列表，并设置给boundList
-            const myId = this.authStore.userInfo?.id;
-            if (myId) {
-                this.healthStore.getBoundList(myId);
+            if (this.authStore.isLoggedIn) {
+                this.healthStore.getBoundList();
             }
-        },
-        beforeUnmount() {
-            // this.healthStore.$reset();
         },
         methods: {
             // 切换用户
@@ -134,7 +130,6 @@
                     const res = await this.$http.get("/user/search", {
                         params: {
                             keyword: this.keyword,
-                            userId: this.authStore.userInfo.id,
                         }
                     });
 

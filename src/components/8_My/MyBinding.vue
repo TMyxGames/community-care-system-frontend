@@ -26,12 +26,7 @@
     // 获取当前用户的绑定列表
     const loadBindings = async () => {
         try {
-            const res = await request.get('/auth/bindings', {
-                params: {
-                    userId: authStore.userInfo.id,
-                }
-            });
-
+            const res = await request.get('/auth/bindings');
             bindingList.value = res;
 
         } catch (error) {

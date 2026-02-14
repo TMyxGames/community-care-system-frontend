@@ -72,7 +72,12 @@
             </el-button>
         </div>
         <div class="form-row">
-            <el-checkbox v-model="regiForm.isAdmin">管理员</el-checkbox>
+            <el-radio-group v-model="regiForm.role">
+                <el-radio :label="0">家属</el-radio>
+                <el-radio :label="3">老人</el-radio>
+                <el-radio :label="2">服务人员</el-radio>
+                <el-radio :label="1">管理员</el-radio>
+            </el-radio-group>
         </div>
         <div class="form-row">
             <label class="prompt">
@@ -116,7 +121,7 @@
                     password1: '',
                     password2: '',
                     email: '',
-                    isAdmin: false,
+                    role: 0,
                     captcha: '',
                 },
                 // 验证码相关
@@ -139,7 +144,7 @@
                     return;
                 }
 
-                const { username, password1, password2, email, isAdmin, captcha } = this.regiForm;
+                const { username, password1, password2, email, role, captcha } = this.regiForm;
                 if (!username || !password1 || !password2) {
                     this.promptMessage = '请填写完整信息';
                     return;
@@ -151,13 +156,12 @@
                         username: username,
                         password: password1,
                         email: email,
-                        isAdmin: isAdmin,
+                        role: role,
                         captcha: captcha,
                     });
-                    if (res.code === 200) {
-                        this.promptMessage = '注册成功!';
-                        this.$router.push('/PageLogin');
-                    }
+
+                    this.promptMessage = '注册成功!';
+                    this.$router.push('/PageLogin');
                 } catch (error) {
                     console.log("请求出错：", error);
                     this.$message.error('注册失败');

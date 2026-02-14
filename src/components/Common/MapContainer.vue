@@ -98,19 +98,18 @@
 
     // 检测人员是否在区域内
     const checkInArea = (point, areaItem) => { 
-        if (!window.AMap || !window.AMap.GeometryUtil) return;
+        if (!window.AMap || !window.AMap.GeometryUtil) return true;
         
         try {
             const path = JSON.parse(areaItem.scopePath);
             const polygonPath = path.map(p => [p.lng, p.lat]);
 
             const isIn = window.AMap.GeometryUtil.isPointInPolygon(point, polygonPath);
-            if(!isIn) {
-                console.warn(`用户离开了区域：${areaItem.areaName || ''}`);
-            }
+
             return isIn;
         } catch (error) { 
             console.error("区域校验失败", error);
+            return true;
         }
     };
 
@@ -221,6 +220,13 @@
         map.setZoomAndCenter(17, [staff.lng, staff.lat]);
     };
 
+    // 一个通用聚焦方法
+    const fitView = () => { 
+        if (map) { 
+            map.setFitView(null, true, [60, 60, 60, 60]);
+        }
+    };
+
     onMounted(async () => {
         window._AMapSecurityConfig = {
             securityJsCode: "98431c9e945c81b827dbc2adfe096468",
@@ -266,6 +272,7 @@
         existingAreaDisplay,
         focusOnArea,
         focusOnStaff,
+        fitView,
         
     });
 

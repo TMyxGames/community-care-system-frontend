@@ -10,7 +10,7 @@
             />
         </div>
         <!-- 地图控制区域 -->
-        <div class="map-control-area">
+        <div class="map-control-area" v-if="authStore.activeRole !== 3">
             <el-button
                 type="primary"
                 @click="startDrawing"
@@ -71,6 +71,7 @@
     import MapContainer from '../Common/MapContainer.vue';
     import LocationControl from '../Common/LocationControl.vue';
     import { onMounted } from 'vue';
+import { load } from '@amap/amap-jsapi-loader';
 
     export default {
         name: 'PageSecurity',
@@ -101,36 +102,20 @@
         },
         async mounted() {
             this.loadAllAreas();
-            await this.getUserBinding();
+            this.locationStore.loadMonitoringData();
+            this.$nextTick(() => {
+                if (this.$refs.mapRef) {
+                    this.$refs.mapRef.fitView();
+                }
+            });
         },
         methods: {
-            // 获取绑定列表
-            async getUserBinding() {
-                this.locationStore.currentMode = 'security';
-
-                try {
-                    const res = await this.$http.get('/auth/bindings');
-                    const users = res.filter(user => user.relation === 0);
-                    console.log("筛选后的用户为：", users)
-                    this.locationStore.showAllUsers(users);
-                    this.$nextTick(() => {
-                        if (this.$refs.mapRef) {
-                            this.$refs.mapRef.getMapInstance()?.setFitView();
-                        }
-                    })
-                } catch (error) {
-                    console.log(error);
-                }
-                
-
-            },
 
             // 显示所有区域
             async loadAllAreas() { 
                 try {
                     const data = await this.areaStore.getAllSafeAreas();
                     if (this.$refs.mapRef && data) {
-                        // this.$refs.mapRef.clearAll();
                         this.$refs.mapRef.existingAreaDisplay(data);
                     }
                 } catch (error) {
