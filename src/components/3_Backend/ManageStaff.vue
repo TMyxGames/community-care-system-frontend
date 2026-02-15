@@ -83,6 +83,8 @@
     import { useAreaStore } from '@/stores/area';
     import { useServiceStore } from '@/stores/service';
     import { useLocationStore } from '@/stores/location';
+    import { useSocketStore } from '@/stores/socket';
+    import { useAuthStore } from '@/stores/auth';
     import MapContainer from '@/components/Common/MapContainer.vue';
     import BaseTitle from '../Common/BaseTitle.vue';
     import StaffItem from './Common/StaffItem.vue';
@@ -101,7 +103,9 @@
             const areaStore = useAreaStore();
             const serviceStore = useServiceStore();
             const locationStore = useLocationStore();
-            return { userStore, areaStore, serviceStore, locationStore };
+            const socketStore = useSocketStore();
+            const authStore = useAuthStore();
+            return { userStore, areaStore, serviceStore, locationStore, socketStore, authStore };
         },
         data() {
             return {
@@ -117,9 +121,6 @@
             this.loadAllAreas();
             this.userStore.getStaffList();
             this.serviceStore.getAllServices();
-        },
-        computed: {
-
         },
         methods: {
             // 显示所有区域

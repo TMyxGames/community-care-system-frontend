@@ -95,24 +95,6 @@
         }
     );
 
-
-    // 检测人员是否在区域内
-    const checkInArea = (point, areaItem) => { 
-        if (!window.AMap || !window.AMap.GeometryUtil) return true;
-        
-        try {
-            const path = JSON.parse(areaItem.scopePath);
-            const polygonPath = path.map(p => [p.lng, p.lat]);
-
-            const isIn = window.AMap.GeometryUtil.isPointInPolygon(point, polygonPath);
-
-            return isIn;
-        } catch (error) { 
-            console.error("区域校验失败", error);
-            return true;
-        }
-    };
-
     // 绘制图形
     const drawPolygon = () => { 
         if (!mouseTool) {
@@ -273,7 +255,6 @@
         focusOnArea,
         focusOnStaff,
         fitView,
-        
     });
 
     onUnmounted(() => {

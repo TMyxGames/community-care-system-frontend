@@ -108,6 +108,16 @@ export const useSocketStore = defineStore("socket", () => {
         locationSocket.value = null;
     };
 
+    const closeMessageSocket = () => { 
+        messageSocket.value?.close();
+        messageSocket.value = null;
+    };
+
+    const closeLocationSocket = () => { 
+        locationSocket.value?.close();
+        locationSocket.value = null;
+    };
+
 
 
 
@@ -139,8 +149,10 @@ export const useSocketStore = defineStore("socket", () => {
     };
 
     return { 
-        messageSocket,
-        locationSocket,
+        initMessageSocket,
+        initLocationSocket,
+        closeMessageSocket,
+        closeLocationSocket,
         initAllSocket,
         closeAllSocket,
     };

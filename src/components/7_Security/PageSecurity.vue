@@ -3,44 +3,74 @@
         <base-title>安全监控</base-title>
     </div>
     <glass-layer class="security-container">
-        <div class="map-area">
+        <div class="main-area">
             <!-- 地图 -->
-            <map-container
-                class="map" ref="mapRef"
-            />
+            <div class="map-area">
+                <map-container
+                    class="map" ref="mapRef"
+                />
+            </div>
+            
+            <div class="side-area" v-if="authStore.activeRole !== 3">
+                <card-layer class="choose-bar">
+
+                </card-layer>
+
+                <safe-area-item
+                    v-for="area in areaStore.areaList"
+                    :key="area.id"
+                    :areaInfo="area"
+                    @click="focusOnArea(area)"
+                    @delete="confirmDelete"
+                />
+
+                <!-- 地图控制区域 -->
+                <div class="map-control-area">
+                    <el-button
+                        type="primary"
+                        @click="startDrawing"
+                        :disabled="isDrawing"
+                    >
+                        开始绘制区域
+                    </el-button>
+                    <el-button
+                        type="primary"
+                        @click="handleSave"
+                        :disabled="!isDrawing"
+                    >
+                        保存区域
+                    </el-button>
+                    <el-button
+                        type="danger" 
+                        @click="clearDrawing"
+                        :disabled="!isDrawing"
+                    >
+                        重置
+                    </el-button>
+                    <el-button
+                        type="danger"
+                        plain
+                        @click="cancelDrawing"
+                        :disabled="!isDrawing"
+                    >
+                        取消绘制
+                    </el-button>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+    
         </div>
-        <!-- 地图控制区域 -->
-        <div class="map-control-area" v-if="authStore.activeRole !== 3">
-            <el-button
-                type="primary"
-                @click="startDrawing"
-                :disabled="isDrawing"
-            >
-                开始绘制区域
-            </el-button>
-            <el-button
-                type="primary"
-                @click="handleSave"
-                :disabled="!isDrawing"
-            >
-                保存区域
-            </el-button>
-            <el-button
-                type="danger" 
-                @click="clearDrawing"
-                :disabled="!isDrawing"
-            >
-                重置
-            </el-button>
-            <el-button
-                type="danger"
-                plain
-                @click="cancelDrawing"
-                :disabled="!isDrawing"
-            >
-                取消绘制
-            </el-button>
-        </div>
+        
         <!-- 绘制完成后显示保存对话框 -->
         <el-dialog title="保存安全区域" v-model="dialogVisible">
             <el-form :model="areaForm">
@@ -56,7 +86,7 @@
             </template>
         </el-dialog>
         <!-- 模拟定位控制区域 -->
-        <location-control :userId="34" type="user"/>
+        <location-control :userId="37" type="user"/>
 
     </glass-layer>
 </template>
@@ -66,19 +96,23 @@
     import { useAreaStore } from '@/stores/area';
     import { useHealthStore } from '@/stores/health';
     import { useLocationStore } from '@/stores/location';
+    import { ElMessageBox } from 'element-plus';
     import GlassLayer from '../Common/GlassLayer.vue';
+    import CardLayer from '../Common/CardLayer.vue';
     import BaseTitle from '../Common/BaseTitle.vue';
     import MapContainer from '../Common/MapContainer.vue';
+    import SafeAreaItem from './Common/SafeAreaItem.vue';
     import LocationControl from '../Common/LocationControl.vue';
-    import { onMounted } from 'vue';
-import { load } from '@amap/amap-jsapi-loader';
+
 
     export default {
         name: 'PageSecurity',
         components: {
             GlassLayer,
+            CardLayer,
             BaseTitle,
             MapContainer,
+            SafeAreaItem,
             LocationControl,
         },
         setup() {
@@ -103,11 +137,11 @@ import { load } from '@amap/amap-jsapi-loader';
         async mounted() {
             this.loadAllAreas();
             this.locationStore.loadMonitoringData();
-            this.$nextTick(() => {
-                if (this.$refs.mapRef) {
-                    this.$refs.mapRef.fitView();
-                }
-            });
+            // this.$nextTick(() => {
+            //     if (this.$refs.mapRef) {
+            //         this.$refs.mapRef.fitView();
+            //     }
+            // });
         },
         methods: {
 
@@ -120,6 +154,13 @@ import { load } from '@amap/amap-jsapi-loader';
                     }
                 } catch (error) {
                     this.$message.error("加载失败");
+                }
+            },
+            // 聚焦区域
+            focusOnArea(area) { 
+                if (this.$refs.mapRef) {
+                    this.$refs.mapRef.focusOnArea(area.id);
+                    this.$message.success(`已定位至: ${area.areaName}`);
                 }
             },
             // 删除前确认
@@ -229,10 +270,36 @@ import { load } from '@amap/amap-jsapi-loader';
         align-items: center;
     }
 
-    .map {
+    .main-area {
         width: 100%;
         height: auto;
 
-        aspect-ratio: 16 / 9;
+        display: flex;
+        gap: var(--thin-gap);
+    }
+
+    .map-area {
+        width: 60rem;
+        height: auto;
+
+        display: flex;
+    }
+
+    .map {
+        width: 100%;
+        height: auto;
+        max-width: 60rem;
+        min-width: 20rem;
+
+        aspect-ratio: 1 / 1;
+    }
+
+    .side-area { 
+        width: auto;
+        height: auto;
+
+        display: flex;
+        flex-direction: column;
+        gap: var(--thin-gap);
     }
 </style>
