@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useAuthStore } from "./auth";
+import { useOrderStore } from "./order";
 import { useLocationStore } from "./location";
 import { ElNotification } from "element-plus";
 
@@ -9,6 +10,7 @@ export const useSocketStore = defineStore("socket", () => {
     const locationSocket = ref(null); // 位置socket
 
     const authStore = useAuthStore();
+    const orderStore = useOrderStore();
     const locationStore = useLocationStore();
     let heartbeatTimer = null;
     const reconnectCount = ref(0);
@@ -118,11 +120,6 @@ export const useSocketStore = defineStore("socket", () => {
         locationSocket.value = null;
     };
 
-
-
-
-
-
     // 尝试重连
     const attemptReconnect = () => { 
         reconnectCount.value++;
@@ -138,14 +135,34 @@ export const useSocketStore = defineStore("socket", () => {
     // 处理接收到的消息
     const handleIncomingMessage = (msg) => { 
         console.log("收到消息：", msg);
-        ElNotification({
-            title: "绑定请求更新",
-            message: msg.content || "您有一条新的绑定请求消息",
-            type: msg.status === 2 ? "warning" : "info",
-            position: 'bottom-right',
-            duration: 3000,
-        });
-        window.dispatchEvent(new CustomEvent("new-message", { detail: msg }));
+        const { type, data } = msg;
+
+        switch (type) { 
+            case "bind_request":
+                ElNotification({
+                    title: "绑定请求更新",
+                    message: data.content || "您有一条新的绑定请求消息",
+                    type: data.status === 2 ? "warning" : "info",
+                    position: 'bottom-right',
+                    duration: 5000,
+                });
+                window.dispatchEvent(new CustomEvent("new-message", { detail: data }));
+                break;
+            case "new_order":
+                ElNotification({
+                    title: "新订单消息",
+                    message: "您收到了新订单，请及时处理",
+                    type: "success",
+                    position: 'bottom-right',
+                    duration: 5000,
+                });
+                window.dispatchEvent(new CustomEvent("new-order", { detail: data }));
+                break;
+            default:
+                console.warn("未知的消息类型：", type);
+        }
+
+        
     };
 
     return { 

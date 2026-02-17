@@ -20,7 +20,7 @@
                     plain
                 >取消订单</el-button>
                 <el-button
-                    v-if="orderInfo.state === 2"
+                    v-if="orderInfo.state === 3"
                     type="primary"
                     size="small"
                     @click="handleCommit"
@@ -79,11 +79,11 @@
         },
         computed: {
             statusText() {
-                const statusMap = {0: '待付款', 1: '待服务', 2: '已完成', 3: '已取消'};
+                const statusMap = {0: '待接单', 1: '待服务', 2: '进行中', 3: '已完成', 4: '已评价', 5: '已取消'};
                 return statusMap[this.orderInfo.status] || '状态未知';
             },
             statusTag() {
-                const tagMap = { 0: 'warning', 1: 'primary', 2: 'success', 3: 'info' };
+                const tagMap = { 0: 'primary', 1: 'primary', 2: 'primary', 3: 'success', 4: 'success', 5: 'info' };
                 return tagMap[this.orderInfo.state] || '';
             }
         },

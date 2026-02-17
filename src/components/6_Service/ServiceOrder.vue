@@ -15,36 +15,20 @@
             </div>
 
             <div class="section">
-                <div class="address" v-if="selectedAddress">
-                    <label>收货地址</label>
-                    <label>{{ selectedAddress.contact }} {{ selectedAddress.phone }}</label>
-                    <label>{{ selectedAddress.area }}{{ selectedAddress.detail }}</label>
-                    <el-button
-                        type="primary"
-                        @click="addressDialogVisible = true"
-                    >
-                        修改地址
-                    </el-button>
-                </div>
-                <div v-else>
-                    <label>地址加载中</label>
-                </div>
-
-                <el-dialog 
-                    v-model="addressDialogVisible"
-                    title="选择地址"
-                    width="40rem"
-                    :append-to-body="true"
+                <p>下单地址：{{ this.orderForm.addressShot }}</p>
+                <el-button 
+                    class="location-btn"
+                    @click="showPicker = true"
                 >
-                    <service-address-item
-                        v-for="item in addressStore.addressList"
-                        :key="item.id"
-                        :addressInfo="item"
-                        @select="handleSelectAddress"
-                    />
-
-                </el-dialog>
+                    选择地址
+                </el-button>
             </div>
+
+            <map-location-picker
+                :visible="showPicker"
+                @close="this.showPicker = false"
+                @confirm="handleSelectLocation"
+            />
 
             <div class="operation">
                 <el-button
@@ -70,6 +54,7 @@
     import GlassLayer from '../Common/GlassLayer.vue';
     import BaseTitle from '../Common/BaseTitle.vue';
     import ServiceAddressItem from './Common/ServiceAddressItem.vue';
+    import MapLocationPicker from '../Common/MapLocationPicker.vue';
 
     export default {
         name: 'ServiceOrder',
@@ -78,6 +63,7 @@
             GlassLayer,
             BaseTitle,
             ServiceAddressItem,
+            MapLocationPicker,
         },
         setup() {
             const authStore = useAuthStore();
@@ -88,11 +74,11 @@
         data() {
             return {
                 serviceInfo: null,
-                selectedAddress: null,
-                addressDialogVisible: false,
+                showPicker: false,
                 orderForm: {
-                    addressId: '',
-                    time: '',
+                    lng: null,
+                    lat: null,
+                    addressShot: '',
                 },
             }
         },
@@ -104,54 +90,37 @@
                 this.serviceInfo = data;
             }
 
-            await this.addressStore.getAddressList();
-            this.defaultAddress();
         },
         methods: {
-            // 默认选中地址
-            defaultAddress() {
-                if (this.addressStore.addressList.length > 0) {
-                    const defaultAddress = this.addressStore.addressList.find(item => item.isDefault === 1) 
-                                        || this.addressStore.addressList[0];
-                    this.handleSelectAddress(defaultAddress);
-                }
-            },
             // 选择地址
-            handleSelectAddress(addr) {
-                this.selectedAddress = addr;
-                this.orderForm.addressId = addr.id;
-                this.addressDialogVisible = false;
+            handleSelectLocation(data) {
+                this.orderForm.lng = data.lng;
+                this.orderForm.lat = data.lat;
+                this.orderForm.addressShot = data.address;
+                this.showPicker = false;
             },
             // 提交订单
             async submitOrder() {
-                if (!this.selectedAddress) {
+                if (!this.orderForm.lng || !this.orderForm.addressShot) {
                     this.$message.error('请选择服务地址');
+                    return;
                 }
-                // if (!this.orderForm.time) {
-                //     this.$message.error('请选择预约时间');
-                //     return;
-                // }
+                
                 try {
-                    const cleanArea = this.selectedAddress.area.replace(/\//g, '');
-                    const fullAddress = this.selectedAddress.contact + " " +
-                                        this.selectedAddress.phone + " " +
-                                        cleanArea + 
-                                        this.selectedAddress.detail;
                     const orderData = {
-                        userId: this.authStore.userInfo.id,
+                        // userId: this.authStore.userInfo.id,
                         serviceId: this.serviceInfo.id,
                         serviceTitle: this.serviceInfo.title,
                         serviceImg: this.serviceInfo.imgUrl,
                         servicePrice: this.serviceInfo.price,
-                        addressId: this.selectedAddress.id,
-                        addressShot: fullAddress,
+                        lng: this.orderForm.lng,
+                        lat: this.orderForm.lat,
+                        addressShot: this.orderForm.addressShot,
                     };
 
                     const res = await this.$http.post('/order/create', orderData);
-                    if (res.code === 200) {
-                        this.$message.success('预约成功');
-                        this.$router.push('/MyOrder');
-                    }
+                    this.$message.success('预约成功');
+                    this.$router.push('/MyOrder');
                 } catch (error) {
                     console.error("订单提交失败", error);
                     this.$message.error('预约失败');
@@ -212,6 +181,10 @@
         display: flex;
         flex-direction: column;
         gap: 1rem;
+    }
+
+    .location-btn {
+        width: 5rem;
     }
 
     .address {

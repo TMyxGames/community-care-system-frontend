@@ -58,17 +58,6 @@
                 </div>
             </div>
 
-
-
-
-
-
-
-
-
-
-
-    
         </div>
         
         <!-- 绘制完成后显示保存对话框 -->
@@ -86,7 +75,7 @@
             </template>
         </el-dialog>
         <!-- 模拟定位控制区域 -->
-        <location-control :userId="37" type="user"/>
+        <location-control :userId="34" type="user"/>
 
     </glass-layer>
 </template>
