@@ -13,8 +13,7 @@ export default defineConfig({
   server: {
     // port: 8080,
     proxy: {
-      // 如果你之前在 vue.config.js 配置了跨域代理，移到这里
-      '/api': {
+      '/files': {
         target: 'http://localhost:8081',
         changeOrigin: true,
       }

@@ -18,9 +18,9 @@ import PageServiceArea from '@/components/10_Staff/PageServiceArea.vue'
 import ManageUser from '@/components/3_Backend/ManageUser.vue'
 import ManageCarousel from '@/components/3_Backend/ManageCarousel.vue'
 import ManageService from '@/components/3_Backend/ManageService.vue'
-import ManageContentList from '@/components/3_Backend/ManageContentList.vue'
 import ManageServiceArea from '@/components/3_Backend/ManageServiceArea.vue'
 import ManageStaff from '@/components/3_Backend/ManageStaff.vue'
+import ManageArticle from '@/components/3_Backend/ManageArticle.vue'
 
 import MyInfo from '@/components/8_My/MyInfo.vue'
 import MyAddress from '@/components/8_My/MyAddress.vue'
@@ -79,7 +79,10 @@ const routes = [
     children: [
       { path: '/ManageUser', component: ManageUser },
       { path: '/ManageCarousel', component: ManageCarousel },
-      { path: '/ManageContentList', component: ManageContentList },
+      { path: '/ManageArticle', component: ManageArticle },
+      { path: '/ManageArticleDetail/:id', name: 'ManageArticleDetail',
+        component: () => import('@/components/3_Backend/ManageArticleDetail.vue') 
+      },
       { path: '/ManageService', component: ManageService },
       { path: '/ManageServiceArea', component: ManageServiceArea },
       { path: '/ManageStaff', component: ManageStaff },
