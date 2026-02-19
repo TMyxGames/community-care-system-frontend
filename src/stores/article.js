@@ -37,6 +37,18 @@ export const useArticleStore = defineStore("article", () => {
     }
   };
 
+  // 获取文章详情
+  const getArticleById = async (id) => {
+    try {
+        const res = await request.get(`/article/get/${id}`);
+        return res;
+    } catch (error) {
+        console.error('文章获取失败：', error);
+        return null;
+    }
+
+  }
+
 
 
 
@@ -54,5 +66,6 @@ export const useArticleStore = defineStore("article", () => {
     isLoading,
     getPublished,
     getDrafts,
+    getArticleById,
   }
 })

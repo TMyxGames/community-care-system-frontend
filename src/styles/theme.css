@@ -1,0 +1,81 @@
+/* 浅色模式（默认） */
+:root {
+    /* 大容器 */
+    --glass-bg: rgba(255, 255, 255, 20%);
+    --glass-text: rgba(225, 225, 225);
+    
+    /* 小容器 */
+    --card-bg: rgba(255, 255, 255, 80%);
+    --card-text: #222831;
+    
+    /* 颜色 */
+    --text-hightlight: #fc85ae;
+    --text-link: #8b2f97;
+    --code-bg: rgba(32, 32, 32, 80%);
+
+    --option-bg: rgba(255, 255, 255, 20%);
+
+    --text-danger: #f12b6b;
+    --text-warning: #f9c23c;
+    --text-success: #07c160;
+
+}
+  
+/* 深色模式 */
+html.dark {
+    /* 大容器 */
+    --glass-bg: rgba(64, 64, 64, 20%);
+    --glass-text: rgb(225, 225, 225);
+    
+    /* 小容器 */
+    --card-bg: rgba(32, 32, 32, 80%);
+    --card-text: rgb(220, 220, 220);
+    
+    /* 颜色 */
+    --text-hightlight: #7e80ff;
+    --text-link: #cf56a1;
+    --code-bg: rgba(72, 72, 72, 80%);
+
+    --text-danger: #f12b6b;
+    --text-warning: #f9c23c;
+    --text-success: #07c160;
+}
+  
+/* 过渡动画 - 让主题切换更平滑 */
+*, *::before, *::after {
+    box-sizing: border-box;
+    transition:
+        background-color 0.25s ease-in-out,
+        color 0.25s ease-in-out,
+        text-shadow 0.25s ease-in-out ;
+}
+
+/* 一级标题 */
+.bd-h1{
+    font-size: 2.2rem;
+    position: relative;
+
+    left: 0.75rem;
+
+    color: var(--text-hightlight);
+}
+
+.bd-h1::after {
+    content: '';
+    position: absolute;
+    
+    left: -0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.5rem;
+    height: 90%;
+
+    background-color: var(--text-hightlight);
+    border-radius: 1rem;
+}
+
+@media(max-width: 768px) {
+    .bd-h1{
+        font-size: 1.4rem;
+    }
+}

@@ -1,0 +1,382 @@
+@font-face { 
+    font-family: 'Jetbrains Mono', monospace;
+    src: url('./assets/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+    font-display: swap;
+}
+
+.bd-markdown { 
+    line-height: 1.8;
+    /* font-family: '晴雪体'; */
+    color: var(--card-text);
+}
+
+/* 一级标题 */
+.bd-markdown h1 {
+    font-size: 2.2rem;
+    position: relative;
+
+    left: 0.75rem;
+
+    color: var(--text-hightlight);
+}
+
+.bd-markdown h1::after {
+    content: '';
+    position: absolute;
+    
+    left: -0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.5rem;
+    height: 90%;
+
+    background-color: var(--text-hightlight);
+    border-radius: 1rem;
+}
+
+/* 二级标题 */
+.bd-markdown h2 {
+    font-size: 2rem;
+    position: relative;
+
+    left: 0.75rem;
+
+    color: var(--text-hightlight);
+}
+
+.bd-markdown h2::after {
+    content: '';
+    position: absolute;
+    
+    left: -0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.5rem;
+    height: 90%;
+
+    background-color: var(--text-hightlight);
+    border-radius: 1rem;
+}
+
+/* 三级标题 */
+.bd-markdown h3 {
+    font-size: 1.8rem;
+    position: relative;
+
+    left: 0.75rem;
+
+    color: var(--text-hightlight);
+}
+
+.bd-markdown h3::after {
+    content: '';
+    position: absolute;
+    
+    left: -0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.5rem;
+    height: 90%;
+
+    background-color: var(--text-hightlight);
+    border-radius: 1rem;
+}
+
+/* 四级标题 */
+.bd-markdown h4 {
+    font-size: 1.6rem;
+    position: relative;
+
+    left: 0.75rem;
+    margin: 2rem 0;
+
+    color: var(--text-hightlight);
+}
+
+.bd-markdown h4::after {
+    content: '';
+    position: absolute;
+    
+    left: -0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.4rem;
+    height: 90%;
+
+    background-color: var(--text-hightlight);
+    border-radius: 1rem;
+}
+
+/* 五级标题 */
+.bd-markdown h5 {
+    font-size: 1.4rem;
+    position: relative;
+
+    left: 0.75rem;
+    margin: 2rem 0;
+
+    color: var(--text-hightlight);
+}
+
+.bd-markdown h5::after {
+    content: '';
+    position: absolute;
+    
+    left: -0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.4rem;
+    height: 90%;
+
+    background-color: var(--text-hightlight);
+    border-radius: 1rem;
+}
+
+/* 六级标题 */
+.bd-markdown h6 {
+    font-size: 1.2rem;
+    position: relative;
+
+    left: 0.75rem;
+    margin: 2rem 0;
+
+    color: var(--text-hightlight);
+}
+
+.bd-markdown h6::after {
+    content: '';
+    position: absolute;
+    
+    left: -0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.4rem;
+    height: 90%;
+
+    background-color: var(--text-hightlight);
+    border-radius: 1rem;
+}
+
+/* 段落 */
+.bd-markdown p {
+    font-size: 1.2rem;
+}
+
+/* 首字下沉段落（自定义样式） */
+.bd-markdown .bd-dropcap {
+    overflow: hidden;
+    margin-bottom: 0rem;
+}
+
+.bd-markdown .bd-dropcap > p {
+    margin-bottom: 0rem; 
+    
+}
+
+.bd-markdown .bd-dropcap > p:first-of-type::first-letter { 
+    font-size: 4rem;
+    
+    padding-bottom: 0.1rem;
+    margin-top: 0.1rem;
+    float: left;
+    line-height: 1;
+    clear: both;
+
+    text-shadow: 0.1rem 0.1rem 0.1rem var(--text-hightlight);
+
+    @media (max-width: 768px) {
+        /* font-size: 3.6rem; */
+    }
+}
+
+/* 粗体 */
+.bd-markdown strong {
+    font-weight: 500;
+    color: var(--text-hightlight);
+    text-shadow: 0.05rem 0.05rem 0.05rem var(--card-text);
+
+    /* -webkit-text-stroke: 0.05rem var(--text-hightlight); */
+}
+
+/* 斜体 */
+.bd-markdown em { 
+    font-style: italic;
+}
+
+/* 下划线 */
+.bd-markdown u { 
+    text-decoration: none;
+
+    /* position: relative; */
+    /* isolation: isolate; */
+
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    display: inline;
+
+    background-image:
+        radial-gradient(circle at 100% 50%, var(--text-hightlight) 0.25rem, transparent 0.27rem),
+        radial-gradient(circle at 0% 50%, var(--text-hightlight) 0.25rem, transparent 0.27rem),
+        linear-gradient(var(--text-hightlight), var(--text-hightlight));
+
+    background-repeat: no-repeat;
+
+    background-size: 
+        0.27rem 0.55rem,
+        0.27rem 0.55rem,
+        calc(100% - 0.54rem) 0.55rem;
+
+    background-position:
+        left bottom 0.1rem,
+        right bottom 0.1rem,
+        center bottom 0.1rem;
+}
+
+/* .bd-markdown u::before { 
+    box-sizing: border-box;
+    content: '';
+    position: absolute;
+    
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 2.5px;
+    width: 100%;
+    height: 0.55rem;
+    z-index: -1;
+
+    border-radius: 1rem;
+    background-color: var(--text-hightlight);
+    box-decoration-break: clone;
+} */
+
+/* 删除线 */
+.bd-markdown s { 
+    text-decoration: none;
+
+    position: relative;
+}
+
+.bd-markdown s::after { 
+    content: '';
+    position: absolute;
+    
+    left: 50%;
+    top: 50%;
+    transform: 
+        translateY(-50%)
+        translateX(-50%);
+    width: 100%;
+    height: 0.25rem;
+
+    border-radius: 1rem;
+    background-color: var(--text-danger);
+    opacity: 60%;
+}
+
+/* 链接 */
+.bd-markdown a { 
+    text-decoration: none;
+    color: var(--text-link);
+    position: relative;
+}
+
+.bd-markdown a::after { 
+    content: '';
+    position: absolute;
+    
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0rem;
+    width: 100%;
+    height: 0.2rem;
+
+    border-radius: 1rem;
+    background-color: var(--text-link);
+}
+
+/* 高亮 */
+.bd-markdown mark { 
+    padding: 0rem 0.2rem;
+    border-radius: 0.5rem;
+
+    background-color: var(--text-hightlight);
+    color: inherit;
+}
+
+/* 代码 */
+.bd-markdown pre { 
+    font-family: 'JetBrains Mono', '晴雪体', monospace !important;
+    overflow-x: auto;
+    padding: 1rem;
+    border-radius: 0.5rem;
+
+    background-color: var(--code-bg);
+}
+
+.bd-markdown pre code { 
+    font-family: inherit;
+
+    padding: 0;
+    border-radius: 0;
+
+    background-color: transparent;
+}
+
+.bd-markdown :not(pre) > code { 
+    font-family: 'Jetbrains Mono', '晴雪体', monospace !important;
+
+    padding: 0rem 0.2rem;
+    border-radius: 0.5rem;
+
+    color: var(--glass-text);
+    background-color: var(--code-bg);
+}
+
+/* 引用 */
+.bd-markdown blockquote { 
+    font-style: italic;
+
+    position: relative;
+
+    /* background-color: var(--code-bg); */
+}
+
+.bd-markdown blockquote::before { 
+    content: '';
+    position: absolute;
+}
+
+/* 图片 */
+.bd-markdown img { 
+    max-width: 50rem;
+    height: auto;
+
+    border-radius: 1rem;
+}
+
+/* 隐藏文本 */
+/* .bd-markdown bd-hide { 
+    width: 100%;
+    height: 100%;
+    padding: 0rem 0.2rem;
+    position: relative;
+}
+
+.bd-markdown bd-hide::before{ 
+    content: '';
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--card-bg);
+    backdrop-filter: 10px;
+    border-radius: 0.5rem;
+    
+}
+
+.bd-markdown bd-hide::before:hover{ 
+    
+} */
+

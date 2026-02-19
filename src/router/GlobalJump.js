@@ -21,6 +21,7 @@ import ManageService from '@/components/3_Backend/ManageService.vue'
 import ManageServiceArea from '@/components/3_Backend/ManageServiceArea.vue'
 import ManageStaff from '@/components/3_Backend/ManageStaff.vue'
 import ManageArticle from '@/components/3_Backend/ManageArticle.vue'
+import ArticleDetail from '@/components/4_Home/ArticleDetail.vue'
 
 import MyInfo from '@/components/8_My/MyInfo.vue'
 import MyAddress from '@/components/8_My/MyAddress.vue'
@@ -60,7 +61,9 @@ const routes = [
           { path: '/MyBinding', component: MyBinding },
         ]
       },
-
+      { path: '/ArticleDetail/:id', name: 'ArticleDetail',
+        component: () => import('@/components/4_Home/ArticleDetail.vue'),
+      },
       { path: '/ServiceDetail/:id', name: 'ServiceDetail',
         component: () => import('@/components/6_Service/Common/ServiceDetail.vue'),
       },

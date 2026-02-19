@@ -5,26 +5,35 @@
         </div>
         <div class="line"></div>
         <div class="content-area">
-            <div class="content-item" v-for="item in items" :key="item.id">
-                <p>{{ item.text }}</p>
-            </div>
+            <content-list-item
+                v-for="item in articleStore.articleList"
+                :key="item.id"
+                :articleInfo="item"
+            />
         </div>
     </div>
 </template>
 
-<script> 
+<script>
+    import { useArticleStore } from '@/stores/article';
+    import ContentListItem from './ContentListItem.vue';
+
     export default {
         name: 'ContentList',
+        components: {
+            ContentListItem,
+        },
+        setup() {
+            const articleStore = useArticleStore();
+            return { articleStore };
+        },
         data() {
             return {
-                items: [
-                    {id:1, text: "测试内容1", link: ''},
-                    {id:2, text: "测试内容2", link: ''},
-                ]
+
             }
         },
-        methods: {
-
+        mounted() {
+            this.articleStore.getPublished();
         },
     }
 
@@ -35,8 +44,8 @@
         width: 100%;
         height: 100%;
 
-        background-color: rgba(255, 255, 255);
-        box-shadow: 0 0 2rem rgba(0, 0, 0, 10%);
+        /* background-color: rgba(255, 255, 255); */
+        /* box-shadow: 0 0 2rem rgba(0, 0, 0, 10%); */
         /* border-radius: 0.5rem; */
 
         box-sizing: border-box;
@@ -76,15 +85,15 @@
         width: 100%;
         height: 100%;
 
-        background-color: rgba(134, 134, 134, 0.5);
+        /* background-color: rgba(134, 134, 134, 0.5); */
         display: flex;
         flex-direction: column;
-        /* justify-content: flex-start; */
+        gap: 0.5rem;
     }
 
     .content-item {
         width: 100%;
-        height: 50px;
+        height: 3rem;
 
         background-color: rgba(134, 134, 134, 0.5);
         border-radius: 2rem;
