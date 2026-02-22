@@ -5,29 +5,27 @@
         </div>
         <div class="content-row">
             
-            <img class="user-logo" :src="$getFileUrl(userInfo.avatarUrl) || defaultAvatar" alt="头像">
+            <img class="user-logo" :src="$getFileUrl(summary.avatarUrl) || defaultAvatar" alt="头像">
             
             <div class="data-view">
-                <div class="cell">
-                    <label class="cell-label">姓名</label>
-                    <label class="cell-value">{{ userInfo.username }}</label>
-                </div>
-                <div class="cell">
-                    <label class="cell-label">性别</label>
-                    <label class="cell-value">{{ userInfo.sex }}</label>
-                </div>
-                <div class="cell">
-                    <label class="cell-label">年龄</label>
-                    <label class="cell-value">{{ userInfo.age }}</label>
-                </div>
-                <div class="cell">
-                    <label class="cell-label">身高</label>
-                    <label class="cell-value">{{ userInfo.height }}</label>
-                </div>
-                <div class="cell">
-                    <label class="cell-label">体重</label>
-                    <label class="cell-value">{{ userInfo.weight }}</label>
-                </div>
+                <card-cell
+                    label="姓名"
+                    :value="summary.username"
+                    valueSize="clamp(1.5rem, 3vw, 3rem)"
+                    color="#5e63b6"
+                />
+                <card-cell
+                    label="性别"
+                    :value="summary.sex"
+                    valueSize="clamp(1.5rem, 3vw, 3rem)"
+                    color="#5e63b6"
+                />
+                <card-cell
+                    label="年龄"
+                    :value="summary.age"
+                    valueSize="clamp(1.5rem, 3vw, 3rem)"
+                    color="#5e63b6"
+                />
             </div>
 
         </div>
@@ -39,6 +37,7 @@
     import { mapState } from 'pinia';
     import CardLayer from '@/components/Common/CardLayer.vue';
     import BaseTitle from '@/components/Common/BaseTitle.vue';
+    import CardCell from './CardCell.vue';
     import defaultAvatar from '@/assets/兔兔.jpg';
 
     export default {
@@ -46,6 +45,7 @@
         components: {
             CardLayer,
             BaseTitle,
+            CardCell,
         },
         setup() {
             const healthStore = useHealthStore();
@@ -57,7 +57,7 @@
             }
         },
         computed: {
-            ...mapState(useHealthStore, ['userInfo']),
+            ...mapState(useHealthStore, ['userInfo', 'summary']),
         },
         methods: {
         
@@ -98,6 +98,7 @@
         /* background-color: #6eb6ff; */
 
         display: flex;
+        align-items: center;
         gap: 1.5rem;
 
     }
@@ -116,34 +117,12 @@
         box-sizing: border-box;
         /* padding: 1.5rem; */
 
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(2, 1fr);
-        gap: 1rem;
-    }
-
-    .cell {
-        width: 100%;
-        height: 100%;
-        box-sizing: border-box;
-    
-        background-color: #6eb6ff;
+        /* display: grid; */
+        /* grid-template-columns: repeat(3, 1fr); */
+        /* grid-template-rows: repeat(2, 1fr); */
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
+        gap: 0.5rem;
     }
 
-    .cell-label { 
-        font-size: 20px;
-        font-weight: 700;
-
-        
-    }
-
-    .cell-value { 
-        font-size: 48px;
-        font-weight: 700;
-
-        
-    }
 </style>

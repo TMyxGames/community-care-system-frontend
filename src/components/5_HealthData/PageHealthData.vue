@@ -118,8 +118,8 @@
         },
         methods: {
             // 切换用户
-            handleUserChange(val) {
-                this.healthStore.setUserId(val);
+            handleUserChange(id) {
+                this.healthStore.setUserId(id);
             },
             // 跳转绑定页面
             goToBind() {

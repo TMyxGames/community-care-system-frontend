@@ -23,7 +23,7 @@
     import MidOverlay from '../Common/MidOverlay.vue';
     import GlassLayer from '../Common/GlassLayer.vue';
     import CardLayer from '../Common/CardLayer.vue';
-    import { Elmessage } from 'element-plus';
+    import { ElMessage } from 'element-plus';
 
     const articleStore = useArticleStore();
     const route = useRoute();
@@ -39,7 +39,7 @@
             currentArticle.value = data;
             markdownRaw.value = data.content;
         } else {
-            Elmessage.error("文章不存在或已被删除");
+            ElMessage.error("文章不存在或已被删除");
         }
     });
 

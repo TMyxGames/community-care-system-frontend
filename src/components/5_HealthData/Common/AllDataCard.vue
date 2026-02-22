@@ -1,56 +1,72 @@
 <template>
     <card-layer class="all-data-card thin">
         <div class="title-row">
-            <base-title class="title">全部数据</base-title>
-            <div class="button-area">
-                <el-radio-group v-model="allData_timeControl">
-                    <el-radio-button
-                        label="latest"
-                    >最新</el-radio-button>
-                    <el-radio-button
-                        label="7days"
-                    >七天内</el-radio-button>
-                </el-radio-group>
-            </div>
+            <base-title class="title">数据概览</base-title>
         </div>
         <div class="data-display-row">
             <!-- 最新数据 -->
             <div class="latest-data-view"
-                v-if="allData_timeControl === 'latest' && latestData"
-                key="latest"
+                v-if="summary"
             >
-                <div class="cells-latest"
-                    v-for="tag in healthTags" :key="tag.label"
-                >
-                    <div class="cells-label">{{ tag.label }}</div>
-                    <div class="cells-value">{{ latestData[tag.prop] }} <small class="unit">/ {{tag.unit}}</small></div>
+                <div class="cells-latest">
+                    <card-cell   
+                        label="身高"
+                        :value="summary.latestBmi?.height"
+                        unit="cm"
+                        color="#ff6f3c"
+                    />
+                </div>
+                <div class="cells-latest">
+                    <card-cell   
+                        label="体重"
+                        :value="summary.latestBmi?.weight"
+                        unit="kg"
+                        color="#ff9a3c"
+                    />
+                </div>
+                <div class="cells-latest">
+                    <card-cell   
+                        label="收缩压"
+                        :value="summary.latestBp?.systolic"
+                        unit="mmHg"
+                        color="#c61951"
+                    />
+                </div>
+                <div class="cells-latest">
+                    <card-cell   
+                        label="舒张压"
+                        :value="summary.latestBp?.diastolic"
+                        unit="mmHg"
+                        color="#f64662"
+                    />
+                </div>
+                <div class="cells-latest">
+                    <card-cell   
+                        label="静息心率"
+                        :value="summary.latestBp?.heartRate"
+                        unit="BPM"
+                        color="#ea0599"
+                    />
+                </div>
+                <div class="cells-latest">
+                    <card-cell 
+                        label= "血糖"
+                        :value="absoluteLatestBs?.bloodSugar"
+                        unit="mmol/L"
+                    >
+                        <template #label>
+                            血糖<span v-if="absoluteLatestBs">
+                                ({{ absoluteLatestBs.mealStatus === 0 ? '空腹' : '餐后' }})
+                            </span>
+                        </template>
+                    </card-cell>
+
                 </div>
             </div>
             <!-- 暂无数据 -->
-            <div v-else-if="allData_timeControl === 'latest' && !latestData">
+            <div v-else>
                 暂无数据
             </div>
-            <!-- 七天内数据 -->
-            <div class="list-data-view"
-                v-else key="7days"
-            > 
-                <div class="list-header">
-                    <label class="header-item">收缩压</label>
-                    <label class="header-item">舒张压</label>
-                    <label class="header-item">血糖</label>
-                    <label class="header-item">日期</label>
-                </div>
-                <div class="list-body">
-                    <div class="data-row" v-for="(item, index) in sevenDaysData" :key="index">
-                        <div class="data-cell" v-for="tag in healthTags" :key="'d-'+tag.label">
-                            <span class="value">{{ item[tag.prop] }}</span>
-                            <span class="unit">{{ tag.unit }}</span>
-                        </div>
-                        <div class="data-cell date-col">{{ formatDate(item.recordDate) }}</div>
-                    </div>
-                </div>
-            </div>
-
         </div>
                 
     </card-layer>
@@ -58,15 +74,17 @@
 
 <script>
     import { useHealthStore } from '@/stores/health';
-    import { mapState, mapActions } from 'pinia';
+    import { mapState } from 'pinia';
     import CardLayer from '@/components/Common/CardLayer.vue';
     import BaseTitle from '@/components/Common/BaseTitle.vue';
+    import CardCell from '@/components/5_HealthData/Common/CardCell.vue';
 
     export default {
         name: 'AllDataCard',
         components: {
             CardLayer,
             BaseTitle,
+            CardCell,
         },
         setup() {
             const healthStore = useHealthStore();
@@ -74,21 +92,27 @@
         },
         data() {
             return {
-                allData_timeControl: 'latest',
-                allData: [],
-                healthTags: [
-                    {label: '收缩压' , prop: 'systolic', unit: 'mmHg'},
-                    {label: '舒张压' , prop: 'diastolic', unit: 'mmHg'},
-                    {label: '血糖' , prop: 'bloodSugar', unit: 'mmol/L'},
-                    // {label: '时间' , prop: 'recordDate', unit: ''},
-                ]
+
             }
         },
         computed: {
-            ...mapState(useHealthStore, ['currentSelection', 'latestData', 'sevenDaysData']),
-        },
-        created() {
-            this.healthStore.getAllData(this.currentUserId);
+            ...mapState(useHealthStore, ['currentSelection', 'summary']),
+
+            // 获取最新的血糖数据，无论最新数据是空腹还是餐后
+            absoluteLatestBs() {
+                const fasting = this.summary.latestFastingBs;
+                const post = this.summary.latestPostprandialBs;
+
+                if (!fasting && !post) return null;
+                if (!fasting) return post;
+                if (!post) return fasting;
+
+                // 都有数据时，比较recordDate
+                const fastingTime = new Date(fasting.recordDate).getTime();
+                const postTime = new Date(post.recordDate).getTime();
+
+                return fastingTime >= postTime ? fasting : post;
+            }
         },
         methods: {
             // 格式化时间
@@ -207,20 +231,6 @@
         background-color: #5e63b6;
 
     }
-
-    /* .cells-label::after {
-        content: "";
-        height: 2.2rem;
-        width: 0.5rem;
-
-        position: absolute;
-        left: -1rem;
-        top: 52%;
-        transform: translateY(-50%);
-
-        background-color: #ff2e63;
-
-    } */
 
     .cells-value {
         font-size: clamp(2.5rem, 5vw, 4.5rem);;

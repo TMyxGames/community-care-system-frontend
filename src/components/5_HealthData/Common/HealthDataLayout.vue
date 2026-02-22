@@ -13,14 +13,14 @@
         </div>
         <div class="second-row">
             <div class="grid-item4">
-                <SystolicCard/>
-            </div>
-            <div class="grid-item4">
-                <DiastolicCard/>
+                <BloodPressureCard/>
             </div>
             <div class="grid-item4">
                 <BloodSugarCard/>
             </div>
+            <div class="grid-item4">
+            </div>
+
         </div>
     </glass-layer>
 </template>
@@ -30,8 +30,7 @@
     import AllDataCard from './AllDataCard.vue';
     import BaseDataCard from './BaseDataCard.vue';
     import BMICard from './BMICard.vue';
-    import SystolicCard from './SystolicCard.vue';
-    import DiastolicCard from './DiastolicCard.vue';
+    import BloodPressureCard from './BloodPressureCard.vue';
     import BloodSugarCard from './BloodSugarCard.vue';
 
     export default {
@@ -41,8 +40,7 @@
             AllDataCard,
             BaseDataCard,
             BMICard,
-            SystolicCard,
-            DiastolicCard,
+            BloodPressureCard,
             BloodSugarCard
         },
         data() {
@@ -86,7 +84,7 @@
 
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        /* grid-template-rows: repeat(2, 1fr); */
+        grid-template-rows: repeat(2, 1fr);
 
         padding-bottom: var(--thin-gap);
         gap: var(--thin-gap);

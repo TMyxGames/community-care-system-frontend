@@ -3,12 +3,12 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-import * as echarts from 'echarts'
-import { VueUiRadar } from "vue-data-ui";
-import "vue-data-ui/style.css";
+// import * as echarts from 'echarts'
+import { VueDataUi } from "vue-data-ui";
 import axios from 'axios'
 import router from './router/GlobalJump'
 
+import "vue-data-ui/style.css";
 import './styles/reset.css'
 import './styles/BDmarkdown.css'
 import './styles/theme.css'
@@ -28,8 +28,8 @@ app.config.globalProperties.$md = md
 app.use(pinia)
 app.use(router)
 app.use(ElementPlus)
-app.use(echarts)
-app.use(VueUiRadar)
+// app.use(echarts)
+app.component('VueDataUi', VueDataUi)
 
 app.mount('#app')
 

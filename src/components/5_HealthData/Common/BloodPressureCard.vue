@@ -1,7 +1,7 @@
 <template>
-    <card-layer class="blood-sugar-card thin">
+    <card-layer class="systolic-card thin">
         <div class="title-row">
-            <base-title class="title" color="#6eb6ff">血糖</base-title>
+            <base-title class="title" color="#6eb6ff">血压</base-title>
             <div class="button-area">
                 <el-radio-group v-model="timeControl">
                     <el-radio-button
@@ -15,35 +15,47 @@
         </div>
         <div class="content-row">
             <div class="data-view" v-if="timeControl === 'latest'" key="latest">
-                <card-cell 
-                    label= "空腹血糖"
-                    :value="summary.latestFastingBs?.bloodSugar"
-                    unit="mmol"
-                />
-                <card-cell 
-                    label= "餐后血糖"
-                    :value="summary.latestPostprandialBs?.bloodSugar"
-                    unit="mmol"
-                />
+                <div class="row">
 
+                </div>
+                <div class="cells-latest">
+                    <card-cell   
+                        label="收缩压"
+                        :value="summary.latestBp?.systolic"
+                        unit="mmHg"
+                        color="#c61951"
+                    />
+                </div>
+                <div class="cells-latest">
+                    <card-cell   
+                        label="舒张压"
+                        :value="summary.latestBp?.diastolic"
+                        unit="mmHg"
+                        color="#f64662"
+                    />
+                </div>
+                <div class="cells-latest">
+                    <card-cell   
+                        label="静息心率"
+                        :value="summary.latestBp?.heartRate"
+                        unit="BPM"
+                        color="#ea0599"
+                    />
+                </div>
             </div>
+
             <div class="data-view trend-view" v-else key="7days">
-                <ChartSparkLine 
-                    label="空腹血糖"
-                    v-if="fastingDataset.length > 0"
-                    :dataset="fastingDataset" 
-                    color="#42b983" 
-                />
-                <div v-else class="no-data-small">暂无空腹记录</div>
-
                 <ChartSparkLine
-                    label="餐后血糖"
-                    v-if="postprandialDataset.length > 0"
-                    :dataset="postprandialDataset" 
-                    color="#ffbb33" 
+                    v-if="systolicDataset && systolicDataset.length > 0"
+                    :dataset="systolicDataset" color="#c61951"   
                 />
-                <div v-else class="no-data-small">暂无餐后记录</div>
+                <ChartSparkLine
+                    v-if="diastolicDataset && diastolicDataset.length > 0"
+                    :dataset="diastolicDataset" color="#f64662"           
+                />
+                <div v-else>暂无数据</div>
             </div>
+
         </div>
     </card-layer>
 </template>
@@ -58,7 +70,7 @@
     import ChartSparkLine from '@/components/5_HealthData/Common/ChartSparkLine.vue';
 
     export default {
-        name: 'BloodSugarCard',
+        name: 'BloodPresureCard',
         components: {
             CardLayer,
             BaseTitle,
@@ -78,63 +90,60 @@
             // 监听切换开关
             timeControl(newVal) {
                 if (newVal === '7days') {
-                    this.getBsTrend();
+                    this.getBpTrend();
                 }
             },
             // 如果用户在“七天内”模式下切换了查看的人，也要重新拉取
             'healthStore.currentSelection'(newVal) {
                 if (this.timeControl === '7days' && newVal) {
-                    this.getBsTrend();
+                    this.getBpTrend();
                 }
             },
         },
         computed: {
-            ...mapState(useHealthStore, ['summary', 'bsHistory']),
+            ...mapState(useHealthStore, ['summary', 'bpHistory']),
 
             // 趋势图配置
             sparklineConfig() {
                 return SPARKLINE_CONFIG;
             },
 
-            // 处理空腹血糖趋势
-            fastingDataset() {
-                if (!Array.isArray(this.bsHistory)) return [];
-                return this.bsHistory
-                    .filter(item => item.mealStatus === 0)
-                    .map((item, index) => ({
-                        period: item.recordDate ? item.recordDate.split(' ')[0] : `记${index + 1}`,
-                        value: item.bloodSugar
-                    }));
+            // 处理收缩压数据
+            systolicDataset() {
+                if (!Array.isArray(this.bpHistory)) return [];
+                return this.bpHistory.map((item, index) => ({
+                    period: item.recordDate ? item.recordDate.split(' ')[0] : `记录${index + 1}`,
+                    value: item.systolic
+                }));
             },
 
-            // 处理餐后血糖趋势
-            postprandialDataset() {
-                if (!Array.isArray(this.bsHistory)) return [];
-                return this.bsHistory
-                    .filter(item => item.mealStatus === 1)
-                    .map((item, index) => ({
-                        period: item.recordDate ? item.recordDate.split(' ')[0] : `记${index + 1}`,
-                        value: item.bloodSugar
-                    }));
+            // 处理舒张压数据
+            diastolicDataset() {
+                if (!Array.isArray(this.bpHistory)) return [];
+                return this.bpHistory.map((item, index) => ({
+                    period: item.recordDate ? item.recordDate.split(' ')[0] : `记录${index + 1}`,
+                    value: item.diastolic
+                }));
             },
 
-            // 血糖状态判定
-            sugarStatus() {
-                const val = this.summary.latestFastingBs?.bloodSugar;
-                if (!val) return { text: '无数据', color: '#ccc' };
-                
-                // 判定标准通常只针对空腹
-                if (val < 3.9) return { text: '偏低', color: '#ff4444' };
-                if (val >= 7.0) return { text: '偏高', color: '#ff4444' };
+            // 血压状态判定
+            bpStatus() {
+                if (!this.latestData) return { text: '无数据', color: '#ccc' };
+                const sys = this.latestData.systolic;
+                const dia = this.latestData.diastolic;
+
+                if (sys >= 140 || dia >= 90) return { text: '高血压', color: '#ff4444' };
+                if (sys >= 120 || dia >= 80) return { text: '正常高值', color: '#ffbb33' };
                 return { text: '正常', color: '#42b983' };
-            }
+            },
+
         },
         methods: {
-            async getBsTrend() { 
+            async getBpTrend() { 
                 try {
-                    await this.healthStore.getBsTrend(this.healthStore.currentSelection);
+                    await this.healthStore.getBpTrend(this.healthStore.currentSelection);
                 } catch (error) {
-                    console.error("获取血糖数据失败:", error);
+                    console.error("获取血压数据失败:", error);
                 }
             },
         },
@@ -143,7 +152,7 @@
 
 <style scoped>
     /* 容器 */
-    .blood-sugar-card {
+    .systolic-card {
         width: 100%;
         height: 100%;
         
@@ -166,7 +175,7 @@
         align-items: center;
     }
 
-        /* 按钮区 */
+    /* 按钮区 */
     .button-area {
         width: auto;
         height: 100%;

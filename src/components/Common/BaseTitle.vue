@@ -5,8 +5,6 @@
 </template>
 
 <script>
-import { color } from 'echarts';
-
     export default {
         name: 'BaseTitle',
         props: {
