@@ -19,6 +19,7 @@
                 <BloodSugarCard/>
             </div>
             <div class="grid-item4">
+                <AiAdviceCard/>
             </div>
 
         </div>
@@ -32,6 +33,7 @@
     import BMICard from './BMICard.vue';
     import BloodPressureCard from './BloodPressureCard.vue';
     import BloodSugarCard from './BloodSugarCard.vue';
+    import AiAdviceCard from './AiAdviceCard.vue';
 
     export default {
         name: 'HealthDataView',
@@ -41,7 +43,8 @@
             BaseDataCard,
             BMICard,
             BloodPressureCard,
-            BloodSugarCard
+            BloodSugarCard,
+            AiAdviceCard,
         },
         data() {
             return {

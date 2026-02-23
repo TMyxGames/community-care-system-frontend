@@ -40,6 +40,11 @@
                     unit="kg"
                     color="#ff9a3c"
                 />
+                <card-cell
+                    label="BMI"
+                    :value="summary.latestBmi?.bmi"
+                    color="#ff9a3c"
+                />
             </div>
             <div class="data-view" 
                 v-else-if="timeControl === '7days' && bmiHistory"

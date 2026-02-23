@@ -19,6 +19,9 @@ export const useHealthStore = defineStore('health', {
     bmiHistory: [],
     bpHistory: [],
     bsHistory: [],
+
+    aiAdvice: '',
+    aiLoading: false,
   }),
   actions: {
     // 获取绑定列表
@@ -111,6 +114,23 @@ export const useHealthStore = defineStore('health', {
           console.error("数据加载失败", error);
       } finally {
         this.loading = false;
+      }
+    },
+
+    // 获取AI建议
+    async getAiAdvice() {
+      if (!this.currentSelection) return;
+      
+      this.aiLoading = true;
+      try {
+        const res = await request.get('/health/ai/advice', {
+          params: { userId: this.currentSelection }
+        });
+        this.aiAdvice = res;
+      } catch (error) {
+        console.error("AI 获取失败", error);
+      } finally {
+        this.aiLoading = false;
       }
     },
 
