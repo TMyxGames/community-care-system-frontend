@@ -4,12 +4,12 @@
             <span class="area-name">{{ areaInfo.areaName }}</span>
         </div>
         <div class="info-footer">
-            <el-button
+            <!-- <el-button
                 class="active-btn"
                 type="text"
                 size="small"
                 @click.stop="$emit('active', areaInfo.id)"
-            >启用</el-button>
+            >启用</el-button> -->
             <el-button
                 class="delete-btn"
                 type="text"

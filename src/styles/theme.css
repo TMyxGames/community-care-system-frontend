@@ -74,6 +74,10 @@ html.dark {
     border-radius: 1rem;
 }
 
+.emergency-select-popper {
+    z-index: 5000 !important; 
+}
+
 @media(max-width: 768px) {
     .bd-h1{
         font-size: 1.4rem;

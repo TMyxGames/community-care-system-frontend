@@ -15,9 +15,12 @@ export const useLocationStore = defineStore('location', {
         currentMode: 'staff', // 地图显示模式
 
         activeSafeAreas: [], // 安全区域缓存
-        alarmCooldowns: {}, // 邮件提醒冷却
         outCount: {}, // 离开安全区域计数器
         isInAlarmStatus: {}, // 是否处于安全提醒状态（是否在安全区域外）
+        currentAlarmingElderId: null, // 安全提醒弹窗对应的老人id
+
+        showSafetyDialog: false, // 是否显示安全提醒对话框
+        dialogStage: 0, // 提醒阶段
 
         isLoading: false,
 
@@ -125,42 +128,37 @@ export const useLocationStore = defineStore('location', {
             }
         },
 
-        // 处理安全提醒邮件
+        // 处理安全提醒
         async handleSafetyAlarm(userId) {
-            const now = Date.now();
-            const lastAlarmTime = this.alarmCooldowns[userId] || 0;
-            const cooldownPeriod = 5 * 60 * 1000; // 5分钟
-            // 检查本地冷却
-            if (now - lastAlarmTime < cooldownPeriod) {
-                // 发送邮件提醒
-                console.log(`用户 ${userId} 处于告警冷却期，跳过请求`);
-                return;
-            }
-
             try {
-                console.warn(`用户 ${userId} 已离开安全区域，尝试发送邮件告警...`);
-                const res = await request.post('/message/safety-alarm', { userId });
-
-                if (res.msg && res.msg.includes("冷却")) {
-                    console.log(`用户 ${userId} 仍处于告警冷却期，跳过请求`);
-                    this.alarmCooldowns[userId] = now;
-                } else {
-                    console.log("告警发送成功！");
-                    this.alarmCooldowns[userId] = now;
+                const res = await request.post('/security/safety-alarm', { userId });
+                // 如果后端因为静默返回了null，则重置触发锁定状态
+                if (!res || res.stage === undefined) {
+                    this.isInAlarmStatus[userId] = false; 
+                    return;
                 }
-
+                if (res.stage) {
+                    this.dialogStage = res.stage;
+                    this.showSafetyDialog = true;
+                    this.currentAlarmingElderId = userId;
+                }
             } catch (error) {
+                this.isInAlarmStatus[userId] = false;
                 console.error('发送告警失败', error);
-                delete this.alarmCooldowns[userId];
             }
+        },
+
+        // 当家属点击确认安全或收到ws清除指令时
+        clearAlarmState() {
+            this.showSafetyDialog = false;
+            this.dialogStage = 0;
+            this.currentAlarmingElderId = null;
         },
 
         // 处理安全返回邮件
         async handleBackToSafety(userId) {
             try {
-                await request.post('/message/back-to-safety', { userId });
-                // 回到区域后，清除本地冷却时间
-                delete this.alarmCooldowns[userId];
+                await request.post('/security/back-to-safety', { userId });
             } catch (error) {
                 console.error('返回提醒发送失败', error);
             }

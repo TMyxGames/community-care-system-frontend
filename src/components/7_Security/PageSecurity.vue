@@ -12,19 +12,17 @@
             </div>
             
             <div class="side-area" v-if="authStore.activeRole !== 3">
-                <card-layer class="choose-bar">
-
+                <!-- 区域列表 -->
+                <card-layer class="area-list">
+                    <safe-area-item
+                        v-for="area in areaStore.areaList"
+                        :key="area.id"
+                        :areaInfo="area"
+                        @click="focusOnArea(area)"
+                        @delete="confirmDelete"
+                    />
                 </card-layer>
-
-                <safe-area-item
-                    v-for="area in areaStore.areaList"
-                    :key="area.id"
-                    :areaInfo="area"
-                    @click="focusOnArea(area)"
-                    @delete="confirmDelete"
-                />
-
-                <!-- 地图控制区域 -->
+                <!-- 地图操作区 -->
                 <div class="map-control-area">
                     <el-button
                         type="primary"
@@ -57,7 +55,6 @@
                     </el-button>
                 </div>
             </div>
-
         </div>
         
         <!-- 绘制完成后显示保存对话框 -->
@@ -126,14 +123,8 @@
         async mounted() {
             this.loadAllAreas();
             this.locationStore.loadMonitoringData();
-            // this.$nextTick(() => {
-            //     if (this.$refs.mapRef) {
-            //         this.$refs.mapRef.fitView();
-            //     }
-            // });
         },
         methods: {
-
             // 显示所有区域
             async loadAllAreas() { 
                 try {
@@ -285,7 +276,16 @@
 
     .side-area { 
         width: auto;
-        height: auto;
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        gap: var(--thin-gap);
+    }
+
+    .area-list { 
+        width: auto;
+        height: 100%;
 
         display: flex;
         flex-direction: column;

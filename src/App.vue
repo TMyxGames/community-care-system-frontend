@@ -1,11 +1,15 @@
 <template>
-  <router-view></router-view>
+  <router-view/>
+  <EmergencyCall/>
+  <SafetyDialog/>
 </template>
 
 <script setup>
   import { onMounted, watch } from 'vue';
   import { useAuthStore } from './stores/auth';
   import { useSocketStore } from './stores/socket';
+  import SafetyDialog from './components/7_Security/Common/SafetyDialog.vue';
+  import EmergencyCall from './components/7_Security/Common/EmergencyCall.vue';
 
   const authStore = useAuthStore();
   const socketStore = useSocketStore();

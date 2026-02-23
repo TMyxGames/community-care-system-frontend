@@ -158,6 +158,37 @@ export const useSocketStore = defineStore("socket", () => {
                 });
                 window.dispatchEvent(new CustomEvent("new-order", { detail: data }));
                 break;
+            case "safety_alarm":
+                // 更新状态，触发全局dialog弹出
+                locationStore.dialogStage = data.stage;
+                locationStore.currentAlarmingElderId = data.elderId;
+                locationStore.showSafetyDialog = true;
+                break;
+            case "clear_alarm":
+                const { action, elderId, minutes } = data;
+                // 统一重置状态 (关闭弹窗和遮罩)
+                locationStore.showSafetyDialog = false;
+                locationStore.dialogStage = 0;
+                locationStore.currentAlarmingElderId = null;
+                if (locationStore.isInAlarmStatus) {
+                    locationStore.isInAlarmStatus[elderId] = false;
+                }
+                // 根据类型显示不同的UI
+                if (action === "leave") {
+                    ElNotification({
+                        title: "告警解除",
+                        message: `家属已确认老人安全，并设置了 ${minutes} 分钟的静默期。`,
+                        type: "success",
+                        position: 'bottom-right'
+                    });
+                } else if (action === "hangup") {
+                    ElMessage({
+                        message: '紧急通话已正常挂断',
+                        type: 'info'
+                    });
+                }
+                console.log(`[状态重置] 动作类型: ${action}, 老人ID: ${elderId}`);
+                break;
             default:
                 console.warn("未知的消息类型：", type);
         }
