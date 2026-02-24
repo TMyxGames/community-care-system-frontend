@@ -30,7 +30,11 @@
 };
 
   onMounted(() => {
-    // initAllAppService();
+    // 如果刷新后发现用户已经登录，立即初始化一次
+    if (authStore.isLoggedIn) {
+      console.log('检测到已登录状态，正在恢复ws连接...');
+      initAllAppService();
+    }
   });
 
   watch(

@@ -56,7 +56,7 @@
 <style scoped>
     .sidebar-container {
         width: 100%;
-        height: 50rem;
+        height: 65rem;
         max-width: 20rem;
 
         display: flex;

@@ -1,7 +1,8 @@
 <template>
     <div class="message-detail">
-        <div class="mid-display-area" ref="scrollContainer">
-            <!-- <el-empty v-if="messageStore.activeMessages.length === 0" description="暂无消息" /> -->
+        <div class="mid-display-area" ref="scrollContainer" @scroll="handleScroll">
+            <div v-if="loading" class="loading-status">正在加载历史记录...</div>
+            <div v-if="noMore" class="no-more">没有更多消息了</div>
             <component
                 v-for="msg in messageStore.activeMessages"
                 :key="msg.id"
@@ -29,7 +30,7 @@
     const { currentSessionId } = storeToRefs(messageStore);
     const scrollContainer = ref(null);
 
-    // 组件映射表
+    // 消息容器组件映射表
     const componentMap = {
         '0': SystemMsgItem,
         '1': BindRequestItem,
@@ -42,23 +43,19 @@
         return componentMap[type] || SystemMsgItem;
     });
 
-    // 获取消息列表
-    const loadData = () => { 
+    // 获取消息记录
+    const loadData = async () => { 
         const sessionId = route.params.id; // 从URL路径获取sessionId
         if (sessionId) {
-            messageStore.getMessages(sessionId);
+            messageStore.noMore = false;
+            await messageStore.getMessages(sessionId);
+            await nextTick();
+            setTimeout(() => {
+                scrollToBottom();
+            }, 50);
         }
     };
-
-    // 监听会话切换
-    watch(() => route.params.id, (newId) => {
-        console.log('sessionId changed:', newId);
-        if (newId) {
-            messageStore.currentSessionId = newId;
-            loadData();
-        }
-    }, { immediate: true });
-
+    // 处理新消息
     const handleNewMessage = (event) => {
         const newMsg = event.detail;
 
@@ -71,7 +68,6 @@
                 otherUser: newMsg.otherUser || oldMsg.otherUser,
                 isSelf: newMsg.fromId === authStore.userInfo.id
             };
-            console.log('新消息已添加到列表')
             scrollToBottom();
         } else {
             if (newMsg.fromSessionId == currentSessionId.value || newMsg.toSessionId == currentSessionId.value) {
@@ -92,14 +88,48 @@
         };
     };
 
+    // 处理滚动事件
+    const handleScroll = async () => {
+        const el = scrollContainer.value;
+        // 判断是否滚动到了顶部 (阈值 5px)
+        if (el.scrollTop <= 5 && !messageStore.isLoading && !messageStore.noMore) {
+            await getHistory();
+        }
+    };
+
+    // 加载历史消息
+    const getHistory = async () => {
+        const el = scrollContainer.value;
+        // 记录加载前的内容总高度
+        const oldScrollHeight = el.scrollHeight;
+
+        const newMessages = await messageStore.getHistory(route.params.id);
+
+        if (newMessages.length > 0) {
+            nextTick(() => {
+                const newScrollHeight = el.scrollHeight;
+                el.scrollTop = newScrollHeight - oldScrollHeight;
+            });
+        }
+    };
+
+    // 监听会话切换
+    watch(() => route.params.id, (newId) => {
+        console.log('sessionId changed:', newId);
+        if (newId) {
+            messageStore.currentSessionId = newId;
+            loadData();
+        }
+    }, { immediate: true });
+
     // 监听消息列表的变化
-    watch(
-        () => messageStore.activeMessages,
-        () => {
-            scrollToBottom();
-        },
-        { deep: true }
-    );
+    // watch(
+    //     () => messageStore.activeMessages,
+    //     () => {
+    //         scrollToBottom();
+    //     },
+    //     { deep: true }
+    // );
 
     onMounted(() => { 
         loadData();
@@ -129,6 +159,7 @@
         align-items: center;
 
         overflow-y: auto;
+        overflow-anchor: none;
         /* padding: 5rem 0; */
         gap: var(--thin-gap);
 
