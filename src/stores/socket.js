@@ -163,6 +163,7 @@ export const useSocketStore = defineStore("socket", () => {
                 locationStore.dialogStage = data.stage;
                 locationStore.currentAlarmingElderId = data.elderId;
                 locationStore.showSafetyDialog = true;
+                console.log("告警的老人id为:", data.elderId);
                 break;
             case "clear_alarm":
                 const { action, elderId, minutes } = data;

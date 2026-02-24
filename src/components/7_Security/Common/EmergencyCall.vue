@@ -39,6 +39,7 @@
     import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
     import { useLocationStore } from '@/stores/location';
     import { ElMessage } from 'element-plus';
+    import request from '@/utils/request';
 
     const locationStore = useLocationStore();
     const timer = ref(0);
