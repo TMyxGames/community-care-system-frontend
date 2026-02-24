@@ -51,83 +51,168 @@
         </div>
         <!-- <div class="form-row"></div> -->
         <base-title>账户安全</base-title>
+        <el-button type="warning" @click="pwdDialogVisible = true" :disabled="isEditing">
+            修改密码
+        </el-button>
     </div>
+
+    <el-dialog
+        v-model="pwdDialogVisible"
+        title="修改密码"
+        width="30rem"
+        @closed="resetPwdForm"
+    >
+        <el-form :model="pwdForm" :rules="pwdRules" ref="pwdFormRef" label-width="100px">
+            <el-form-item label="原密码" prop="oldPassword">
+                <el-input v-model="pwdForm.oldPassword" type="password" show-password placeholder="请输入原密码" />
+            </el-form-item>
+            <el-form-item label="新密码" prop="newPassword">
+                <el-input v-model="pwdForm.newPassword" type="password" show-password placeholder="请输入新密码" />
+            </el-form-item>
+            <el-form-item label="确认密码" prop="confirmPassword">
+                <el-input v-model="pwdForm.confirmPassword" type="password" show-password placeholder="请再次输入新密码" />
+            </el-form-item>
+        </el-form>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="pwdDialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="submitPassword" :loading="pwdLoading">确认修改</el-button>
+            </span>
+        </template>
+    </el-dialog>
 </template>
 
-<script>
+<script setup>
+    import { ref, reactive, computed, watch, onMounted } from 'vue';
     import BaseTitle from '../Common/BaseTitle.vue';
     import { useAuthStore } from '@/stores/auth';
     import defaultAvatar from '@/assets/兔兔.jpg';
+    import request from '@/utils/request';
+    import { ElMessage } from 'element-plus';
+    import { useRouter } from 'vue-router';
 
-    export default {
-        name: 'MyInfo',
-        components: {
-            BaseTitle,
-        },
-        data() {
-            return {
-                defaultAvatar: defaultAvatar,
-                isEditing: false,
-                editForm: {
-                    username: '',
-                    sex: '',
-                    password: '',
-                },
-            };
-        },
-        setup() {
-            const authStore = useAuthStore();
-            return { authStore };
-        },
-        computed: {
-            userInfo() {
-                return this.authStore.userInfo || {};
-            },
-        },
-        methods: {
-            startEdit() {
-                this.editForm = {...this.userInfo}
-                this.isEditing = true;
-            },
-            async saveEdit() { 
-                try {
-                    const res = await this.$http.post('/auth/upload/info', this.editForm);
-                    if (res) {
-                        this.authStore.login(res, this.authStore.activeRole, this.authStore.token);
-                        this.isEditing = false;
-                        this.$message.success("资料更新成功");
-                    }
-                } catch (error) {
-                    this.$message.error("资料更新失败");
-                }
-            },
-            // 上传头像
-            async UpLoadAvatar(file) {
-                if (!file || !file.raw) return;
+    const router = useRouter();
+    const authStore = useAuthStore();
 
-                // 校验图片大小和格式 (可选)
-                // const isLt2M = file.raw.size / 1024 / 1024 < 2;
+    const isEditing = ref(false);
+    const pwdDialogVisible = ref(false);
+    const pwdLoading = ref(false);
+    const pwdFormRef = ref(null);
 
-                let formData = new FormData();
-                formData.append('file', file.raw);
-                formData.append('userId', this.userInfo.id);
+    const editForm = reactive({
+        username: '',
+        sex: '',
+        password: ''
+    });
 
-                if (this.userInfo.avatarUrl) {
-                    formData.append('oldUrl', this.userInfo.avatarUrl);
-                }
+    const pwdForm = reactive({
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+    });
 
-                try {
-                    const res = await this.$http.post('/auth/upload/avatar', formData);
-                    const newAvatarUrl = res.data; // 获取新的头像URL
-                    this.authStore.userInfo.avatarUrl = newAvatarUrl;
-                    localStorage.setItem('userInfo', JSON.stringify(this.authStore.userInfo));
-                    this.$message.success("头像上传成功");
-                } catch (error) {
-                    console.error(error);
-                    this.$message.error("头像上传失败");
-                }
-            },
-        },
+    const userInfo = computed(() => authStore.userInfo || {});
+       
+    // 开始编辑个人资料
+    const startEdit = () => {
+        Object.assign(editForm, userInfo.value);
+        isEditing.value = true;
+    };
+
+    // 保存个人资料
+    const saveEdit = async () => { 
+        try {
+            const res = await request.post('/auth/upload/info', editForm);
+            if (res) {
+                authStore.login(res, authStore.activeRole, authStore.token);
+                isEditing.value = false;
+                ElMessage.success("资料更新成功");
+            }
+        } catch (error) {
+            ElMessage.error("资料更新失败");
+        }
+    };
+
+    // 上传头像
+    const UpLoadAvatar = async (file) => {
+        if (!file || !file.raw) return;
+
+        // 校验图片大小和格式
+        // const isLt2M = file.raw.size / 1024 / 1024 < 2;
+
+        let formData = new FormData();
+        formData.append('file', file.raw);
+        formData.append('userId', userInfo.id);
+
+        if (userInfo.avatarUrl) {
+            formData.append('oldUrl', userInfo.avatarUrl);
+        }
+
+        try {
+            const res = await request.post('/auth/upload/avatar', formData);
+            const newAvatarUrl = res; // 获取新的头像URL
+            authStore.userInfo.avatarUrl = newAvatarUrl;
+            localStorage.setItem('userInfo', JSON.stringify(authStore.userInfo));
+            ElMessage.success("头像上传成功");
+        } catch (error) {
+            console.error(error);
+            ElMessage.error("头像上传失败");
+        }
+    };
+
+    // 校验两次密码是否一致
+    const validateConfirmPassword = (rule, value, callback) => {
+        if (value !== pwdForm.newPassword) {
+            callback(new Error('两次输入的密码不一致'));
+        } else {
+            callback();
+        }
+    };
+
+    const pwdRules = {
+        oldPassword: [{ required: true, message: '请输入原密码', trigger: 'blur' }],
+        newPassword: [
+            { required: true, message: '请输入新密码', trigger: 'blur' },
+            { min: 6, message: '密码长度至少为6位', trigger: 'blur' }
+        ],
+        confirmPassword: [
+            { required: true, message: '请再次输入密码', trigger: 'blur' },
+            { validator: validateConfirmPassword, trigger: 'blur' }
+        ]
+    };
+
+    // 重置表单
+    const resetPwdForm = () => {
+        if (pwdFormRef.value) pwdFormRef.value.resetFields();
+    };
+
+    // 提交修改
+    const submitPassword = async() => {
+        pwdFormRef.value.validate(async (valid) => {
+            if (!valid) return;
+
+            pwdLoading.value = true;
+            try {
+                await request.put('/auth/password', {
+                    oldPassword: pwdForm.oldPassword,
+                    newPassword: pwdForm.newPassword
+                });
+
+                ElMessage.success("密码修改成功，请重新登录");
+                pwdDialogVisible.value = false;
+                // 密码修改后强制退出登录
+                setTimeout(() => {
+                    authStore.logout();
+                    router.push('/login');
+                }, 1000);
+                
+            } catch (error) {
+                console.log(error);
+            } finally {
+                pwdLoading.value = false;
+            }
+        });
+
     };
 </script>
 
