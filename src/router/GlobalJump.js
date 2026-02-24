@@ -32,15 +32,16 @@ import ServiceDetail from '@/components/6_Service/Common/ServiceDetail.vue'
 import ServiceOrder from '@/components/6_Service/ServiceOrder.vue'
 import MessagePlaceholder from '@/components/9_Message/Common/MessagePlaceholder.vue'
 
+import { useAuthStore } from '@/stores/auth'
 
 const routes = [
   { path: '/:catchAll(.*)', component: BaseMainPage, redirect: "/PageHome", 
     children: [
       { path: '/PageHome', component: PageHome },
-      { path: '/PageHealthData', component: PageHealthData },
-      { path: '/PageSecurity', component: PageSecurity },
+      { path: '/PageHealthData', component: PageHealthData, meta: { requiresAuth: true } },
+      { path: '/PageSecurity', component: PageSecurity, meta: { requiresAuth: true } },
       { path: '/PageService', component: PageService },
-      { path: '/PageMessage', component:PageMessage,
+      { path: '/PageMessage', component:PageMessage, meta: { requiresAuth: true },
         children: [
           { path: '', name: 'MessagePlaceholder',
             component: () => import('@/components/9_Message/Common/MessagePlaceholder.vue') 
@@ -61,7 +62,7 @@ const routes = [
           { path: '/MyBinding', component: MyBinding },
         ]
       },
-      { path: '/ArticleDetail/:id', name: 'ArticleDetail',
+      { path: '/ArticleDetail/:id', name: 'ArticleDetail', 
         component: () => import('@/components/4_Home/ArticleDetail.vue'),
       },
       { path: '/ServiceDetail/:id', name: 'ServiceDetail',

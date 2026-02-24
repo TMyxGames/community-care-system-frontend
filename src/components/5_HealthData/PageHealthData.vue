@@ -56,9 +56,7 @@
 
         <HealthDataLayout></HealthDataLayout>
     </div>
-    <div class="healthData-container" v-else>
-        <span>请先登录</span>
-    </div>
+    <login-placeholder v-else/>
 
 </template>
 
@@ -68,6 +66,7 @@
     import { useRouter } from 'vue-router';
     import MidOverlay from '../Common/MidOverlay.vue';
     import GlassLayer from '../Common/GlassLayer.vue';
+    import LoginPlaceholder from '../Common/LoginPlaceholder.vue';
     import HealthDataLayout from './Common/HealthDataLayout.vue';
     import SearchUserItem from './Common/SearchUserItem.vue';
     import defaultAvatar from '@/assets/兔兔.jpg';
@@ -78,6 +77,7 @@
             HealthDataLayout,
             GlassLayer,
             MidOverlay,
+            LoginPlaceholder,
             SearchUserItem,
         },
         setup() {

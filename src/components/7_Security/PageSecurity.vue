@@ -1,8 +1,8 @@
 <template>
-    <div class="head">
+    <!-- <div class="head">
         <base-title>安全监控</base-title>
-    </div>
-    <glass-layer class="security-container">
+    </div> -->
+    <glass-layer class="security-container" v-if="authStore.isLoggedIn">
         <div class="main-area">
             <!-- 地图 -->
             <div class="map-area">
@@ -75,6 +75,7 @@
         <location-control :userId="34" type="user"/>
 
     </glass-layer>
+    <login-placeholder v-else/>
 </template>
 
 <script> 
@@ -85,6 +86,7 @@
     import { ElMessageBox } from 'element-plus';
     import GlassLayer from '../Common/GlassLayer.vue';
     import CardLayer from '../Common/CardLayer.vue';
+    import LoginPlaceholder from '../Common/LoginPlaceholder.vue';
     import BaseTitle from '../Common/BaseTitle.vue';
     import MapContainer from '../Common/MapContainer.vue';
     import SafeAreaItem from './Common/SafeAreaItem.vue';
@@ -96,6 +98,7 @@
         components: {
             GlassLayer,
             CardLayer,
+            LoginPlaceholder,
             BaseTitle,
             MapContainer,
             SafeAreaItem,
@@ -121,8 +124,10 @@
             }
         },
         async mounted() {
-            this.loadAllAreas();
-            this.locationStore.loadMonitoringData();
+            if (this.authStore.isLoggedIn) {
+                this.loadAllAreas();
+                this.locationStore.loadMonitoringData();
+            }
         },
         methods: {
             // 显示所有区域

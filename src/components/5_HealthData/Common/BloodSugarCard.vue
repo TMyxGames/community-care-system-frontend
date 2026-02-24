@@ -1,8 +1,13 @@
 <template>
     <card-layer class="blood-sugar-card thin">
+        <!-- 标题栏 -->
         <div class="title-row">
             <base-title class="title" color="#6eb6ff">血糖</base-title>
             <div class="button-area">
+                <el-button
+                    type="primary"
+                    @click="openDialog('blood_sugar')"
+                >添加数据</el-button>
                 <el-radio-group v-model="timeControl">
                     <el-radio-button
                         label="latest"
@@ -13,6 +18,7 @@
                 </el-radio-group>
             </div>
         </div>
+        <!-- 内容区 -->
         <div class="content-row">
             <div class="data-view" v-if="timeControl === 'latest'" key="latest">
                 <card-cell 
@@ -45,6 +51,13 @@
                 <div v-else class="no-data-small">暂无餐后记录</div>
             </div>
         </div>
+        <!-- 上传数据对话框 -->
+        <UploadHealthDataDialog
+            v-model="dialogVisible"
+            :dataType="currentType"
+            :userId="healthStore.currentSelection"
+            @success="refreshData"
+        />
     </card-layer>
 </template>
 
@@ -56,6 +69,7 @@
     import BaseTitle from '@/components/Common/BaseTitle.vue';
     import CardCell from '@/components/5_HealthData/Common/CardCell.vue';
     import ChartSparkLine from '@/components/5_HealthData/Common/ChartSparkLine.vue';
+    import UploadHealthDataDialog from './UploadHealthDataDialog.vue';
 
     export default {
         name: 'BloodSugarCard',
@@ -64,6 +78,7 @@
             BaseTitle,
             CardCell,
             ChartSparkLine,
+            UploadHealthDataDialog,
         },
         setup() {
             const healthStore = useHealthStore();
@@ -72,6 +87,8 @@
         data() {
             return {
                 timeControl: 'latest',
+                dialogVisible: false,
+                currentType: "blood_sugar",
             }
         },
         watch: {
@@ -136,6 +153,17 @@
                 } catch (error) {
                     console.error("获取血糖数据失败:", error);
                 }
+            },
+
+            // 显示上传对话框
+            openDialog(type) { 
+                this.currentType = type;
+                this.dialogVisible = true;
+            },
+
+            // 刷新卡片数据
+            refreshData() { 
+                this.healthStore.getAllData(this.healthStore.currentSelection);
             },
         },
     }

@@ -1,29 +1,49 @@
 <template>
   <router-view/>
-  <EmergencyCall/>
-  <SafetyDialog/>
+  <template v-if="authStore.isLoggedIn">
+    <EmergencyCall/>
+    <SafetyDialog/>
+  </template>
 </template>
 
 <script setup>
   import { onMounted, watch } from 'vue';
   import { useAuthStore } from './stores/auth';
   import { useSocketStore } from './stores/socket';
+  import { useLocationStore } from './stores/location';
   import SafetyDialog from './components/7_Security/Common/SafetyDialog.vue';
   import EmergencyCall from './components/7_Security/Common/EmergencyCall.vue';
 
   const authStore = useAuthStore();
   const socketStore = useSocketStore();
+  const locationStore = useLocationStore();
+
+  // 初始化服务
+  const initAllAppService = async () => {
+    const token = localStorage.getItem('token');
+    // 必须同时具备token和 userInfo.id才能初始化
+    if (token && authStore.userInfo?.id) {
+        console.log("鉴权通过");
+        socketStore.initAllSocket();
+        // locationStore.loadMonitoringData();
+    }
+};
+
+  onMounted(() => {
+    // initAllAppService();
+  });
 
   watch(
     () => authStore.userInfo?.id, 
     (newId) => {
       if (newId) {
-        socketStore.initAllSocket();
+        initAllAppService();
       } else {
-        socketStore.closeAllSocket();
+        if (socketStore.isConnected) {
+          socketStore.closeAllSocket();
+        }
       }
     }, 
-    { immediate: true }
   );
 
 </script>

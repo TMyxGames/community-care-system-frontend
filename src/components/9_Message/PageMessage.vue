@@ -1,5 +1,5 @@
 <template>
-    <glass-layer class="message-container thin">
+    <glass-layer class="message-container thin" v-if="authStore.isLoggedIn">
         <message-side-bar/>
 
         <card-layer class="main">
@@ -7,15 +7,17 @@
         </card-layer>
     </glass-layer>
         
-
+    <login-placeholder v-else/>
 </template>
 
 <script>
     import MidOverlay from '../Common/MidOverlay.vue';
     import GlassLayer from '../Common/GlassLayer.vue';
     import CardLayer from '../Common/CardLayer.vue';
+    import LoginPlaceholder from '../Common/LoginPlaceholder.vue';
     import BaseTitle from '../Common/BaseTitle.vue';
     import MessageSideBar from './Common/MessageSideBar.vue';
+    import { useAuthStore } from '@/stores/auth';
 
     export default {
         name: "PageMessage",
@@ -23,8 +25,13 @@
             MidOverlay,
             GlassLayer,
             CardLayer,
+            LoginPlaceholder,
             BaseTitle,
             MessageSideBar
+        },
+        setup() {
+            const authStore = useAuthStore();
+            return { authStore };
         },
         data() {
             return {

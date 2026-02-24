@@ -1,8 +1,13 @@
 <template>
     <card-layer class="bmi-card thin">
+        <!-- 标题栏 -->
         <div class="title-row">
             <base-title class="title" color="#6eb6ff">BMI</base-title>
             <div class="button-area">
+                <el-button
+                    type="primary"
+                    @click="openDialog('bmi')"
+                >添加数据</el-button>
                 <el-radio-group v-model="timeControl">
                     <el-radio-button
                         label="latest"
@@ -13,6 +18,7 @@
                 </el-radio-group>
             </div>
         </div>
+        <!-- 内容区 -->
         <div class="content-row">
             <div class="data-view" 
                 v-if="timeControl === 'latest' && summary"
@@ -58,6 +64,13 @@
             </div>
 
         </div>
+        <!-- 上传数据对话框 -->
+        <UploadHealthDataDialog
+            v-model="dialogVisible"
+            :dataType="currentType"
+            :userId="healthStore.currentSelection"
+            @success="refreshData"
+        />
     </card-layer>
 </template>
 
@@ -69,6 +82,7 @@
     import BaseTitle from '@/components/Common/BaseTitle.vue';
     import CardCell from './CardCell.vue';
     import ChartSparkLine from './ChartSparkLine.vue';
+    import UploadHealthDataDialog from './UploadHealthDataDialog.vue';
 
     export default {
         name: 'BMICard',
@@ -77,6 +91,7 @@
             BaseTitle,
             CardCell,
             ChartSparkLine,
+            UploadHealthDataDialog,
         },
         setup() {
             const healthStore = useHealthStore();
@@ -85,6 +100,8 @@
         data() {
             return {
                 timeControl: "latest",
+                dialogVisible: false,
+                currentType: "bmi",
             }
         },
         watch: {
@@ -189,12 +206,24 @@
             },
         },
         methods: {
+            // 获取BMI趋势
             async getBmiTrend() { 
                 try {
                     await this.healthStore.getBmiTrend(this.healthStore.currentSelection);
                 } catch (error) {
                     console.error("获取BMI数据失败:", error);
                 }
+            },
+
+            // 显示上传对话框
+            openDialog(type) { 
+                this.currentType = type;
+                this.dialogVisible = true;
+            },
+
+            // 刷新卡片数据
+            refreshData() { 
+                this.healthStore.getAllData(this.healthStore.currentSelection);
             },
         },
     }

@@ -35,8 +35,15 @@ request.interceptors.response.use(
         if (error.response && error.response.status === 401) {
             const authStore = useAuthStore();
             authStore.logout();
-            window.location.href = '/auth';
-            console.error('登录已过期，请重新登录');
+
+            const currentPath = window.location.pathname;
+            const whiteList = ['/PageHome', '/PageLogin', '/PageRegister'];
+
+            if (whiteList.includes(currentPath)) {
+                ElMessage.warning('登录已过期，部分功能已停用');
+            } else {
+                window.location.href = '/PageLogin';
+            }
         }
         return Promise.reject(error);
     }

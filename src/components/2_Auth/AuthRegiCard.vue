@@ -96,7 +96,6 @@
             立即注册
             </el-button>
 
-            <!-- <button class="submit-btn" @click="handelRegister">立即注册</button> -->
         </div>
         <div class="form-row" id="bottom-row">
             <router-link to="/PageLogin">

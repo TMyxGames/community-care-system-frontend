@@ -13,8 +13,10 @@ export const useSocketStore = defineStore("socket", () => {
     const orderStore = useOrderStore();
     const locationStore = useLocationStore();
     let heartbeatTimer = null;
-    const reconnectCount = ref(0);
-    const maxReconnectAttempts = 5;
+    const reconnectCount = ref(0); // 重连次数
+    const maxReconnectAttempts = 5; // 最大重连次数
+
+    const isConnected = ref(false);
     // 初始化消息socket
     const initMessageSocket = () => { 
         // 如果是已连接或未登录，则不初始化连接
@@ -100,6 +102,7 @@ export const useSocketStore = defineStore("socket", () => {
     const initAllSocket = () => { 
         initMessageSocket();
         initLocationSocket();
+        isConnected.value = true;
     };
 
     // 关闭所有socket
@@ -108,6 +111,7 @@ export const useSocketStore = defineStore("socket", () => {
         locationSocket.value?.close();
         messageSocket.value = null;
         locationSocket.value = null;
+        isConnected.value = false;
     };
 
     const closeMessageSocket = () => { 
@@ -204,6 +208,7 @@ export const useSocketStore = defineStore("socket", () => {
         closeLocationSocket,
         initAllSocket,
         closeAllSocket,
+
     };
 
 });
