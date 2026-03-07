@@ -1,10 +1,36 @@
 <template>
-    <div class="sidebar-container">
+    <div class="sidebar-container" v-if="this.isMobile != true">
         <router-link v-for="option in options" :key="option.id" :to="option.path">
             <div class="sidebar-option"> 
                 <span class="option-text">{{ option.name }}</span>
             </div>
         </router-link>
+
+        <el-drawer
+            v-model="drawerVisible"
+            direction="ltr" 
+            :with-header=false
+            size="25%"
+        >
+            <el-menu mode="vertical" @select="handleSelect">
+                <router-link 
+                    v-for="option in visibleOptions"
+                    :key="option.id"
+                    :to="option.path"
+                    custom 
+                    v-slot="{ isActive, navigate }"
+                    @click="drawerVisible=false"
+                >
+                    <el-menu-item
+                        :name="option.name"
+                        :active="isActive"
+                        @click="navigate"
+                    >
+                        {{ option.name }}
+                    </el-menu-item>
+                </router-link>
+            </el-menu>
+        </el-drawer>
     </div>
 </template>
 
@@ -16,6 +42,7 @@
         props: {
             
         },
+        inject: ['isMobile'],
         data() {
             return {
                 options: [

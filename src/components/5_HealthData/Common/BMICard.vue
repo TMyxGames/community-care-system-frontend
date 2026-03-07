@@ -20,38 +20,50 @@
         </div>
         <!-- 内容区 -->
         <div class="content-row">
+            <!-- 桌面端显示 -->
             <div class="data-view" 
                 v-if="timeControl === 'latest' && summary"
                 key="latest"
             >
-                <div class="chart-wrapper">
-                    <VueDataUi
-                        v-if="summary && currentBmiValue > 0"
-                        :key="currentBmiValue"
-                        component="VueUiGauge"
-                        :dataset="gaugeDataset"
-                        :config="gaugeConfig"
-                    />
-                    <div v-else>暂无数据</div>
+
+                <div class="row">
+                    <div class="chart-wrapper">
+                        <VueDataUi
+                            v-if="summary && currentBmiValue > 0"
+                            :key="currentBmiValue"
+                            component="VueUiGauge"
+                            :dataset="gaugeDataset"
+                            :config="gaugeConfig"
+                        />
+                        <div v-else>暂无数据</div>
+                    </div>
                 </div>
-                <card-cell
-                    label="身高"
-                    :value="summary.latestBmi?.height"
-                    unit="cm"
-                    color="#ff6f3c"
-                />
-                <card-cell
-                    label="体重"
-                    :value="summary.latestBmi?.weight"
-                    unit="kg"
-                    color="#ff9a3c"
-                />
-                <card-cell
-                    label="BMI"
-                    :value="summary.latestBmi?.bmi"
-                    color="#ff9a3c"
-                />
+                <div class="row">
+                    <card-cell
+                        label="身高"
+                        :value="summary.latestBmi?.height"
+                        valueSize="clamp(1.5rem, 3vw, 3rem)"
+                        unit="cm"
+                        color="#ff6f3c"
+                    />
+                    <card-cell
+                        label="体重"
+                        :value="summary.latestBmi?.weight"
+                        valueSize="clamp(1.5rem, 3vw, 3rem)"
+                        unit="kg"
+                        color="#ff9a3c"
+                    />
+                    <card-cell
+                        label="BMI"
+                        :value="summary.latestBmi?.bmi"
+                        valueSize="clamp(1.5rem, 3vw, 3rem)"
+                        color="#ff9a3c"
+                    />
+                </div>
             </div>
+
+
+
             <div class="data-view" 
                 v-else-if="timeControl === '7days' && bmiHistory"
                 key="7days"
@@ -97,6 +109,7 @@
             const healthStore = useHealthStore();
             return { healthStore };
         },
+        inject: ['isMobile'],
         data() {
             return {
                 timeControl: "latest",
@@ -279,12 +292,23 @@
         gap: var(--thin-gap);
     }
 
+    .row {
+        width: auto;
+        height: auto;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        
+    }
+
     .data-view {
         width: 100%;
         height: 100%;
         box-sizing: border-box;
 
         display: flex;
+        flex-direction: column;
         gap: 1rem;
     }
 

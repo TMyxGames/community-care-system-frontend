@@ -179,7 +179,6 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
-        gap: 1rem;
     }
 
     .latest-data-view {
@@ -193,7 +192,7 @@
 
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
+        gap: var(--thin-gap);
     }
 
     .cells-latest {
@@ -204,10 +203,6 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
-        gap: 0.5rem;
-
-        /* background-color: #6eb6ff; */
-        /* border-radius: 1rem; */
     }
 
     .cells-label {
@@ -292,5 +287,11 @@
         font-size: 32px;
         font-weight: 700;
 
+    }
+
+    @media (max-width: 768px) { 
+        .latest-data-view {
+            gap: 0.5rem;
+        }
     }
 </style>

@@ -21,9 +21,10 @@
             CardLayer,
             MySideBar,
         },
+        inject: ['isMobile'],
         data() {
             return {
-
+                drawerVisible: false,
             }
         },
     }
@@ -62,5 +63,12 @@
         flex-direction: column;
         justify-content: center;
         
+    }
+
+    @media (max-width: 768px) {
+        .my-container {
+            display: flex;
+        }
+
     }
 </style>

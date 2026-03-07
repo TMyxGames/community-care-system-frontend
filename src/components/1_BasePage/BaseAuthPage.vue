@@ -1,21 +1,17 @@
 <template>
-    <GlobalBackground></GlobalBackground>
+    <GlobalBackground/>
     <div id="login-overlay">
-        <!-- 返回按钮需要完善效果 -->
-        <router-link to="/PageHome">
+        <router-link to="/PageHome" v-if="this.isMobile != true">
             <button class="back">← 返回主页</button>
         </router-link>
-        <!-- <button class="back" @click="goHome">← 返回主页</button>  -->
-
         <!-- logo区域 -->
-        <div id="logo-area">
+        <div id="logo-area" v-if="this.isMobile != true">
             <img id="logo" src="@/assets/房子.png" alt="logo">
             <div id="title">社区智慧养老服务系统</div>
         </div>
-
         <!-- 卡片区域 -->
         <div id="card-area">
-            <router-view></router-view>
+            <router-view/>
         </div>
     </div>
 </template>
@@ -29,6 +25,7 @@
         components: {
             GlobalBackground,
         },
+        inject: ['isMobile'],
         data() {
             return {
                 inputValue: '',

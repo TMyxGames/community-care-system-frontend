@@ -146,10 +146,11 @@
         width: 100%;
         height: auto;
 
-        background-color: white;
+        /* background-color: white; */
 
-        display: grid;
-        grid-template-columns: 20rem 1fr;
+        /* display: grid;
+        grid-template-columns: 20rem 1fr; */
+        display: flex;
         gap: 1rem;
     }
 
@@ -193,5 +194,15 @@
 
         display: flex;
         gap: 1rem;
+    }
+
+    @media (max-width: 768px) { 
+        .service-order-item {
+            flex-direction: column;
+        }
+        .img-area {
+            width: 100%;
+            height: 100%;
+        }
     }
 </style>

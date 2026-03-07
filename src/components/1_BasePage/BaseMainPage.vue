@@ -48,5 +48,11 @@
 
     margin-top: 7rem;
   }
+
+  @media (max-width: 768px) {
+    .main-page {
+        margin-top: 3.5rem;
+    }
+  }
       
 </style>

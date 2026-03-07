@@ -1,5 +1,6 @@
 <template>
     <div class="healthData-container" v-if="authStore.isLoggedIn">
+        <!-- 选择用户栏 -->
         <glass-layer class="choose_bar thin" v-if="authStore.activeRole !== 3">
             <!-- 自己的选项 -->
             <div class="option" v-if="authStore.activeRole === 3">
@@ -54,10 +55,10 @@
             </el-dialog>
         </glass-layer>
 
-        <HealthDataLayout></HealthDataLayout>
+        <HealthDataLayout/>
     </div>
-    <login-placeholder v-else/>
 
+    <login-placeholder v-else/>
 </template>
 
 <script>
@@ -176,6 +177,7 @@
         font-size: 28px;
         font-weight: bold;
         color: #132843;
+        overflow-x: auto;
 
         display: flex;
         gap: 1rem;
@@ -217,6 +219,22 @@
 
         /* cursor: pointer; */
         user-select: none;
+    }
+
+    @media (max-width: 768px) {
+        .choose_bar {
+            border-radius: 0rem 0rem 1.25rem 1.25rem;
+        }
+        .avatar {
+            width: 3rem;
+            height: 3rem;
+            border: 0.15rem solid rgba(255, 255, 255);
+        }
+        .add_option {
+            width: 3rem;
+            height: 3rem;
+            border: 0.15rem solid rgba(255, 255, 255);
+        }
     }
 
 </style>

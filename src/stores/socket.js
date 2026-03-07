@@ -197,8 +197,22 @@ export const useSocketStore = defineStore("socket", () => {
             default:
                 console.warn("未知的消息类型：", type);
         }
+    };
 
-        
+    // 向后端发送位置信息
+    const sendLocation = (lng, lat) => { 
+        if (locationSocket.value?.readyState === WebSocket.OPEN) {
+            const payload = { 
+                type: 'report_location',
+                lng: lng,
+                lat: lat,
+                userId: authStore.userInfo.id,
+                timestamp: Date.now(),
+            };
+            locationSocket.value.send(JSON.stringify(payload));
+        } else { 
+            console.error("位置服务器未连接，无法发送位置数据");
+        }
     };
 
     return { 
@@ -208,7 +222,7 @@ export const useSocketStore = defineStore("socket", () => {
         closeLocationSocket,
         initAllSocket,
         closeAllSocket,
-
+        sendLocation,
     };
 
 });

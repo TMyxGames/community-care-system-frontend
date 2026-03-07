@@ -21,13 +21,14 @@
         <!-- 内容区 -->
         <div class="content-row">
             <div class="data-view" v-if="timeControl === 'latest'" key="latest">
-                <div class="row">
+                <!-- <div class="row">
 
-                </div>
+                </div> -->
                 <div class="cells-latest">
                     <card-cell   
                         label="收缩压"
                         :value="summary.latestBp?.systolic"
+                        valueSize="clamp(1.5rem, 3vw, 3rem)"
                         unit="mmHg"
                         color="#c61951"
                     />
@@ -36,6 +37,7 @@
                     <card-cell   
                         label="舒张压"
                         :value="summary.latestBp?.diastolic"
+                        valueSize="clamp(1.5rem, 3vw, 3rem)"
                         unit="mmHg"
                         color="#f64662"
                     />
@@ -44,6 +46,7 @@
                     <card-cell   
                         label="静息心率"
                         :value="summary.latestBp?.heartRate"
+                        valueSize="clamp(1.5rem, 3vw, 3rem)"
                         unit="BPM"
                         color="#ea0599"
                     />

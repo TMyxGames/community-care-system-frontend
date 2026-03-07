@@ -1,8 +1,9 @@
 <template>
     <el-dialog
+        class="upload-health-data-dialog"
         v-model="visible"
         :title="'添加' + typeLabel"
-        width="400px"
+        width="25rem"
         @close="handleClose"
         append-to-body
     >
@@ -154,3 +155,14 @@
     };
 
 </script>
+
+<style scoped>
+
+    @media (max-width: 768px) { 
+        .upload-health-data-dialog {
+            width: 10rem;
+        }
+
+    }
+    
+</style>

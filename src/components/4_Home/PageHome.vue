@@ -34,17 +34,6 @@
 
             <h1 id="title">你好</h1>
             <h2 id="subtitle">欢迎来到我的个人页面</h2>
-            <h2 id="subtitle">假设我这里有很多很多内容</h2>
-            <h2 id="subtitle">假设我这里有很多很多内容</h2>
-            <h2 id="subtitle">假设我这里有很多很多内容</h2>
-            <h2 id="subtitle">假设我这里有很多很多内容</h2>
-            <h2 id="subtitle">假设我这里有很多很多内容</h2>
-            <h2 id="subtitle">假设我这里有很多很多内容</h2>
-            <h2 id="subtitle">假设我这里有很多很多内容</h2>
-            <h2 id="subtitle">假设我这里有很多很多内容</h2>
-            <h2 id="subtitle">假设我这里有很多很多内容</h2>
-            <h2 id="subtitle">假设我这里有很多很多内容</h2>
-            <h2 id="subtitle">假设我这里有很多很多内容</h2>
         </glass-layer>
     </mid-overlay>
 </template>

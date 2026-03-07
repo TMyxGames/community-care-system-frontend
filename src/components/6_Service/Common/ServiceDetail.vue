@@ -34,7 +34,7 @@
 <script>
     import GlassLayer from '@/components/Common/GlassLayer.vue';
     import { useServiceStore } from '@/stores/service';
-    import { useCommentStore } from '@/stores/comment';
+    import { useEvaluationStore } from '@/stores/evaluation';
     import MarkdownIt from 'markdown-it';
 
     export default {
@@ -44,8 +44,8 @@
         },
         setup() {
             const serviceStore = useServiceStore();
-            const commentStore = useCommentStore();
-            return { serviceStore, commentStore }
+            const evaluationStore = useEvaluationStore();
+            return { serviceStore, evaluationStore }
         },
         data() {
             return {
@@ -80,7 +80,7 @@
                 this.$router.push('/PageService');
             }
 
-            this.commentStore.getCommentList(id);
+            this.evaluationStore.getEvaluationList(id);
         },
         methods: {
             async loadMarkdown(url) {

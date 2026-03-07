@@ -2,7 +2,7 @@
     <div class="card-cell-container">
         <div class="card-cell-view">
             <div class="cells-label" :style="{ '--label-color' : color }">
-                <slot name="label" :style="{ '--label-size' : labelSize }">{{ label }}</slot>
+                <slot class="label-text" name="label" :style="{ '--label-size' : labelSize }">{{ label }}</slot>
             </div>
             <div class="cells-value">
                 <slot>
@@ -45,7 +45,7 @@
 
 <style scoped>
     .card-cell-container {
-        width: 100%;
+        width: auto;
         height: auto;
 
         display: flex;
@@ -107,5 +107,14 @@
     .unit {
         font-size: clamp(1rem, 2vw, 1.5rem);
         font-weight: 700;
+    }
+
+    @media (max-width: 768px) {
+        .cells-label::after {
+            height: 0.25rem;
+        }
+        .cells-label {
+            font-size: var(--label-size, clamp(0.8rem, 1.5vw, 1.5rem));
+        }
     }
 </style>

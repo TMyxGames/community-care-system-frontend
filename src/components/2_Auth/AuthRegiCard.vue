@@ -1,9 +1,19 @@
 <template>
-    <!-- 未来改动 -->
-    <!-- 注册后给按钮增加禁用状态,直到出现反馈为止，防止用户多次点击 -->
-    <div id="regi-card">
+    <div class="regi-card">
+        <router-link to="/PageHome" v-if="this.isMobile == true">
+            <el-button 
+                class="back"
+                type="primary"
+                text
+            >
+                ← 返回主页
+            </el-button>
+        </router-link>
+
         <h1>注 册</h1>
-        <div class="form-row"></div>
+
+        <div class="form-row" v-if="this.isMobile != true"></div>
+
         <div class="form-row">
             <InputBox1
                 v-model="regiForm.username"
@@ -12,7 +22,6 @@
                 moduleWidth="20rem"
                 moduleHeight="3rem"
                 type="text"
-                clearable
             />
         </div>
         <div class="form-row">
@@ -23,7 +32,6 @@
                 moduleWidth="20rem"
                 type="password"
                 @input="checkPassword"
-                clearable
                 showPassword
             />
         </div>
@@ -34,6 +42,7 @@
                 title2="确认密码"
                 moduleWidth="20rem"
                 type="password"
+                showPassword
                 :status="statusPassword"
                 @input="checkPassword"
                 @blur="checkPassword"
@@ -75,11 +84,11 @@
             <el-radio-group v-model="regiForm.role">
                 <el-radio :label="0">家属</el-radio>
                 <el-radio :label="3">老人</el-radio>
-                <el-radio :label="2">服务人员</el-radio>
-                <el-radio :label="1">管理员</el-radio>
+                <!-- <el-radio :label="2">服务人员</el-radio> -->
+                <!-- <el-radio :label="1">管理员</el-radio> -->
             </el-radio-group>
         </div>
-        <div class="form-row">
+        <div class="form-row message-row">
             <label class="prompt">
                 {{ promptMessage }}
             </label>
@@ -97,9 +106,12 @@
             </el-button>
 
         </div>
-        <div class="form-row" id="bottom-row">
+        <div class="form-row bottom-row">
             <router-link to="/PageLogin">
-                <button>有账号了？去登录</button>
+                <el-button
+                    type="primary"
+                    text
+                >有账号了？去登录</el-button>
             </router-link>
         </div>
     </div>
@@ -113,6 +125,7 @@
         components: {
             InputBox1
         },
+        inject: ['isMobile'],
         data() {
             return {
                 regiForm: {
@@ -160,6 +173,7 @@
                     });
 
                     this.promptMessage = '注册成功!';
+                    this.$message.success('注册成功');
                     this.$router.push('/PageLogin');
                 } catch (error) {
                     console.log("请求出错：", error);
@@ -225,9 +239,9 @@
 </script>
 
 <style scoped>
-    #regi-card {
-        width: 500px;
-        height: 900px;
+    .regi-card {
+        width: 30rem;
+        height: 50rem;
         box-sizing: border-box;
         background-color: rgba(255, 255, 255, 75%);
         /* background-color: rgba(128, 128, 128, 0.75); */
@@ -238,6 +252,12 @@
         display: flex;
         flex-direction: column;
         /* gap: 20px; */
+    }
+
+    .back {
+        position: absolute;
+        top: 0.5rem;
+        left: 0.25rem;
     }
 
     .form-row {
@@ -274,7 +294,17 @@
         border-radius: 0.5rem;
     }
 
-    #bottom-row {
-        margin-top: auto;
+    @media (max-width: 768px) {
+        .regi-card {
+            width: 100vw;
+            height: 100vh;
+            border-radius: 0;
+        }
+        .message-row { 
+            height: 1rem;
+        }
+        .bottom-row {
+            margin-top: 0;
+        }
     }
 </style>

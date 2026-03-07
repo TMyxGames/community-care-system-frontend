@@ -1,7 +1,19 @@
 <template>
-    <div id="login-card">
+    <div class="login-card">
+        <router-link to="/PageHome" v-if="this.isMobile == true">
+            <el-button 
+                class="back"
+                type="primary"
+                text
+            >
+                ← 返回主页
+            </el-button>
+        </router-link>
+
         <h1>登 录</h1>
+
         <div class="form-row"></div>
+
         <div class="form-row">
             <InputBox1
                 v-model="LoginForm.email"
@@ -22,7 +34,10 @@
             />
         </div>
         <div class="form-row">
-            <el-radio-group v-model="LoginForm.selectedRole">
+            <el-radio-group
+                class="radio-group"
+                v-model="LoginForm.selectedRole"
+            >
                 <el-radio :label="0">家属</el-radio>
                 <el-radio :label="3">老人</el-radio>
                 <el-radio :label="2">服务人员</el-radio>
@@ -31,7 +46,7 @@
         </div>
         <div class="form-row">
             <el-button
-                class="submit-btn"
+                class="login-btn"
                 @click="handelLogin"
                 type="primary"
                 plain
@@ -40,12 +55,19 @@
             >
             登录
             </el-button>
-
-            <!-- <button class="submit-btn" @click="handelRegister">立即注册</button> -->
         </div>
         <div class="form-row bottom-row">
             <router-link to="/PageRegister">
-                <button>前往注册</button>
+                <el-button
+                    type="primary"
+                    text
+                >忘记密码</el-button>
+            </router-link>
+            <router-link to="/PageRegister">
+                <el-button
+                    type="primary"
+                    text
+                >前往注册</el-button>
             </router-link>
         </div>
     </div>
@@ -60,6 +82,7 @@
         components: {
             InputBox1
         },
+        inject: ['isMobile'],
         setup() {
             const authStore = useAuthStore();
             return { authStore };
@@ -112,9 +135,9 @@
 </script>
 
 <style scoped>
-    #login-card {
-        width: 500px;
-        height: 700px;
+    .login-card {
+        width: 30rem;
+        height: 40rem;
         box-sizing: border-box;
         
         background-color: rgba(255, 255, 255, 75%);
@@ -125,6 +148,12 @@
         display: flex;
         flex-direction: column;
         /* gap: 20px; */
+    }
+
+    .back {
+        position: absolute;
+        top: 0.5rem;
+        left: 0.25rem;
     }
 
     .form-row {
@@ -138,7 +167,27 @@
         gap: 10px;
     }
 
+    .login-btn {
+        width: 20rem;
+        height: 3rem;
+
+        box-sizing: border-box;
+        border-radius: 0.5rem;
+    }
+
     .bottom-row {
         margin-top: auto;
+        margin-bottom: 10rem;
+    }
+
+    @media (max-width: 768px) {
+        .login-card {
+            width: 100vw;
+            height: 100vh;
+            border-radius: 0;
+        }
+        .bottom-row {
+            margin-top: 0;
+        }
     }
 </style>

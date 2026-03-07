@@ -5,22 +5,25 @@
         </div>
         <div class="content-row">
             
-            <img class="user-logo" :src="$getFileUrl(summary.avatarUrl) || defaultAvatar" alt="头像">
+            <img class="user-avatar" :src="$getFileUrl(summary.avatarUrl) || defaultAvatar" alt="头像">
             
             <div class="data-view">
                 <card-cell
+                    class="cell"
                     label="姓名"
                     :value="summary.username"
                     valueSize="clamp(1.5rem, 3vw, 3rem)"
                     color="#5e63b6"
                 />
                 <card-cell
+                    class="cell"
                     label="性别"
                     :value="summary.sex"
                     valueSize="clamp(1.5rem, 3vw, 3rem)"
                     color="#5e63b6"
                 />
                 <card-cell
+                    class="cell"
                     label="年龄"
                     :value="summary.age"
                     valueSize="clamp(1.5rem, 3vw, 3rem)"
@@ -95,17 +98,16 @@
         height: 100%;
         box-sizing: border-box;
 
-        /* background-color: #6eb6ff; */
-
         display: flex;
+        flex-direction: row;
         align-items: center;
         gap: 1.5rem;
 
     }
 
-    .user-logo {
-        width: 10rem;
-        height: 10rem;
+    .user-avatar {
+        width: clamp(6rem, 10vw, 10rem);
+        height: clamp(6rem, 10vw, 10rem);
         /* padding-top: 0.2rem; */
 
         border-radius: 50%;
@@ -115,14 +117,18 @@
         width: 100%;
         height: 100%;
         box-sizing: border-box;
-        /* padding: 1.5rem; */
-
-        /* display: grid; */
-        /* grid-template-columns: repeat(3, 1fr); */
-        /* grid-template-rows: repeat(2, 1fr); */
+    
         display: flex;
         align-items: center;
+        justify-content: space-around;
         gap: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .user-avatar {
+            width: 6rem;
+            height: 6rem;
+        }
     }
 
 </style>

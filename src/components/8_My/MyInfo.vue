@@ -18,10 +18,15 @@
                 <label class="info-label">ID:</label>
                 <label class="user-id">{{ userInfo.id }}</label>
             </div>
+
             <div class="edit" v-if="isEditing">
                 <div class="cell">
                     <label class="info-label">用户名</label>
                     <input class="info" type="text" :value="userInfo.username"/>
+                </div>
+                <div class="cell">
+                    <label class="info-label">真实姓名</label>
+                    <input class="info" type="text" :value="userInfo.realName"/>
                 </div>
                 <div class="cell">
                     <label class="info-label">性别</label>
@@ -33,14 +38,25 @@
                 <el-button type="primary" @click="saveEdit">保存编辑</el-button>
                 <el-button type="primary" @click="isEditing = false">取消保存</el-button>
             </div>
+
             <div class="display" v-else>
                 <div class="cell">
                     <label class="info-label">用户名</label>
-                    <input class="info" type="text" :value="userInfo.username"/>
+                    <span class="info">
+                        {{ userInfo.username }}
+                    </span>
+                </div>
+                <div class="cell">
+                    <label class="info-label">真实姓名</label>
+                    <span class="info">
+                        {{ userInfo.realName }}
+                    </span>
                 </div>
                 <div class="cell">
                     <label class="info-label">性别</label>
-                    <input class="info" type="text" :value="userInfo.sex"/>
+                    <span class="info">
+                        {{ userInfo.sex }}
+                    </span>
                 </div>
                 <el-button type="primary" @click="startEdit">编辑资料</el-button>
             </div>
@@ -101,6 +117,7 @@
 
     const editForm = reactive({
         username: '',
+        realName: '',
         sex: '',
         password: ''
     });

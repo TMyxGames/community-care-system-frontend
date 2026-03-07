@@ -187,4 +187,11 @@
         position: absolute;
         z-index: 10;
     }
+
+    @media (max-width: 768px) { 
+        .header {
+            top: 0.25rem;
+            left: 0.25rem;
+        }
+    }
 </style>

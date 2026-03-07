@@ -1,5 +1,13 @@
 <template>
-    <glass-layer class="message-container thin" v-if="authStore.isLoggedIn">
+    <glass-layer class="message-container thin" v-if="authStore.isLoggedIn && this.isMobile != true">
+        <message-side-bar/>
+
+        <card-layer class="main">
+            <router-view/>
+        </card-layer>
+    </glass-layer>
+
+    <glass-layer class="message-container thin" v-else-if="authStore.isLoggedIn && this.isMobile == true">
         <message-side-bar/>
 
         <card-layer class="main">
@@ -29,6 +37,7 @@
             BaseTitle,
             MessageSideBar
         },
+        inject: ['isMobile'],
         setup() {
             const authStore = useAuthStore();
             return { authStore };
@@ -67,5 +76,9 @@
     .main {
         height: 100%;
         width: 100%;
+    }
+
+    @media (max-width: 768px) {
+
     }
 </style>
