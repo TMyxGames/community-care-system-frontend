@@ -72,7 +72,7 @@
             </template>
         </el-dialog>
         <!-- 模拟定位控制区域 -->
-        <location-control :userId="34" type="user"/>
+        <location-control :userId="37" type="user"/>
 
     </glass-layer>
     <login-placeholder v-else/>

@@ -22,7 +22,15 @@ export const useSocketStore = defineStore("socket", () => {
         // 如果是已连接或未登录，则不初始化连接
         if (messageSocket.value?.readyState === WebSocket.OPEN || !authStore.userInfo?.id) return;
 
-        const ws = new WebSocket (`ws://localhost:8081/ws/message?userId=${authStore.userInfo.id}`);
+        // 根据当前页面协议自动切换 ws 或 wss
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        // 获取当前前端页面的主机和端口
+        const host = window.location.host;
+        // 拼接 url
+        const wsUrl = `${protocol}//${host}/ws/message?userId=${authStore.userInfo.id}`;
+        console.log("正在通过代理连接消息服务器:", wsUrl);
+        const ws = new WebSocket(wsUrl);
+        // const ws = new WebSocket (`ws://localhost:8081/ws/message?userId=${authStore.userInfo.id}`);
 
         ws.onopen = () => { 
             console.log("已连接到消息服务器");
@@ -65,7 +73,15 @@ export const useSocketStore = defineStore("socket", () => {
         // 如果是已连接或未登录，则不初始化连接
         if (locationSocket.value?.readyState === WebSocket.OPEN || !authStore.userInfo?.id) return;
 
-        const ws = new WebSocket (`ws://localhost:8081/ws/location?userId=${authStore.userInfo.id}`);
+        // 根据当前页面协议自动切换 ws 或 wss
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        // 获取当前前端页面的主机和端口
+        const host = window.location.host;
+        // 拼接 url
+        const wsUrl = `${protocol}//${host}/ws/location?userId=${authStore.userInfo.id}`;
+        console.log("正在通过代理连接位置服务器:", wsUrl);
+        const ws = new WebSocket(wsUrl); 
+        // const ws = new WebSocket (`ws://localhost:8081/ws/location?userId=${authStore.userInfo.id}`);
 
         ws.onopen = () => { 
             console.log("已连接到位置服务器");
@@ -175,9 +191,9 @@ export const useSocketStore = defineStore("socket", () => {
                 locationStore.showSafetyDialog = false;
                 locationStore.dialogStage = 0;
                 locationStore.currentAlarmingElderId = null;
-                if (locationStore.isInAlarmStatus) {
-                    locationStore.isInAlarmStatus[elderId] = false;
-                }
+                // if (locationStore.isInAlarmStatus) {
+                //     locationStore.isInAlarmStatus[elderId] = false;
+                // }
                 // 根据类型显示不同的UI
                 if (action === "leave") {
                     ElNotification({
@@ -207,6 +223,7 @@ export const useSocketStore = defineStore("socket", () => {
                 lng: lng,
                 lat: lat,
                 userId: authStore.userInfo.id,
+                avatarUrl: authStore.userInfo.avatarUrl,
                 timestamp: Date.now(),
             };
             locationSocket.value.send(JSON.stringify(payload));

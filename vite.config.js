@@ -19,7 +19,12 @@ export default defineConfig({
       '/files': {
         target: 'http://localhost:8081',
         changeOrigin: true,
-      }
+      },
+      '/ws': {
+        target: 'http://127.0.0.1:8081',
+        ws: true,
+        changeOrigin: true,
+      },
     }
   }
 })

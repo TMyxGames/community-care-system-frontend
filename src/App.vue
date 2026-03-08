@@ -32,43 +32,58 @@
     const token = localStorage.getItem('token');
     // 必须同时具备token和 userInfo.id才能初始化
     if (token && authStore.userInfo?.id) {
-        console.log("鉴权通过");
+        console.log("鉴权通过，初始化各项服务...");
+        // 初始化所有ws服务
         socketStore.initAllSocket();
+        // 获取并同步告警状态
+        locationStore.loadMonitoringData();
+        // 如果当前用户是老人，开启定时定位上报
+        if (authStore.userInfo.role === 3) {
+          startLocationReporting();
+        }
     }
   };
 
   let locationTimer = null;
-  // 开启定时定位上报
+  // 定时定位上报
   const startLocationReporting = async () => {
-    try {
-        // 1. 即使不渲染地图，也要先 load API，确保 window.AMap 被注入
-        const AMap = await AMapLoader.load({
-            key: "28fa556174185bba89d841f3c448147d", // 必填
-            version: "2.0",    // 建议 2.0
-            plugins: ['AMap.Geolocation'], // 直接在这里声明插件
-        });
-
-        const geolocation = new AMap.Geolocation({
-            enableHighAccuracy: true,
-            timeout: 10000,
-        });
-
-        // 每5秒获取一次位置
-        locationTimer = setInterval(() => {
-            geolocation.getCurrentPosition((status, result) => {
-                if (status === 'complete') {
-                    const { lng, lat } = result.position;
-                    socketStore.sendLocation(lng, lat);
-                    console.log(`[定时上报成功] 经度: ${lng}, 纬度: ${lat}`);
-                } else {
-                    console.error('定位失败，可能是未开启HTTPS或浏览器权限拒绝:', result.message);
-                }
-            });
-        }, 5000);
-
-    } catch (e) {
-        console.error('高德地图加载失败:', e);
+    // 判断当前用户身份是否为老人
+    if (authStore.userInfo.role !== 3) {
+      console.log('当前用户身份非老人，无需上报位置');
+      return;
     }
+    // 防抖，如果已存在定时器则清除
+    if (locationTimer) clearInterval(locationTimer);
+
+    AMapLoader.load({
+        key: "28fa556174185bba89d841f3c448147d", // 必填
+        version: "2.0",    // 建议 2.0
+        plugins: ['AMap.Geolocation'], // 直接在这里声明插件
+    }).then((AMap) => {
+      const geolocation = new AMap.Geolocation({
+        enableHighAccuracy: true, // 开启高精度定位
+        timeout: 10000, // 超过10秒停止定位
+        useNative: true,
+        convert: false,
+        noIpLocate: 1, // 是否禁止IP定位。0:都用 1:手机上不用 2:PC上不用 3:都不用
+        noGeoLocation: 0, // 是否禁止浏览器获取位置
+        extensions: 'all'
+      });
+      // 立即执行一次，然后开启定时器，每10秒上报一次位置
+      const report = () => {
+          geolocation.getCurrentPosition((status, result) => {
+              if (status === 'complete') {
+                console.log('定位来源：', result.location_type);
+                const { lng, lat } = result.position;
+                socketStore.sendLocation(lng, lat);
+                console.log(`[定时上报成功] 经度: ${lng}, 纬度: ${lat}`);
+              }
+          });
+      };
+
+      report();
+      locationTimer = setInterval(report, 10000);
+    })
   };
 
   // 停止定位上报
@@ -81,15 +96,15 @@
   };
 
   onMounted(() => {
+    // 监听窗口大小变化
+    window.addEventListener('resize', updateSize);
     // 如果刷新后发现用户已经登录，立即初始化一次
     if (authStore.isLoggedIn) {
-      console.log('检测到已登录状态，正在恢复ws连接...');
+      console.log('检测到已登录状态，正在恢复服务...');
       initAllAppService();
-      locationStore.loadMonitoringData();
     }
 
 
-    window.addEventListener('resize', updateSize);
   });
 
   onUnmounted(() => {
@@ -102,17 +117,11 @@
 
   watch(
     () => authStore.userInfo?.id, 
-    (newId) => {
-      if (newId) {
+    (loggedIn) => {
+      if (loggedIn) {
         initAllAppService();
-        // 延迟执行，确保 WebSocket 已初始化并连接
-        setTimeout(() => {
-          startLocationReporting();
-        }, 2000);
       } else {
-        if (socketStore.isConnected) {
-          socketStore.closeAllSocket();
-        }
+        socketStore.closeAllSocket();
         stopLocationReporting();
       }
     }, 
