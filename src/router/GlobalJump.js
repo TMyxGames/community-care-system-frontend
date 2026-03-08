@@ -5,6 +5,7 @@ import BaseBackendPage from '@/components/1_BasePage/BaseBackendPage.vue'
 
 import AuthLoginCard from '@/components/2_Auth/AuthLoginCard.vue'
 import AuthRegiCard from '@/components/2_Auth/AuthRegiCard.vue'
+import AuthForgetCard from '@/components/2_Auth/AuthForgetCard.vue'
 
 import PageHome from '@/components/4_Home/PageHome.vue'
 import PageHealthData from '@/components/5_HealthData/PageHealthData.vue'
@@ -77,6 +78,7 @@ const routes = [
     children: [
       { path: '/PageLogin', component: AuthLoginCard },
       { path: '/PageRegister', component: AuthRegiCard },
+      { path: '/PageForget', component: AuthForgetCard },
     ]
   },
   { path: '/manage', component: BaseBackendPage, redirect: "/ManageUser", 

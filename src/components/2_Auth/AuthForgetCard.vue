@@ -1,5 +1,5 @@
 <template>
-    <div class="regi-card">
+    <div class="forget-card">
         <router-link to="/PageHome" v-if="this.isMobile == true">
             <el-button 
                 class="back"
@@ -10,48 +10,13 @@
             </el-button>
         </router-link>
 
-        <h1>注 册</h1>
+        <h1>找回密码</h1>
 
         <div class="form-row" v-if="this.isMobile != true"></div>
 
         <div class="form-row">
             <InputBox1
-                v-model="regiForm.username"
-                title1="请输入用户名"
-                title2="用户名"
-                moduleWidth="20rem"
-                moduleHeight="3rem"
-                type="text"
-            />
-        </div>
-        <div class="form-row">
-            <InputBox1
-                v-model="regiForm.password1"
-                title1="请输入密码"
-                title2="密码"
-                moduleWidth="20rem"
-                type="password"
-                @input="checkPassword"
-                showPassword
-            />
-        </div>
-        <div class="form-row">
-            <InputBox1
-                v-model="regiForm.password2"
-                title1="请再次输入密码"
-                title2="确认密码"
-                moduleWidth="20rem"
-                type="password"
-                showPassword
-                :status="statusPassword"
-                @input="checkPassword"
-                @blur="checkPassword"
-                @focus="statusPassword = 'default'"
-            />
-        </div>
-        <div class="form-row">
-            <InputBox1
-                v-model="regiForm.email"
+                v-model="resetForm.email"
                 title1="请输入邮箱"
                 title2="邮箱"
                 moduleWidth="20rem"
@@ -62,7 +27,7 @@
         </div>
         <div class="form-row">
             <InputBox1
-                v-model="regiForm.captcha"
+                v-model="resetForm.captcha"
                 title1="请输入验证码"
                 title2="验证码"
                 moduleWidth="14.5rem"
@@ -80,29 +45,42 @@
                 {{ countdown > 0 ? `${countdown}s后重新发送` : '获取验证码' }}
             </el-button>
         </div>
+
         <div class="form-row">
-            <el-radio-group v-model="regiForm.role">
-                <el-radio :label="0">家属</el-radio>
-                <el-radio :label="3">老人</el-radio>
-                <!-- <el-radio :label="2">服务人员</el-radio> -->
-                <!-- <el-radio :label="1">管理员</el-radio> -->
-            </el-radio-group>
+            <InputBox1
+                v-model="resetForm.password1"
+                title1="请输入密码"
+                title2="密码"
+                moduleWidth="20rem"
+                type="password"
+                @input="checkPassword"
+                showPassword
+            />
         </div>
-        <div class="form-row message-row">
-            <label class="prompt">
-                {{ promptMessage }}
-            </label>
+        <div class="form-row">
+            <InputBox1
+                v-model="resetForm.password2"
+                title1="请再次输入密码"
+                title2="确认密码"
+                moduleWidth="20rem"
+                type="password"
+                showPassword
+                :status="statusPassword"
+                @input="checkPassword"
+                @blur="checkPassword"
+                @focus="statusPassword = 'default'"
+            />
         </div>
         <div class="form-row">
             <el-button
                 class="submit-btn"
-                @click="handelRegister"
+                @click="handelResetPwd"
                 type="primary"
                 plain
                 color="#6191D3"
                 size="large"
             >
-            立即注册
+            重置密码
             </el-button>
 
         </div>
@@ -121,19 +99,17 @@
     import InputBox1 from '../Common/InputBox1.vue'
     
     export default {
-        name: 'LoginCard',
+        name: 'AuthForgetCard',
         components: {
             InputBox1
         },
         inject: ['isMobile'],
         data() {
             return {
-                regiForm: {
-                    username: '',
+                resetForm: {
                     password1: '',
                     password2: '',
                     email: '',
-                    role: 0,
                     captcha: '',
                 },
                 // 验证码相关
@@ -143,81 +119,46 @@
 
                 statusPassword: 'default', //密码状态（改变样式）
                 statusEmail: 'default', //邮箱状态（改变样式）
-                promptMessage: '', //提示信息
                 isPasswordMatch: true, //密码一致状态
             }
         },
         methods: {
-            async handelRegister() {
-                this.checkPassword();
-
-                if (!this.isPasswordMatch) {
-                    this.promptMessage = '两次输入密码不一致';
+            async handelResetPwd() {
+                const { password1, password2, email, captcha } = this.resetForm;
+                if (!email || !captcha || !password1 || !password2) {
+                    this.$message.error('请填写完整信息');
                     return;
                 }
 
-                const { username, password1, password2, email, role, captcha } = this.regiForm;
-                if (!username || !password1 || !password2) {
-                    this.promptMessage = '请填写完整信息';
+                if (password1 !== password2) {
+                    this.statusPassword = 'danger';
+                    this.$message.error('两次输入密码不一致');
                     return;
                 }
 
-                this.promptMessage = '';
                 try {
-                    const res = await this.$http.post('/auth/register', {
-                        username: username,
+                    const res = await this.$http.put('/auth/reset', {
                         password: password1,
                         email: email,
-                        role: role,
                         captcha: captcha,
                     });
 
-                    this.promptMessage = '注册成功!';
-                    this.$message.success('注册成功');
+                    this.$message.success('密码重置成功');
                     this.$router.push('/PageLogin');
                 } catch (error) {
                     console.log("请求出错：", error);
-                    this.$message.error('注册失败');
+                    this.$message.error('密码重置失败');
                 }
-            },
-            checkPassword() {
-                if (this.regiForm.password2 === '') {
-                    this.statusPassword = 'default';
-                    this.isPasswordMatch = true;
-                    return;
-                }
-                if (this.regiForm.password2 === this.regiForm.password1) {
-                    this.statusPassword = 'success';
-                    this.isPasswordMatch = true;
-                    if (this.promptMessage === '两次输入密码不一致') {
-                        this.promptMessage = '';
-                    }
-                } else {
-                    this.statusPassword = 'danger';
-                    this.isPasswordMatch = false;
-                    this.promptMessage = '两次输入密码不一致';
-                }
-            },
-            checkUsername() {
-                if (this.regiForm.username === '') {
-                    this.promptMessage = '请填写用户名';
-                    return;
-                }
-                this.promptMessage = '';
-            
-                // TODO: 检查用户名是否合法
             },
             async sendCaptcha() {
-                if (!this.regiForm.email) {
-                    this.promptMessage = '请填写邮箱';
+                if (!this.resetForm.email) {
+                    this.$message.error('请填写邮箱');
                     return;
                 }
 
                 this.isCodeSending = true;
                 try {
-                    const res = await this.$http.post(`/auth/sendRegiCaptcha?email=${this.regiForm.email}`);
-
-                    this.promptMessage = '';
+                    const res = await this.$http.post(`/auth/sendResetCaptcha?email=${this.resetForm.email}`);
                     this.$message.success('验证码已发送');
 
                     this.countdown = 60;
@@ -228,7 +169,7 @@
                         }
                     }, 1000);
                 } catch (error) {
-                    this.promptMessage = '发送验证码失败';
+                    this.$message('发送验证码失败');
                 } finally {
                     this.isCodeSending = false;
                 }
@@ -239,7 +180,7 @@
 </script>
 
 <style scoped>
-    .regi-card {
+    .forget-card {
         width: 30rem;
         height: 50rem;
         box-sizing: border-box;

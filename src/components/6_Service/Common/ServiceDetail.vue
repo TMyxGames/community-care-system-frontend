@@ -24,6 +24,12 @@
             <!-- 评价区 -->
             <div class="rate-area">
                 <h1>用户评价</h1>
+                <evaluation-item
+                    v-for="item in evaluationStore.evaluationList"
+                    :key="item.id"
+                    :evaluationInfo="item"
+                
+                />
             </div>
         </glass-layer>
         <!-- <div class="loading" v-else>加载中...</div> -->
@@ -35,12 +41,14 @@
     import GlassLayer from '@/components/Common/GlassLayer.vue';
     import { useServiceStore } from '@/stores/service';
     import { useEvaluationStore } from '@/stores/evaluation';
+    import EvaluationItem from '@/components/8_My/Common/EvaluationItem.vue';
     import MarkdownIt from 'markdown-it';
 
     export default {
         name: 'ServiceDetail',
         components: {
             GlassLayer,
+            EvaluationItem,
         },
         setup() {
             const serviceStore = useServiceStore();

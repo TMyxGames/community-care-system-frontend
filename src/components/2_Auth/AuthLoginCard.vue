@@ -57,7 +57,7 @@
             </el-button>
         </div>
         <div class="form-row bottom-row">
-            <router-link to="/PageRegister">
+            <router-link to="/PageForget">
                 <el-button
                     type="primary"
                     text

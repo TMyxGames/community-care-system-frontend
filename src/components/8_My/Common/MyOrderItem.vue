@@ -111,7 +111,7 @@
                 }
 
                 try {
-                    const res = await this.$http.post('/comment/add', this.commentForm);
+                    const res = await this.$http.post('/evaluation/add', this.commentForm);
                     this.$message.success('评价成功');
                     this.dialogVisible = false;
                     this.$emit('refresh');
