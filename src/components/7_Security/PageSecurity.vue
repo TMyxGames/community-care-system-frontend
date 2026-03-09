@@ -12,6 +12,13 @@
             </div>
             
             <div class="side-area" v-if="authStore.activeRole !== 3">
+                <card-layer class="call-list">
+                    <emergency-call-item
+                        v-for="item in callStore.callList"
+                        :key="item.id"
+                        :callInfo="item"
+                    />    
+                </card-layer>
                 <!-- 区域列表 -->
                 <card-layer class="area-list">
                     <safe-area-item
@@ -83,6 +90,7 @@
     import { useAreaStore } from '@/stores/area';
     import { useHealthStore } from '@/stores/health';
     import { useLocationStore } from '@/stores/location';
+    import { useCallStore } from '@/stores/call';
     import { ElMessageBox } from 'element-plus';
     import GlassLayer from '../Common/GlassLayer.vue';
     import CardLayer from '../Common/CardLayer.vue';
@@ -90,6 +98,7 @@
     import BaseTitle from '../Common/BaseTitle.vue';
     import MapContainer from '../Common/MapContainer.vue';
     import SafeAreaItem from './Common/SafeAreaItem.vue';
+    import EmergencyCallItem from './Common/EmergencyCallItem.vue';
     import LocationControl from '../Common/LocationControl.vue';
 
 
@@ -102,6 +111,7 @@
             BaseTitle,
             MapContainer,
             SafeAreaItem,
+            EmergencyCallItem,
             LocationControl,
         },
         setup() {
@@ -109,8 +119,9 @@
             const areaStore = useAreaStore();
             const healthStore = useHealthStore();
             const locationStore = useLocationStore();
+            const callStore = useCallStore();
 
-            return { authStore, areaStore, healthStore, locationStore };
+            return { authStore, areaStore, healthStore, locationStore, callStore };
 
         },
         data() {
@@ -127,6 +138,7 @@
             if (this.authStore.isLoggedIn) {
                 this.loadAllAreas();
                 this.locationStore.loadMonitoringData();
+                this.callStore.getCallList();
             }
         },
         methods: {
@@ -288,9 +300,20 @@
         gap: var(--thin-gap);
     }
 
+    .call-list { 
+        width: auto;
+        height: 100%;
+        overflow-y: auto;
+
+        display: flex;
+        flex-direction: column;
+        gap: var(--thin-gap);
+    }
+
     .area-list { 
         width: auto;
         height: 100%;
+        overflow-y: auto;
 
         display: flex;
         flex-direction: column;
