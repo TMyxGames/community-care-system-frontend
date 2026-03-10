@@ -9,11 +9,14 @@ export const useCallStore = defineStore("call", {
   }),
   actions: {
     async getCallList() {
+      const authStore = useAuthStore();
       this.isLoading = true;
       this.callList = [];
 
       try {
-        const res = await request.get("/security/call/all");
+        const res = await request.get("/security/call/all", {
+          params: { role: authStore.userInfo.role }
+        });
         this.callList = res;
         console.log("紧急呼叫记录加载成功：", res);
       } catch (error) {

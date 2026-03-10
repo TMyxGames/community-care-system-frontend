@@ -25,7 +25,12 @@
                 <label class="name">{{ option.username }}</label>
             </div>
             <!-- 添加绑定按钮 -->
-            <button class="add_option" @click="goToBind"/>
+            <div class="option">
+                <button class="add_option" @click="goToBind">
+                    <span class="add-icon">+</span>
+                </button>
+                <label class="name">添加绑定</label>
+            </div>
             <!-- 点击添加绑定时弹出对话框 -->
             <el-dialog title="添加绑定" v-model="dialogVisible" append-to-body>
                 <div>
@@ -216,9 +221,15 @@
 
         border-radius: 50%;
         border: 0.25rem solid rgba(255, 255, 255);
+        background-color: #d6e6f2;
 
         /* cursor: pointer; */
         user-select: none;
+    }
+
+    .add-icon {
+        font-size: 2.5rem;
+        color: white;
     }
 
     @media (max-width: 768px) {

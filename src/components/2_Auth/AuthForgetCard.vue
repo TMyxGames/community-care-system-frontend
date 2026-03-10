@@ -182,7 +182,7 @@
 <style scoped>
     .forget-card {
         width: 30rem;
-        height: 50rem;
+        height: 45rem;
         box-sizing: border-box;
         background-color: rgba(255, 255, 255, 75%);
         /* background-color: rgba(128, 128, 128, 0.75); */

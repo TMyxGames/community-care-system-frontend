@@ -163,7 +163,7 @@
                         {
                             from: 15,
                             to: 18.4,
-                            color: '#008040',
+                            color: '#769fcd',
                             id: '111',
                             name: '偏瘦',
                             nameOffsetRatio: 1
@@ -171,7 +171,7 @@
                         {
                             from: 18.5,
                             to: 23.9,
-                            color: '#ff7f0e',
+                            color: '#1fab89',
                             id: '222',
                             name: '正常',
                             nameOffsetRatio: 1
@@ -179,7 +179,7 @@
                         {
                             from: 24,
                             to: 27.9,
-                            color: '#ff0000',
+                            color: '#ff7e67',
                             id: '333',
                             name: '超重',
                             nameOffsetRatio: 1
@@ -187,7 +187,7 @@
                         {
                             from: 28,
                             to: 40,
-                            color: '#0000ff',
+                            color: '#f25d9c',
                             name: '肥胖',
                             nameOffsetRatio: 1,
                             id: '029d32ce-a8e0-4554-bf44-3b0873ab5afa'

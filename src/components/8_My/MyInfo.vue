@@ -14,12 +14,13 @@
                 </el-button> -->
                 <img class="avatar" :src="$getFileUrl(userInfo.avatarUrl) || defaultAvatar" alt="用户头像" />
             </el-upload>
+
             <div class="cell id">
                 <label class="info-label">ID:</label>
                 <label class="user-id">{{ userInfo.id }}</label>
             </div>
 
-            <div class="edit" v-if="isEditing">
+            <div class="display" v-if="isEditing">
                 <div class="cell">
                     <label class="info-label">用户名</label>
                     <input class="info" type="text" :value="userInfo.username"/>
@@ -35,8 +36,19 @@
                         <el-option label="女" value="女" />
                     </el-select>
                 </div>
-                <el-button type="primary" @click="saveEdit">保存编辑</el-button>
-                <el-button type="primary" @click="isEditing = false">取消保存</el-button>
+                <div class="cell">
+                    <label class="info-label">生日</label>
+                    <el-date-picker
+                        class="birthday-select" 
+                        v-model="editForm.birthday" 
+                        type="date"
+                        placeholder="请选择生日"
+                    />
+                </div>
+                <div class="operation-area">
+                    <el-button type="primary" @click="saveEdit">保存编辑</el-button>
+                    <el-button type="primary" @click="isEditing = false">取消保存</el-button>
+                </div>
             </div>
 
             <div class="display" v-else>
@@ -58,18 +70,23 @@
                         {{ userInfo.sex }}
                     </span>
                 </div>
+                <div class="cell">
+                    <label class="info-label">生日</label>
+                    <span class="info">
+                        {{ formatTime(userInfo.birthday) }}
+                    </span>
+                </div>
                 <el-button type="primary" @click="startEdit">编辑资料</el-button>
             </div>
-            
-
-            
 
         </div>
-        <!-- <div class="form-row"></div> -->
+
         <base-title>账户安全</base-title>
-        <el-button type="warning" @click="pwdDialogVisible = true" :disabled="isEditing">
-            修改密码
-        </el-button>
+        <div class="form-row">
+            <el-button type="warning" @click="pwdDialogVisible = true" :disabled="isEditing">
+                修改密码
+            </el-button>
+        </div>
     </div>
 
     <el-dialog
@@ -119,6 +136,7 @@
         username: '',
         realName: '',
         sex: '',
+        birthday: '',
         password: ''
     });
 
@@ -140,11 +158,10 @@
     const saveEdit = async () => { 
         try {
             const res = await request.post('/auth/upload/info', editForm);
-            if (res) {
-                authStore.login(res, authStore.activeRole, authStore.token);
-                isEditing.value = false;
-                ElMessage.success("资料更新成功");
-            }
+
+            authStore.login(res, authStore.activeRole, authStore.token);
+            isEditing.value = false;
+            ElMessage.success("资料更新成功");
         } catch (error) {
             ElMessage.error("资料更新失败");
         }
@@ -231,6 +248,12 @@
         });
 
     };
+
+    // 格式化日期
+    const formatTime = (time) => {
+        if (!time) return '';
+        return time.replace('T', ' ').substring(0, 10);
+    };
 </script>
 
 <style scoped>
@@ -265,6 +288,19 @@
         /* background-color: #6eb6ff; */
         flex-direction: column;
         align-items: center;
+        gap: 1rem;
+    }
+
+    .display {
+        width: 100%;
+        height: auto;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        gap: 2rem;
+
     }
 
     .info-form {

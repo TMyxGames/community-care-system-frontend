@@ -11,8 +11,8 @@
                 />
             </div>
             
-            <div class="side-area" v-if="authStore.activeRole !== 3">
-                <card-layer class="call-list">
+            <div class="side-area">
+                <card-layer class="call-list" v-if="callStore.callList.length > 0">
                     <emergency-call-item
                         v-for="item in callStore.callList"
                         :key="item.id"
@@ -20,7 +20,7 @@
                     />    
                 </card-layer>
                 <!-- 区域列表 -->
-                <card-layer class="area-list">
+                <card-layer class="area-list" v-if="authStore.activeRole !== 3">
                     <safe-area-item
                         v-for="area in areaStore.areaList"
                         :key="area.id"
@@ -30,7 +30,7 @@
                     />
                 </card-layer>
                 <!-- 地图操作区 -->
-                <div class="map-control-area">
+                <div class="map-control-area" v-if="authStore.activeRole !== 3">
                     <el-button
                         type="primary"
                         @click="startDrawing"
@@ -224,7 +224,6 @@
                 if (!this.areaForm.name) return this.$message.warning("请填写名称");
 
                 const payload = {
-                    userId: this.authStore.userInfo.id,
                     areaName: this.areaForm.name,
                     scopePath: JSON.stringify(this.areaForm.path), // 将路径存储为JSON字符串
                     centerLng: this.areaForm.centerLng,
@@ -301,7 +300,7 @@
     }
 
     .call-list { 
-        width: auto;
+        width: 100%;
         height: 100%;
         overflow-y: auto;
 

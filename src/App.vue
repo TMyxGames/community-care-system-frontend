@@ -38,14 +38,15 @@
         // 获取并同步告警状态
         locationStore.loadMonitoringData();
         // 如果当前用户是老人，开启定时定位上报
-        if (authStore.userInfo.role === 3) {
+        // id=37是测试用户，用于手动控制定位，不进行上报
+        if (authStore.userInfo.role === 3 && authStore.userInfo.id !== 37) {
           startLocationReporting();
         }
     }
   };
 
   let locationTimer = null;
-  // 定时定位上报
+  // 定时推送位置
   const startLocationReporting = async () => {
     // 判断当前用户身份是否为老人
     if (authStore.userInfo.role !== 3) {
