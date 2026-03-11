@@ -34,7 +34,7 @@
                     老人长时间处于区域外且未返回，您是否知晓此情况？
                 </p>
                 <div v-if="locationStore.dialogStage === 2" class="action-area">
-                    <p>您可以为老人设置临时离开时间（期间不再报警）：</p>
+                    <p>您可以为老人设置临时离开时间（期间不再提醒）：</p>
                     <el-select 
                         v-model="leaveMinutes" placeholder="请选择时长" style="width: 100%; margin-bottom: 10px;"
                         :teleported="true" popper-class="emergency-select-popper"
@@ -43,13 +43,20 @@
                         <el-option label="1 小时" :value="60" />
                         <el-option label="2 小时" :value="120" />
                     </el-select>
-                    <el-button type="success" @click="handleConfirmSafe">确认安全</el-button>
-                    <el-button type="danger" @click="handleImmediateCall">紧急呼叫</el-button>
+                    <!-- <el-button type="danger" @click="handleImmediateCall">紧急呼叫</el-button> -->
                 </div>
             </div>
         </div>
         <template #footer>
-            <el-button type="primary" @click="locationStore.showSafetyDialog = false">我知道了</el-button>
+            <el-button type="success" 
+                @click="handleConfirmSafe" 
+                v-if="authStore.userInfo.role !== 3 && locationStore.dialogStage === 2"
+            >
+                确认安全并设置静默
+            </el-button>
+            <el-button type="primary" @click="locationStore.showSafetyDialog = false">
+                我知道了
+            </el-button>
         </template>
     </el-dialog>
 </template>

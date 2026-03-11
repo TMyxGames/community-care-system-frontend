@@ -98,9 +98,9 @@
 <style scoped>
     .article-item-container {
         width: auto;
-        height: 10rem;
+        height: auto;
         padding: var(--thin-gap);
-        /* box-sizing: border-box; */
+        box-sizing: border-box;
 
         background-color: #cadefc;
         border-radius: 1.5rem;

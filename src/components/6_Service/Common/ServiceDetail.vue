@@ -9,13 +9,13 @@
                 <div class="introduce-area">
                     <label class="title">{{ currentService.title }}</label>
                     <label class="type">{{ currentService.type }}</label>
-                    <label class="price">{{ currentService.price }}</label>
+                    <label class="price">{{ currentService.price }}￥</label>
 
                     <div class="content markdown-body" v-html="renderedMarkdown"></div>
 
                     <div class="operation-row">
                         <el-button type="primary" @click="toOrder">预约服务</el-button>
-                        <el-button type="primary">收藏</el-button>
+                        <!-- <el-button type="primary">收藏</el-button> -->
                     </div>
                 </div>
                 
@@ -41,7 +41,7 @@
     import GlassLayer from '@/components/Common/GlassLayer.vue';
     import { useServiceStore } from '@/stores/service';
     import { useEvaluationStore } from '@/stores/evaluation';
-    import EvaluationItem from '@/components/8_My/Common/EvaluationItem.vue';
+    import EvaluationItem from '@/components/6_Service/Common/EvaluationItem.vue';
     import MarkdownIt from 'markdown-it';
 
     export default {
@@ -206,28 +206,14 @@
 
     }   
 
-    /* 4. Markdown 内容区域的基础样式调整 */
-    /* .markdown-body {
-        text-align: left;
-        line-height: 1.6;
-        word-wrap: break-word;
-        font-size: 1.1rem;
-        color: #333;
-        margin-top: 1rem;
-    } */
+    .price {
+        color: #ffc93c;
+        font-size: clamp(1rem, 1.5vw, 1.5rem);
+        font-weight: 700;
+        line-height: clamp(1rem, 1.5vw, 1.5rem);
 
-    /* 确保 Markdown 中的图片不会超出容器 */
-    /* .markdown-body :deep(img) {
-        max-width: 100%;
-        height: auto;
-        border-radius: 0.5rem;
-    } */
-
-    /* 简单的列表样式调整 */
-    /* .markdown-body :deep(ul), .markdown-body :deep(ol) {
-        padding-left: 1.5rem;
-        margin-bottom: 1rem;
-    } */
+        position: relative;
+    }
 
 
 

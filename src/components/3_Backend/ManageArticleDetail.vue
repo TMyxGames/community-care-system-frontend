@@ -152,6 +152,6 @@
     }
 
     .editor-body { 
-        height: 100%;
+        height: 60rem;
     }
 </style>

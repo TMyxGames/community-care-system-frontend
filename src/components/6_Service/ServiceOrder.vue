@@ -3,26 +3,41 @@
         <glass-layer class="service-order-container" v-if="serviceInfo">
             <base-title>创建订单</base-title>
 
-            <div class="service-order-item"> 
+            <card-layer class="service-order-item"> 
                 <div class="img-area">
                     <img class="img" :src="$getFileUrl(serviceInfo.imgUrl)" alt="图片" />
                 </div>
-                <div class="info-area">
-                    <label class="title">{{ serviceInfo.title }}</label>
-                    <label class="type">{{ serviceInfo.type }}</label>
-                    <label class="price">{{ serviceInfo.price }}</label>
+                <div class="detail-area">
+                    <div class="info">
+                        <label class="title">{{ serviceInfo.title }}</label>
+                        <label class="type">{{ serviceInfo.type }}</label>
+                        <label class="price">{{ serviceInfo.price }}￥</label>
+                    </div>
+                    <div class="control">
+                        <div class="contact">
+                            <el-input
+                                class="phone-input"
+                                v-model="orderForm.phone"
+                                placeholder="请输入手机号"
+                                clearable
+                                maxlength="11"
+                                show-word-limit
+                            ></el-input>
+                        </div>
+                        <div class="select-location">
+                            <p>下单地址：{{ this.orderForm.addressShot }}</p>
+                            <el-button 
+                                class="location-btn"
+                                type="primary"
+                                plain
+                                @click="showPicker = true"
+                            >
+                                选择地址
+                            </el-button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="section">
-                <p>下单地址：{{ this.orderForm.addressShot }}</p>
-                <el-button 
-                    class="location-btn"
-                    @click="showPicker = true"
-                >
-                    选择地址
-                </el-button>
-            </div>
+            </card-layer>
 
             <map-location-picker
                 :visible="showPicker"
@@ -52,6 +67,7 @@
     import { useAddressStore } from '@/stores/address';
     import MidOverlay from '../Common/MidOverlay.vue';
     import GlassLayer from '../Common/GlassLayer.vue';
+    import CardLayer from '../Common/CardLayer.vue';
     import BaseTitle from '../Common/BaseTitle.vue';
     import ServiceAddressItem from './Common/ServiceAddressItem.vue';
     import MapLocationPicker from '../Common/MapLocationPicker.vue';
@@ -61,6 +77,7 @@
         components: {
             MidOverlay,
             GlassLayer,
+            CardLayer,
             BaseTitle,
             ServiceAddressItem,
             MapLocationPicker,
@@ -78,6 +95,7 @@
                 orderForm: {
                     lng: null,
                     lat: null,
+                    phone: '',
                     addressShot: '',
                 },
             }
@@ -101,20 +119,20 @@
             },
             // 提交订单
             async submitOrder() {
-                if (!this.orderForm.lng || !this.orderForm.addressShot) {
-                    this.$message.error('请选择服务地址');
+                if (!this.orderForm.lng || !this.orderForm.addressShot || !this.orderForm.phone) {
+                    this.$message.error('请填写完整信息');
                     return;
                 }
                 
                 try {
                     const orderData = {
-                        // userId: this.authStore.userInfo.id,
                         serviceId: this.serviceInfo.id,
                         serviceTitle: this.serviceInfo.title,
                         serviceImg: this.serviceInfo.imgUrl,
                         servicePrice: this.serviceInfo.price,
                         lng: this.orderForm.lng,
                         lat: this.orderForm.lat,
+                        phone: this.orderForm.phone,
                         addressShot: this.orderForm.addressShot,
                     };
 
@@ -146,10 +164,6 @@
         width: 100%;
         height: auto;
 
-        /* background-color: white; */
-
-        /* display: grid;
-        grid-template-columns: 20rem 1fr; */
         display: flex;
         gap: 1rem;
     }
@@ -175,12 +189,75 @@
         aspect-ratio: 1 / 1;
     }
 
-    .section {
+    .detail-area {
         width: 100%;
         height: auto;
 
         display: flex;
         flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .info {
+        width: 100%;
+        height: fit-content;
+
+        display: flex;
+        align-items: center;
+        gap: var(--thin-gap);
+    }
+
+    .title {
+        height: fit-content;
+    }
+
+    .type {
+        height: fit-content;
+        width: fit-content;
+        padding: 0 0.1rem 0 0.1rem;
+        background-color: #6eb6ff;
+        color: #fff;
+        border-radius: 0.25rem;
+
+        font-size: clamp(1rem, 1.25vw, 1.25rem);
+        font-weight: 500;
+    }
+
+    .price {
+        color: #ffc93c;
+        font-size: clamp(1rem, 1.5vw, 1.5rem);
+        font-weight: 700;
+        line-height: clamp(1rem, 1.5vw, 1.5rem);
+
+        position: relative;
+    }
+
+    .control {
+        width: 100%;
+        height: auto;
+
+        display: flex;
+        flex-direction: column;
+
+        margin-top: auto;
+    }
+
+    .contact {
+        width: fit-content;
+        height: fit-content;
+
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+
+
+    .select-location {
+        width: 100%;
+        height: auto;
+
+        display: flex;
+        align-items: center;
         gap: 1rem;
     }
 
@@ -194,6 +271,14 @@
 
         display: flex;
         gap: 1rem;
+    }
+
+    .operation {
+        width: 100%;
+        height: auto;
+
+        display: flex;
+        justify-content: center;
     }
 
     @media (max-width: 768px) { 

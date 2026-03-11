@@ -10,7 +10,7 @@
             <div class="info-detail">
                 <div class="title">{{ orderInfo.serviceTitle }}</div>
                 <div class="address">地址：{{ formatArea(orderInfo.addressShot) }}</div>
-                <span class="price">{{ orderInfo.servicePrice }}</span>
+                <span class="price">{{ orderInfo.servicePrice }}￥</span>
             </div>
             <div class="action">
                 <el-button
@@ -80,7 +80,7 @@
         computed: {
             statusText() {
                 const statusMap = {0: '待接单', 1: '待服务', 2: '进行中', 3: '已完成', 4: '已评价', 5: '已取消'};
-                return statusMap[this.orderInfo.status] || '状态未知';
+                return statusMap[this.orderInfo.state] || '状态未知';
             },
             statusTag() {
                 const tagMap = { 0: 'primary', 1: 'primary', 2: 'primary', 3: 'success', 4: 'success', 5: 'info' };
@@ -138,7 +138,7 @@
 <style scoped>
     .order-item-container {
         width: 100%;
-        height: 10rem;
+        height: fit-content;
         padding: var(--thin-gap);
         /* box-sizing: border-box; */
 
@@ -174,6 +174,15 @@
         display: flex;
         flex-direction: column;
         gap: 1rem;
+    }
+
+    .price {
+        color: #ffc93c;
+        font-size: clamp(1rem, 1.5vw, 1.5rem);
+        font-weight: 700;
+        line-height: clamp(1rem, 1.5vw, 1.5rem);
+
+        position: relative;
     }
 
     .action {

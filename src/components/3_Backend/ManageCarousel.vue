@@ -1,10 +1,8 @@
 <template>
+    <div class="head">
+        <base-title>首页轮播图管理</base-title>
+    </div>
     <div class="manage-carousel-container">
-        <el-row>
-            <el-col :span="24">
-                <span class="title">首页轮播管理</span>
-            </el-col>
-        </el-row>
         <el-row :span="24"> 
             <el-col>
                 <el-table :data="tableData" border style="width: 100%">
@@ -79,8 +77,12 @@
 </template>
 
 <script>
+    import BaseTitle from '../Common/BaseTitle.vue';
     export default {
         name: 'ManageCarousel',
+        components: {
+            BaseTitle,
+        },
         data() {
             return {
                 tableData: [
@@ -183,6 +185,15 @@
 </script>
 
 <style scoped>
+    .head {
+        height: auto;
+        width: 100%;
+        box-sizing: border-box;
+
+        display: flex;
+        align-items: center;
+    }
+
     .manage-carousel-container {
         width: 100%;
         height: 100%;

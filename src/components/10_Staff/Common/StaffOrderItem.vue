@@ -47,7 +47,7 @@
         computed: {
             statusText() {
                 const statusMap = {0: '待接单', 1: '待服务', 2: '进行中', 3: '已完成', 4: '已评价', 5: '已取消'};
-                return statusMap[this.orderInfo.status] || '状态未知';
+                return statusMap[this.orderInfo.state] || '状态未知';
             },
             statusTag() {
                 const tagMap = { 0: 'primary', 1: 'primary', 2: 'primary', 3: 'success', 4: 'success', 5: 'info' };
@@ -88,7 +88,7 @@
 <style scoped>
     .order-item-container {
         width: auto;
-        height: 10rem;
+        height: fit-content;
         padding: var(--thin-gap);
         /* box-sizing: border-box; */
 

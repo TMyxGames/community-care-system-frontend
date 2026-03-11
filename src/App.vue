@@ -37,8 +37,8 @@
         socketStore.initAllSocket();
         // 获取并同步告警状态
         locationStore.loadMonitoringData();
-        // 如果当前用户是老人，开启定时定位上报
-        // id=37是测试用户，用于手动控制定位，不进行上报
+        // 如果当前用户是老人，开启定时定位推送
+        // id=37是测试用户，用于手动控制定位，不进行推送
         if (authStore.userInfo.role === 3 && authStore.userInfo.id !== 37) {
           startLocationReporting();
         }
@@ -57,9 +57,9 @@
     if (locationTimer) clearInterval(locationTimer);
 
     AMapLoader.load({
-        key: "28fa556174185bba89d841f3c448147d", // 必填
-        version: "2.0",    // 建议 2.0
-        plugins: ['AMap.Geolocation'], // 直接在这里声明插件
+        key: "28fa556174185bba89d841f3c448147d",
+        version: "2.0",
+        plugins: ['AMap.Geolocation'],
     }).then((AMap) => {
       const geolocation = new AMap.Geolocation({
         enableHighAccuracy: true, // 开启高精度定位
@@ -70,7 +70,7 @@
         noGeoLocation: 0, // 是否禁止浏览器获取位置
         extensions: 'all'
       });
-      // 立即执行一次，然后开启定时器，每10秒上报一次位置
+      // 立即执行一次，然后开启定时器，每10秒推送一次位置
       const report = () => {
           geolocation.getCurrentPosition((status, result) => {
               if (status === 'complete') {

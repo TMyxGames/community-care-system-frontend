@@ -8,6 +8,19 @@
             <map-container
                 class="map" ref="mapRef"
             />
+        </div>
+
+        <div class="side-area">
+            <!-- 区域列表 -->
+            <div class="area-list">
+                <service-area-item
+                    v-for="area in areaStore.areaList"
+                    :key="area.id"
+                    :areaInfo="area"
+                    @click="focusOnArea(area)"
+                    @delete="confirmDelete"
+                />
+            </div>
             <!-- 地图控制区域 -->
             <div class="map-control-area">
                 <el-button
@@ -40,31 +53,22 @@
                     取消绘制
                 </el-button>
             </div>
-            <!-- 绘制完成后显示保存对话框 -->
-            <el-dialog title="保存服务区域" v-model="dialogVisible">
-                <el-form :model="areaForm">
-                    <el-form-item label="区域名称" label-width="80px">
-                        <el-input v-model="areaForm.name" placeholder="请输入区域名称"></el-input>
-                    </el-form-item>
-                </el-form>
-                <template #footer>
-                    <span class="dialog-footer">
-                        <el-button @click="dialogVisible = false">取消</el-button>
-                        <el-button type="primary" @click="saveArea">确定保存</el-button>
-                    </span>
-                </template>
-            </el-dialog>
         </div>
 
-        <div class="area-list">
-            <service-area-item
-                v-for="area in areaStore.areaList"
-                :key="area.id"
-                :areaInfo="area"
-                @click="focusOnArea(area)"
-                @delete="confirmDelete"
-            />
-        </div>
+        <!-- 绘制完成后显示保存对话框 -->
+        <el-dialog title="保存服务区域" v-model="dialogVisible">
+            <el-form :model="areaForm">
+                <el-form-item label="区域名称" label-width="80px">
+                    <el-input v-model="areaForm.name" placeholder="请输入区域名称"></el-input>
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="dialogVisible = false">取消</el-button>
+                    <el-button type="primary" @click="saveArea">确定保存</el-button>
+                </span>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
@@ -189,7 +193,6 @@
                 if (!this.areaForm.name) return this.$message.warning("请填写名称");
 
                 const payload = {
-                    adminId: this.authStore.userInfo.id,
                     areaName: this.areaForm.name,
                     scopePath: JSON.stringify(this.areaForm.path), // 将路径存储为JSON字符串
                     centerLng: this.areaForm.centerLng,
@@ -247,6 +250,15 @@
         aspect-ratio: 1 / 1;
     }
 
+    .side-area {
+        width: auto;
+        height: auto;
+
+        display: flex;
+        flex-direction: column;
+        gap: var(--thin-gap);
+    }
+
     .map-control-area {
         width: 100%;
         display: flex;
@@ -255,7 +267,7 @@
 
     .area-list {
         width: auto;
-        height: 100%;
+        height: auto;
         min-width: 20rem;
         overflow-y: auto;
 

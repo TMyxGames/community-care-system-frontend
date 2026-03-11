@@ -8,14 +8,14 @@
         </div>
 
         <el-tabs v-model="activeName" class="article-tabs">
-            <el-tab-pane label="已发布文章" name="first">
+            <el-tab-pane class="list" label="已发布文章" name="first">
                 <article-item
                     v-for="article in articleStore.articleList"
                     :key="article.id"
                     :article-info="article"
                 />
             </el-tab-pane>
-            <el-tab-pane label="草稿" name="second">
+            <el-tab-pane class="list" label="草稿" name="second">
                 <article-item
                     v-for="article in articleStore.articleList"
                     :key="article.id"
@@ -101,5 +101,11 @@
         box-sizing: border-box;
 
         display: flex;
+    }
+
+    .list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--thin-gap);
     }
 </style>

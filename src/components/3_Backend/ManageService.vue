@@ -1,10 +1,8 @@
 <template>
-    <div class="container">
-        <el-row>
-            <el-col :span="24">
-                <span class="title">服务管理</span>
-            </el-col>
-        </el-row>
+    <div class="head">
+        <base-title>服务项目管理</base-title>
+    </div>
+    <div class="manage-service-container">
         <el-row :span="24"> 
             <el-col>
                 <el-table :data="tableData" border style="width: 100%">
@@ -50,18 +48,6 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <!-- 提供方 -->
-                    <el-table-column label="提供方" width="200rem" align="center">
-                        <template #default="scope">
-                            <el-input v-model="scope.row.provider" placeholder="请输入内容"></el-input>
-                        </template>
-                    </el-table-column>
-                    <!-- 地区 -->
-                    <el-table-column label="地区" width="200rem" align="center">
-                        <template #default="scope">
-                            <el-input v-model="scope.row.location" placeholder="请输入内容"></el-input>
-                        </template>
-                    </el-table-column>
                     <!-- 价格 -->
                     <el-table-column label="服务价格" width="200rem" align="center">
                         <template #default="scope">
@@ -95,12 +81,6 @@
                                     </el-button>
                                 </el-upload>
                             </div>
-                        </template>
-                    </el-table-column>
-                    <!-- 链接 -->
-                    <el-table-column label="链接" width="200rem" align="center">
-                        <template #default="scope">
-                            <el-input v-model="scope.row.link" placeholder="请输入链接"></el-input>
                         </template>
                     </el-table-column>
                     <!-- 操作 -->
@@ -137,8 +117,12 @@
 </template>
 
 <script>
+    import BaseTitle from '../Common/BaseTitle.vue';
     export default {
         name: 'ManageService',
+        components: {
+            BaseTitle,
+        },
         data() {
             return {
                 tableData: [],
@@ -167,12 +151,9 @@
                     type: "类型",
                     introduce: "新简介",
                     contentUrl: "",
-                    provider: "提供者",
                     workTime: "00:00-00:00",
-                    location: "地点",
                     price: "价格",
                     imgUrl: '',
-                    link: '新链接',
                 });
             },
             // 删除服务
@@ -271,7 +252,16 @@
 </script>
 
 <style scope>
-    .container {
+    .head {
+        height: auto;
+        width: 100%;
+        box-sizing: border-box;
+
+        display: flex;
+        align-items: center;
+    }
+
+    .manage-service-container {
         width: 100%;
         height: 100%;
         padding: 1rem;

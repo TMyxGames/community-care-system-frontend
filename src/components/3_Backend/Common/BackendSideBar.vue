@@ -8,8 +8,11 @@
 
         <!-- 菜单区域 -->
         <div class="option-area"> 
-
-            <router-link v-for="option in options" :key="option.id" :to="option.path">
+            <router-link 
+                v-for="option in options" 
+                :key="option.id" 
+                :to="option.path"
+            >
                 <div class="sidebar-option"> 
                     <span class="option-text">{{ option.name }}</span>
                 </div>
@@ -26,7 +29,7 @@
         data() {
             return {
                 options: [
-                    {id:1, name: "用户管理", path: '/ManageUser'},
+                    // {id:1, name: "用户管理", path: '/ManageUser'},
                     {id:2, name: "轮播图管理", path: '/ManageCarousel'},
                     {id:3, name: "文章管理", path: '/ManageArticle'},
                     {id:4, name: "服务项目管理", path: '/ManageService'},
@@ -52,7 +55,7 @@
 
 <style scoped>
     .sidebar-container{
-        width: 100%;
+        width: 18rem;
         height: 100%;
         /* padding: 10px; */
 
@@ -66,7 +69,7 @@
     }
 
     .logo-area {
-        width: 100%;
+        width: 18rem;
         height: 50px;
         display: flex;
         justify-content: center;
@@ -92,19 +95,17 @@
         user-select: none;
     }
 
-    /* .option-area {
+    .option-area {
         width: 100%;
-        height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
-        gap: 10px;
-        flex-shrink: 0;
-    } */
+        gap: 0.5rem;
+    }
 
     .sidebar-option {
-        width: 100%;
+        width: 18rem;
         height: 50px;
         display: flex;
         justify-content: center;
