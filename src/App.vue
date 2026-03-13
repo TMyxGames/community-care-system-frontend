@@ -46,6 +46,7 @@
   };
 
   let locationTimer = null;
+  const apiKey = import.meta.env.VITE_AMAP_API_KEY || '';
   // 定时推送位置
   const startLocationReporting = async () => {
     // 判断当前用户身份是否为老人
@@ -57,7 +58,7 @@
     if (locationTimer) clearInterval(locationTimer);
 
     AMapLoader.load({
-        key: "28fa556174185bba89d841f3c448147d",
+        key: apiKey,
         version: "2.0",
         plugins: ['AMap.Geolocation'],
     }).then((AMap) => {
@@ -105,6 +106,8 @@
       initAllAppService();
     }
 
+    console.log(import.meta.env.VITE_AMAP_API_KEY);
+    console.log(import.meta.env.VITE_AMAP_SEC_CODE);
 
   });
 

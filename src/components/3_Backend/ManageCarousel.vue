@@ -132,11 +132,8 @@
                 }
 
                 let formData = new FormData();
+                formData.append('id', this.tableData[index].id);
                 formData.append('file', file.raw); // file.raw 是原始文件对象
-
-                if (this.tableData[index].imgUrl) {
-                    formData.append('oldUrl', this.tableData[index].imgUrl);
-                }
 
                 try {
                     const res = await this.$http.post('/carousel/upload/img', formData);

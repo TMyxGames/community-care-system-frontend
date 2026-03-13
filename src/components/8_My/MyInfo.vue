@@ -178,10 +178,6 @@
         formData.append('file', file.raw);
         formData.append('userId', userInfo.id);
 
-        if (userInfo.avatarUrl) {
-            formData.append('oldUrl', userInfo.avatarUrl);
-        }
-
         try {
             const res = await request.post('/auth/upload/avatar', formData);
             const newAvatarUrl = res; // 获取新的头像URL

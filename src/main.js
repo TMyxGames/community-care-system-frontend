@@ -14,7 +14,7 @@ import './styles/BDmarkdown.css'
 import './styles/theme.css'
 
 // 自己设定的接口地址
-import { getFullUrl } from '@/utils/config';
+import { getFileUrl } from '@/utils/config';
 import request from './utils/request'
 import md from './utils/markdown'
 
@@ -22,7 +22,7 @@ const pinia = createPinia()
 const app = createApp(App)
 
 app.config.globalProperties.$http = request
-app.config.globalProperties.$getFileUrl = getFullUrl
+app.config.globalProperties.$getFileUrl = getFileUrl
 app.config.globalProperties.$md = md
 
 app.use(pinia)

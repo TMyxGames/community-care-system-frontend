@@ -10,7 +10,7 @@
     import { useAreaStore } from "@/stores/area";
     import { useLocationStore } from "@/stores/location";
     import AMapLoader from "@amap/amap-jsapi-loader";
-    import { getFullUrl } from "@/utils/config";
+    import { getFileUrl } from "@/utils/config";
     import defaultAvatar from "@/assets/兔兔.jpg";
 
     let map = null;
@@ -54,7 +54,7 @@
                     position: position,
                     map: map,
                     content: `<div class="custom-marker">
-                                <img class="marker-img" src="${getFullUrl(item.avatarUrl) || defaultAvatar}"/>
+                                <img class="marker-img" src="${getFileUrl(item.avatarUrl) || defaultAvatar}"/>
                             </div>`,
                     // offset: new window.AMap.Pixel(-(config.size / 2), -config.size),
                 });
@@ -209,12 +209,14 @@
         }
     };
 
+    const secKey = import.meta.env.VITE_AMAP_SEC_KEY || '';
+    const apiKey = import.meta.env.VITE_AMAP_API_KEY || '';
     onMounted(async () => {
         window._AMapSecurityConfig = {
-            securityJsCode: "98431c9e945c81b827dbc2adfe096468",
+            securityJsCode: secKey,
         };
         AMapLoader.load({
-            key: "28fa556174185bba89d841f3c448147d",
+            key: apiKey,
             version: "2.0",
             plugins: ["AMap.Scale", "AMap.MouseTool"],
         })

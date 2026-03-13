@@ -28,12 +28,7 @@
 
             </section>
 
-            <content-list> </content-list>
-
-            <div class="test"></div>
-
-            <h1 id="title">你好</h1>
-            <h2 id="subtitle">欢迎来到我的个人页面</h2>
+            <content-list/>
         </glass-layer>
     </mid-overlay>
 </template>

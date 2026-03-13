@@ -1,8 +1,8 @@
 // 后端服务器基础地址
-export const API_BASE_URL = 'http://localhost:8081';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // 通用的路径拼接方法
-export const getFullUrl = (path) => {
+export const getFileUrl = (path) => {
     if (!path) return '';
     // 如果已经是完整路径则直接返回
     if (path.startsWith('http')) return path;
